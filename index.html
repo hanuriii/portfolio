@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="김하늘 · kim.hanul — UX/UI Product Designer">
 <meta property="og:description" content="사용자의 행동 너머의 이유를 읽고 정교한 디테일로 경험을 구축합니다.">
-<meta property="og:image" content="assets/works/bloom.png">
+<meta property="og:image" content="assets/works/bloom_new.png">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
 
@@ -337,11 +337,18 @@ section.tight{ padding-top:0; }
 .work:first-of-type{ border-top:0; padding-top:8px; }
 .work--flip .work-media{ order:2; }
 .work-media{
-  position:relative; border-radius:var(--r); overflow:hidden;
-  background:var(--paper-2); border:1px solid var(--line-paper);
+  position:relative; aspect-ratio:3/2; display:grid; place-items:center;
+  padding:32px; border-radius:var(--r); overflow:hidden;
+  background:linear-gradient(158deg, #ffffff 0%, #f1ede9 100%);
+  border:1px solid var(--line-paper);
   box-shadow:0 26px 60px -34px rgba(90,60,60,.5);
 }
-.work-media img{ width:100%; transition:transform .8s var(--ease); }
+/* 이미지는 배경이 투명한 컷아웃 — 잘리지 않고 안쪽에 꽉 맞춰 들어갑니다 */
+.work-media img{
+  width:100%; height:100%; object-fit:contain;
+  filter:drop-shadow(0 14px 26px rgba(60,40,40,.13));
+  transition:transform .8s var(--ease);
+}
 .work-media:hover img{ transform:scale(1.045); }
 .work-no{
   position:absolute; left:16px; top:14px; z-index:2;
@@ -368,6 +375,7 @@ section.tight{ padding-top:0; }
 @media (max-width:860px){
   .work{ grid-template-columns:1fr; gap:26px; padding-block:48px; }
   .work--flip .work-media{ order:0; }   /* 모바일: 항상 이미지 먼저 */
+  .work-media{ padding:20px; }
   .work-facts{ gap:6px; flex-direction:column; }
 }
 
@@ -504,7 +512,7 @@ footer{ border-top:1px solid var(--line-ink); }
       </div>
       <div class="about-grid rv">
         <div>
-          <img class="portrait" src="assets/profile.png" alt="김하늘 프로필 사진" width="480" height="480">
+          <img class="portrait" src="assets/profile_new.png" alt="김하늘 프로필 사진" width="389" height="389">
           <p class="portrait-cap dim" id="about-cap"></p>
         </div>
         <div>
@@ -750,7 +758,7 @@ const DATA = {
         'PM·프론트엔드·백엔드·AI 협업을 리드해 <b>실무 통합 프로젝트 우수상</b> 수상'
       ],
       tags: ['Figma', 'Design System', 'Dark UI', 'AI Agent'],
-      image: 'assets/works/bloom.png',
+      image: 'assets/works/bloom_new.png',
       alt: 'Bloom 서비스의 데스크톱과 모바일 화면'
     },
     {
@@ -765,7 +773,7 @@ const DATA = {
         '「Weave with Python」 슬로건과 컬러 시스템 등 행사 전체 비주얼 아이덴티티 수립'
       ],
       tags: ['Responsive Web', 'Design System', 'Brand Identity'],
-      image: 'assets/works/pycon.png',
+      image: 'assets/works/pycon_new.png',
       alt: '파이콘 한국 2025 홈페이지 비주얼 아이덴티티'
     },
     {
@@ -780,7 +788,7 @@ const DATA = {
         '설문·인터뷰로 “날씨 만족도는 여행 같은 특별한 경험에서 크게 변화한다”는 인사이트 도출'
       ],
       tags: ['Mobile UX', 'Weather Data', 'Checklist'],
-      image: 'assets/works/nalssimong.png',
+      image: 'assets/works/nalssimong_new.png',
       alt: '날씨몽 앱의 지도, 체크리스트, 캘린더 화면'
     },
     {
@@ -795,7 +803,7 @@ const DATA = {
         '비즈니스 모델 캔버스와 수익 구조까지 설계해 서비스의 지속 가능성 검증'
       ],
       tags: ['1인 가구', 'Matching', 'BM 설계'],
-      image: 'assets/works/bappul.png',
+      image: 'assets/works/bappul_new.png',
       alt: '밥풀 서비스의 캐릭터 일러스트레이션'
     },
     {
@@ -810,7 +818,7 @@ const DATA = {
         '블록체인 기반 보상 시스템 <b>특허 출원(10-2024-0164728)</b>, 「방송과 기술」 vol.349 게재'
       ],
       tags: ['React Native', 'NFT', 'Community', '논문·특허'],
-      image: 'assets/works/unirun.png',
+      image: 'assets/works/unirun_new.png',
       alt: 'UniRun 프로젝트가 게재된 방송과 기술 매거진'
     }
   ],
@@ -900,7 +908,7 @@ el('works-list').innerHTML = DATA.works.map((w, i) => `
   <article class="work rv${i % 2 ? ' work--flip' : ''}">
     <div class="work-media">
       <span class="work-no">0${i + 1}</span>
-      <img src="${w.image}" alt="${w.alt}" loading="lazy" decoding="async" width="740" height="512">
+      <img src="${w.image}" alt="${w.alt}" loading="lazy" decoding="async">
     </div>
     <div class="work-text">
       <p class="work-kicker">${w.kicker}</p>
