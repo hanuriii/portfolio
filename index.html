@@ -228,10 +228,16 @@ section.tight{ padding-top:0; }
 /* ══════════════════ ABOUT ══════════════════ */
 .about-grid{ display:grid; grid-template-columns:190px minmax(0,1fr); gap:56px; align-items:start; }
 .portrait{
-  width:170px; height:170px; border-radius:50%; object-fit:cover;
-  border:1px solid var(--line-paper);
+  width:200px; height:200px; border-radius:50%; object-fit:cover;
+  outline: 1px solid var(--line-paper);
+  outline-offset: 2px;
+  box-shadow:
+    /* 첫 번째 그림자: 아웃라인 바로 뒤에 약간 더 두꺼운 옅은 층 */
+    0 0 0 5px rgba(255, 255, 255, 0.8), /* 흰색 여백 효과 */
+    /* 두 번째 그림자: 그 뒤로 은은하게 번지는 포인트 컬러 오라 */
+    0 0 15px 1px rgba(100, 150, 250, 0.2);
 }
-.portrait-cap{ margin-top:16px; font-size:13px; line-height:1.7; }
+.portrait-cap{ margin-top:36px; text-align: center; font-size:23px; line-height:1.7; }
 .about-h{
   font-size:clamp(22px,3.2vw,32px); font-weight:600; line-height:1.45;
   letter-spacing:-.03em; margin-bottom:24px;
@@ -529,8 +535,8 @@ footer{ border-top:1px solid var(--line-ink); }
     <div class="wrap">
       <div class="sec-head rv">
         <p class="sec-label">Experience</p>
-        <h2 class="sec-title">experience<span class="d">.</span></h2>
-        <p class="sec-desc dim">연구실, 오픈소스 컨퍼런스, 기업 부트캠프까지 — 서로 다른 환경에서 설계하고 검증한 기록입니다.</p>
+        <h2 class="sec-title">activity<span class="d">.</span>log</h2>
+        <p class="sec-desc dim">연구실, 오픈소스 컨퍼런스, 기업 부트캠프 등 여러 환경에서 경험한 기록입니다.</p>
       </div>
       <div class="exp-grid" id="exp-grid"></div>
     </div>
@@ -564,7 +570,7 @@ footer{ border-top:1px solid var(--line-ink); }
       <div class="sec-head rv">
         <p class="sec-label">Selected Works</p>
         <h2 class="sec-title">my<span class="d">.</span>works</h2>
-        <p class="sec-desc dim">AI SaaS부터 블록체인 커뮤니티까지, 서로 성격이 다른 다섯 개의 서비스를 설계했습니다.</p>
+        <p class="sec-desc dim">AI SaaS부터 블록체인 커뮤니티까지 서로 성격이 다른 다섯 개의 서비스를 설계했습니다.</p>
       </div>
       <div id="works-list"></div>
     </div>
@@ -574,7 +580,7 @@ footer{ border-top:1px solid var(--line-ink); }
     <div class="wrap">
       <div class="sec-head rv">
         <p class="sec-label">Awards &amp; Research</p>
-        <h2 class="sec-title">proof<span class="d">.</span></h2>
+        <h2 class="sec-title">achievements<span class="d">.</span></h2>
         <p class="sec-desc dim">설계한 결과를 수상, 특허, 논문으로 검증받았습니다.</p>
       </div>
       <div class="aw-grid">
@@ -620,31 +626,29 @@ const DATA = {
   nameEn: ['kim', 'hanul'],          // 큰 제목 (가운데 점은 자동으로 들어갑니다)
   tagline: '사용자의 행동 <b>너머의 이유</b>를 읽고<br>정교한 디테일로 <b>경험을 구축</b>합니다',
   heroMeta: [
-    '동덕여자대학교 <b>컴퓨터학과 · HCI사이언스전공</b>',
-    'kt cloud <b>TECH UP 1기</b>',
-    '<b>PyCon Korea 2025</b> 준비위원회',
-    '<b>Seoul, Korea</b>'
+    'HELLO!',
+    'From Dot <b>to Flow</b>'
   ],
 
   /* ─── 연락처 ─────────────────────────────────────────── */
   contact: {
-    message: '새로운 프로젝트나 협업에 대해 이야기하고 싶다면<br>편하게 연락 주세요. 언제든 환영합니다.',
-    email: 'hanuri714@gmail.com',
+    message: '사용자 경험을 정교하게 설계하고<br>신뢰할 수 있는 프로덕트로 함께 풀어내고 싶습니다.',
+    /* email: 'hanuri714@gmail.com',*/
     links: [
       { label: 'LinkedIn',  url: 'https://linkedin.com/in/hanuriii/' },
       { label: 'Portfolio', url: 'https://hanuriii.github.io/portfolio/' },
-      { label: 'Phone',     url: 'tel:+821041178482' }
+      { label: 'Email',     url: 'mailto:hanuri714@gmail.com' }
     ]
   },
 
   /* ─── About ─────────────────────────────────────────── */
   about: {
-    caption: 'UX/UI 프로덕트 디자이너<br>2025.08 졸업 · 신입',
+    caption: '<b>김하늘</b><br>KIM HANUL',
     heading: '설계와 구현 사이를 오가는 디자이너, <mark>김하늘</mark>입니다.',
     paragraphs: [
-      'HCI를 전공하며 사용자 경험을 연구했고, 프로젝트에서는 기획부터 UX 설계, UI 디자인, 프로토타입 제작, 개발 협업까지 <b>하나의 서비스가 완성되는 전 과정</b>을 경험했습니다. 단순히 보기 좋은 화면을 만드는 것이 아니라 사용자가 왜 불편한지 고민하고 데이터를 기반으로 더 나은 해결책을 제안하는 것이 저의 강점입니다.',
-      'VR/AR, AI SaaS, NFT 커뮤니티, 모바일 서비스 등 서로 성격이 다른 프로젝트를 거치며 <b>사용자와 비즈니스, 기술 사이의 균형</b>을 찾는 감각을 키워왔습니다. 특히 PM·개발자와 긴밀하게 협업하며 구현 가능성을 고려한 디자인을 제안했고, 디자인 시스템 구축과 서비스 개선 경험을 통해 프로젝트의 완성도를 높였습니다.',
-      '저는 감각보다 <b>근거</b>를 바탕으로 디자인합니다. 리서치–설계–검증–발표로 이어지는 사이클을 여러 번 반복하다 보니, 이제는 ‘좋아 보이는 디자인’보다 <b>‘근거를 댈 수 있는 디자인’</b>을 만드는 것이 더 익숙합니다.'
+      'HCI를 전공하며 사용자 경험을 연구했고 프로젝트에서는 기획부터 UX 설계, UI 디자인, 프로토타입 제작, 개발 협업까지 <b>하나의 서비스가 완성되는 전 과정</b>을 경험했습니다. 단순히 보기 좋은 화면을 만드는 것이 아니라 사용자가 왜 불편한지 고민하고 데이터를 기반으로 더 나은 해결책을 제안하는 것이 저의 강점입니다.',
+      'VR/AR, AI SaaS, NFT 커뮤니티, 모바일 서비스 등 서로 성격이 다른 프로젝트를 거치며 <b>사용자와 비즈니스, 기술 사이의 균형</b>을 찾는 감각을 키워왔습니다. 특히 PM·개발자와 긴밀하게 협업하며 구현 가능성을 고려한 디자인을 제안했고 디자인 시스템 구축과 서비스 개선 경험을 통해 프로젝트의 완성도를 높였습니다.',
+      '저는 감각보다 <b>근거</b>를 바탕으로 디자인합니다. 리서치 – 설계 – 검증 – 발표로 이어지는 사이클을 여러 번 반복하다 보니 이제는 ‘좋아 보이는 디자인’보다 <b>‘근거를 댈 수 있는 디자인’</b>을 만드는 것이 더 익숙합니다.'
     ],
     // 핵심 역량 (이력서 Core Competency)
     strengths: [
@@ -671,10 +675,11 @@ const DATA = {
       period: '2025.09 – 2026.04',
       points: [
         'AI 기반 조직 리더십 개발 SaaS <b>〈Bloom〉</b> 기획·디자인 담당',
-        '직원용 팟캐스트 콘텐츠와 관리자용 마인드 온톨로지 대시보드를 동시에 설계해 서로 다른 두 타깃의 니즈를 하나의 서비스로 통합',
-        'PM·프론트엔드·백엔드·AI 등 타 직군과의 협업을 리드하여 <b>실무 통합 프로젝트 우수상</b> 수상'
+        '조직원용 팟캐스트 콘텐츠와 관리자용 마인드 온톨로지 대시보드를 동시에 설계해 서로 다른 두 타깃의 니즈를 하나의 서비스로 통합',
+        'PM·프론트엔드·백엔드·AI·보안·클라우드 인프라 등 타 직군과 협업하여 <b>실무 통합 프로젝트 우수상</b> 수상',
+        '여행 날씨 대비 서비스 <b><날씨몽></b>, 식습관 관리 서비스 <b><밥풀></b> 기획·디자인 참여'
       ],
-      tags: ['AI SaaS', 'Design System', 'Dark UI', '협업 리드']
+      tags: ['AI', 'B2B SaaS', 'Web·Mobile App', 'Figma']
     },
     {
       org: 'PyCon Korea 2025',
@@ -685,7 +690,7 @@ const DATA = {
         '사용자 만족도 조사 결과 <b>69.83점</b>으로 평균 이상 달성, 유지보수 효율 향상',
         '행사 전체 비주얼 가이드 수립 및 굿즈 판매 프로모션 기획'
       ],
-      tags: ['Design System', 'Branding', 'UMUX-Lite']
+      tags: ['Design System', 'Web', 'UMUX-Lite', 'Figma', 'Adobe Illustrator']
     },
     {
       org: '동덕여자대학교 TED LAB',
@@ -693,9 +698,9 @@ const DATA = {
       period: '2023.09 – 2025.03',
       points: [
         '국가연구과제(NRF) <b>HMD 기반 가상현실 사용자 멀미 예측 및 저감 방안</b> 연구에 실험 설계·진행·분석 담당으로 참여',
-        '연구 성과를 국제인간공학회(<b>IEA 2024</b>)에서 발표, 국제 학술 무대에서 연구 역량 검증'
+        '연구 성과를 국제인간공학회(IEA 2024)에서 발표, 국제 학술 무대에서 연구 역량 검증'
       ],
-      tags: ['VR/AR', '실험 설계', '데이터 분석']
+      tags: ['VR', '실험 설계·분석', 'Steam', 'HTC VIVE Pro 2']
     },
     {
       org: '한이음 ICT 멘토링',
@@ -706,40 +711,40 @@ const DATA = {
         '관련 논문 작성 및 <b>한국정보처리학회 ACK 2024 우수상</b> 수상, 블록체인 기반 보상 시스템 <b>특허 출원</b>',
         '「방송과 기술」 vol.349에 프로젝트 성과 게재'
       ],
-      tags: ['Blockchain', 'React Native', '논문·특허']
+      tags: ['Blockchain', 'Mobile App', 'React Native', '논문·특허', 'Figma']
     },
     {
       org: '서비스디자인학회 Cresol 10·11기',
       role: '기획 · UX/UI 디자인',
-      period: '2023 – 2024',
+      period: '2023.09 – 2024.05',
       points: [
         '1인 가구 부동산 정보 서비스 기획 및 UX/UI 디자인',
         '성인 ADHD 대상 AI 헬스케어 서비스 기획 및 UX/UI 디자인'
       ],
-      tags: ['Service Design', 'Healthcare']
+      tags: ['Service Design', 'Mobile App', 'Healthcare', 'Figma']
     },
     {
       org: 'World Friends Korea ICT 봉사단',
-      role: '앱 개발 · 글로벌 스토어 디자인',
-      period: '2022 – 2023',
+      role: '기획 · UX/UI 디자인 · 프론트엔드',
+      period: '2023.05 – 2023.11',
       points: [
         '네팔 SWOPNA SANSAR SCHOOL 협력 앱 개발 참여',
         '다국어 사용자 가이드 및 글로벌 스토어 디자인 전담'
       ],
-      tags: ['Global', 'Mobile App', '다국어 UX']
+      tags: ['Android Studio', 'Mobile App', '다국어 UX']
     }
   ],
 
   /* ─── Skills ─────────────────────────────────────────── */
   skills: {
     // 원 주위를 도는 태그 (8개 권장 — 개수를 바꿔도 자동 배치됩니다)
-    orbit: ['Figma', 'React Native', 'TypeScript', 'SQL', 'UX Research', '실험 설계', 'Design System', 'Generative AI'],
+    orbit: ['Figma', 'Design System', 'Front-end', 'SQL', 'HCI', 'Adobe', 'UX Research', 'Generative AI'],
     groups: [
       { label: 'Design',      text: 'Figma (프로토타이핑, 디자인 시스템 구축), Adobe Illustrator, Adobe Photoshop' },
       { label: 'Development', text: 'SQL, React Native, TypeScript, Android Studio' },
       { label: 'Research',    text: '사용자 리서치, 실험 설계, 사용성 평가(UMUX-Lite), 데이터 분석' },
       { label: 'Collaboration', text: 'Notion, Slack, Discord, MS Office (PPT, Word, Excel)' },
-      { label: 'Certificate', text: 'TOEIC Speaking 160 (AL) · SQL 개발자 (SQLD)' }
+      { label: 'Certificate', text: 'TOEIC Speaking 160 (AL), SQL 개발자 (SQLD)' }
     ]
   },
 
@@ -748,8 +753,8 @@ const DATA = {
   works: [
     {
       title: 'AI 멘탈 웰니스 서비스, Bloom',
-      kicker: 'AI SaaS · Featured',
-      summary: '조직의 리더십 개발을 위한 AI 기반 멘탈 웰니스 SaaS 서비스. 직원의 감정 기록과 관리자의 조직 진단을 하나의 흐름으로 연결했습니다.',
+      kicker: 'AI · SaaS · Web App',
+      summary: '조직의 리더십 개발을 위한 AI 기반 멘탈 웰니스 SaaS 서비스,<br> 직원의 감정 기록과 관리자의 조직 진단을 하나의 흐름으로 연결했습니다.',
       period: '2026.01 – 04 (3개월)',
       role: '프로덕트 디자인',
       points: [
@@ -757,7 +762,7 @@ const DATA = {
         '직원용 <b>그린룸</b>과 관리자용 <b>마인드 온톨로지</b>, 두 타깃을 하나의 신뢰 구조로 설계',
         'PM·프론트엔드·백엔드·AI 협업을 리드해 <b>실무 통합 프로젝트 우수상</b> 수상'
       ],
-      tags: ['Figma', 'Design System', 'Dark UI', 'AI Agent'],
+      tags: ['AI', 'B2B SaaS', 'Web App', 'Design System', 'Figma'],
       image: 'assets/works/bloom_new.png',
       alt: 'Bloom 서비스의 데스크톱과 모바일 화면'
     },
@@ -766,58 +771,57 @@ const DATA = {
       kicker: 'Web · Branding',
       summary: '매년 새로 만들어지던 비효율을 없애기 위해 재사용 가능한 컴포넌트 기반의 반응형 웹과 행사 브랜딩을 함께 설계했습니다.',
       period: '2025.03 – 08 (5개월)',
-      role: '프로덕트 디자인, 브랜딩, 굿즈 제작',
+      role: 'UX/UI 디자인, 브랜딩, 굿즈 제작',
       points: [
         '반복 활용 가능한 <b>디자인 시스템</b>을 구축해 유지보수 효율 향상',
-        '사용성 평가(UMUX-Lite) <b>69.83점</b>, 전년 대비 상승',
+        '사용성 평가(UMUX-Lite) <b>69.83점</b> 평균 이상 달성',
         '「Weave with Python」 슬로건과 컬러 시스템 등 행사 전체 비주얼 아이덴티티 수립'
       ],
-      tags: ['Responsive Web', 'Design System', 'Brand Identity'],
+      tags: ['Responsive Web', 'Design System', 'Brand Identity', 'Figma', 'Adobe Illustrator'],
       image: 'assets/works/pycon_new.png',
       alt: '파이콘 한국 2025 홈페이지 비주얼 아이덴티티'
     },
     {
-      title: '모바일 여행 케어 앱, 날씨몽',
+      title: '여행 날씨 대응 서비스, 날씨몽',
       kicker: 'Mobile App',
-      summary: '가변적인 날씨 예보에 대응하는 체크리스트 기반의 알림 서비스. 숫자로만 제공되던 날씨를 여행자의 행동 언어로 번역했습니다.',
+      summary: '가변적인 날씨 예보에 대응하는 체크리스트 기반의 알림 서비스,<br> 숫자로만 제공되던 날씨를 여행자의 행동 언어로 번역했습니다.',
       period: '2025.11 (1개월)',
       role: '프로덕트 디자인',
       points: [
         '수치형 날씨 정보를 <b>대응책 중심</b>으로 바꿔 사용자의 판단 시간을 단축',
-        '여행 중 날씨가 변할 때 <b>대응 가이드</b>를 제시해 의사결정 시간 단축',
         '설문·인터뷰로 “날씨 만족도는 여행 같은 특별한 경험에서 크게 변화한다”는 인사이트 도출'
       ],
-      tags: ['Mobile UX', 'Weather Data', 'Checklist'],
+      tags: ['Mobile UX', 'Design System', 'UT', 'Figma'],
       image: 'assets/works/nalssimong_new.png',
       alt: '날씨몽 앱의 지도, 체크리스트, 캘린더 화면'
     },
     {
-      title: '헬스 케어 매칭 플랫폼, 밥풀',
-      kicker: 'Platform · Team Lead',
-      summary: '유저 간 매칭 시스템과 기록의 재미를 더해 1인 가구의 건강한 식습관을 유도하는 플랫폼입니다.',
+      title: '1인 가구 식습관 관리 서비스, 밥풀',
+      kicker: 'Mobile App',
+      summary: '유저 간 매칭 시스템과 식사 기록의 재미를 더해<br> 1인 가구의 건강한 식습관을 유도하는 플랫폼입니다.',
       period: '2025.12 (1개월)',
-      role: '프로덕트 디자인, 팀 리딩',
+      role: '프로덕트 디자인',
       points: [
         '“식사 루틴의 핵심은 완벽한 식단이 아니라 <b>지속</b>이다”라는 핵심 인사이트 도출',
         '같은 목표를 가진 <b>파트너 1:1 매칭</b>과 사진 인증으로 스트레스 없는 기록 경험 설계',
         '비즈니스 모델 캔버스와 수익 구조까지 설계해 서비스의 지속 가능성 검증'
       ],
-      tags: ['1인 가구', 'Matching', 'BM 설계'],
+      tags: ['Figma', 'BM', 'Mobile UX', 'Gamification'],
       image: 'assets/works/bappul_new.png',
       alt: '밥풀 서비스의 캐릭터 일러스트레이션'
     },
     {
       title: '블록체인 러닝 플랫폼, UniRun',
-      kicker: 'Blockchain · Patent',
-      summary: '대학생 러너들을 위해 NFT 보상 시스템을 결합한 러닝 커뮤니티 서비스. 기획부터 프론트엔드 구현까지 담당했습니다.',
+      kicker: 'Mobile App · Patent',
+      summary: '대학생 러너들을 위한 NFT 보상 시스템을 결합한 러닝 커뮤니티 서비스 입니다.',
       period: '2024.04 – 10 (6개월)',
-      role: '기획, 프로덕트 디자인, 프론트엔드 개발',
+      role: '기획, UX/UI 디자인, 프론트엔드 개발',
       points: [
         '실시간 러닝 추적, 토큰 획득, 대학 마스코트 NFT, 대학별 랭킹으로 이어지는 보상 구조 설계',
         '<b>한국정보처리학회 ACK 2024 우수상</b> 수상 및 논문 게재',
         '블록체인 기반 보상 시스템 <b>특허 출원(10-2024-0164728)</b>, 「방송과 기술」 vol.349 게재'
       ],
-      tags: ['React Native', 'NFT', 'Community', '논문·특허'],
+      tags: ['React Native', 'NFT', 'Figma', '논문·특허', 'Mobile UX'],
       image: 'assets/works/unirun_new.png',
       alt: 'UniRun 프로젝트가 게재된 방송과 기술 매거진'
     }
