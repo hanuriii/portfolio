@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>반도체 공정 품질 모니터링 대시보드</title>
+<style>
+  :root{
+    --bg:#0f172a; --panel:#1e293b; --panel2:#16213a; --border:#2c3b57;
+    --text:#e6edf5; --sub:#94a3b8; --accent:#3b82f6; --good:#22c55e; --bad:#ef4444;
+    --grid:#2c3b57;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+    background:var(--bg); color:var(--text); padding:24px;
+  }
+  h1{font-size:20px; margin:0 0 4px;}
+  .subtitle{color:var(--sub); font-size:13px; margin:0 0 20px;}
+
+  .filters{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    padding:16px; margin-bottom:20px; display:flex; flex-wrap:wrap; gap:24px; align-items:flex-start;
+  }
+  .filter-group{display:flex; flex-direction:column; gap:8px;}
+  .filter-group .label{font-size:12px; color:var(--sub); font-weight:600;}
+  .chip-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .chip{
+    border:1px solid var(--border); background:var(--panel2); color:var(--text);
+    padding:6px 12px; border-radius:20px; font-size:13px; cursor:pointer; user-select:none;
+    transition:.15s;
+  }
+  .chip.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .chip.bad-active{background:var(--bad); border-color:var(--bad); color:#fff;}
+  .reset-btn{
+    margin-left:auto; align-self:center; background:transparent; color:var(--text);
+    border:1px solid var(--border); padding:8px 16px; border-radius:8px; cursor:pointer; font-size:13px;
+  }
+  .reset-btn:hover{background:var(--panel2);}
+
+  .kpi-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:20px;}
+  .kpi-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px;
+  }
+  .kpi-card .title{font-size:12px; color:var(--sub); margin-bottom:8px;}
+  .kpi-card .value{font-size:26px; font-weight:700;}
+  .kpi-card .value small{font-size:13px; color:var(--sub); font-weight:400;}
+  .kpi-sub{display:flex; gap:14px; margin-top:6px; font-size:13px;}
+  .kpi-sub .good{color:var(--good);}
+  .kpi-sub .bad{color:var(--bad);}
+  .stat-mini-grid{display:grid; grid-template-columns:1fr 1fr; gap:6px 14px; margin-top:4px;}
+  .stat-mini{font-size:12px; color:var(--sub);}
+  .stat-mini b{color:var(--text); font-size:13px;}
+
+  .charts{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .chart-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px;
+  }
+  .chart-card.full{grid-column:1 / -1;}
+  .chart-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;}
+  .chart-head h3{font-size:14px; margin:0;}
+  select{
+    background:var(--panel2); color:var(--text); border:1px solid var(--border);
+    border-radius:6px; padding:5px 8px; font-size:12px;
+  }
+  svg{width:100%; height:auto; overflow:visible;}
+  .axis-label{fill:var(--sub); font-size:11px;}
+  .axis-line{stroke:var(--grid);}
+  .grid-line{stroke:var(--grid); stroke-dasharray:2,3;}
+  .bar{fill:var(--accent); transition:.15s;}
+  .bar:hover{fill:#60a5fa;}
+  .hist-bar{fill:#8b5cf6; transition:.15s;}
+  .hist-bar:hover{fill:#a78bfa;}
+  .legend{font-size:11px; fill:var(--sub);}
+  .empty-msg{fill:var(--sub); font-size:13px;}
+
+  #tooltip{
+    position:fixed; pointer-events:none; background:#0b1220; border:1px solid var(--border);
+    color:var(--text); padding:8px 10px; border-radius:8px; font-size:12px; line-height:1.5;
+    box-shadow:0 4px 12px rgba(0,0,0,.4); display:none; z-index:100; white-space:nowrap;
+  }
+  footer{margin-top:20px; color:var(--sub); font-size:11px; text-align:center;}
+
+  @media (max-width:900px){
+    .charts{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<h1>반도체 공정 품질 모니터링 대시보드</h1>
+<p class="subtitle">데이터 출처: 11cha_secom_cleaned.csv · 공정/품질 엔지니어를 위한 설비별·시간대별 공정 이상 모니터링</p>
+
+<div class="filters">
+  <div class="filter-group">
+    <div class="label">설비명 필터</div>
+    <div class="chip-row" id="equipFilterRow"></div>
+  </div>
+  <div class="filter-group">
+    <div class="label">양품여부 필터</div>
+    <div class="chip-row" id="qualityFilterRow">
+      <div class="chip active" data-quality="ALL">전체</div>
+      <div class="chip" data-quality="양품">양품</div>
+      <div class="chip" data-quality="불량">불량</div>
+    </div>
+  </div>
+  <button class="reset-btn" id="resetBtn">필터 초기화</button>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi-card">
+    <div class="title">전체 건수 (필터 적용)</div>
+    <div class="value" id="kpiTotal">-</div>
+  </div>
+  <div class="kpi-card">
+    <div class="title">양품 / 불량 건수</div>
+    <div class="value" id="kpiQualityMain">-</div>
+    <div class="kpi-sub">
+      <span class="good" id="kpiGood">양품 -건</span>
+      <span class="bad" id="kpiBad">불량 -건</span>
+      <span id="kpiBadRate">불량률 -%</span>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="title">핵심 수치 평균</div>
+    <div class="stat-mini-grid">
+      <div class="stat-mini">챔버온도 <b id="avgTemp">-</b></div>
+      <div class="stat-mini">압력 <b id="avgPressure">-</b></div>
+      <div class="stat-mini">가스유량 <b id="avgGas">-</b></div>
+      <div class="stat-mini">공정시간 <b id="avgDuration">-</b></div>
+    </div>
+  </div>
+</div>
+
+<div class="charts">
+  <div class="chart-card">
+    <div class="chart-head"><h3>설비명별 건수</h3></div>
+    <svg id="barChart" viewBox="0 0 460 300"></svg>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-head">
+      <h3>수치 컬럼 분포 (히스토그램)</h3>
+      <select id="histMetricSelect">
+        <option value="temp">챔버온도 (℃)</option>
+        <option value="pressure">압력 (kPa)</option>
+        <option value="gas">가스유량 (sccm)</option>
+        <option value="duration">공정시간 (분)</option>
+      </select>
+    </div>
+    <svg id="histChart" viewBox="0 0 460 300"></svg>
+  </div>
+
+  <div class="chart-card full">
+    <div class="chart-head">
+      <h3>측정일시 기준 추이</h3>
+      <select id="lineMetricSelect">
+        <option value="temp">챔버온도 (℃)</option>
+        <option value="pressure">압력 (kPa)</option>
+        <option value="gas">가스유량 (sccm)</option>
+        <option value="duration">공정시간 (분)</option>
+      </select>
+    </div>
+    <svg id="lineChart" viewBox="0 0 960 300"></svg>
+  </div>
+</div>
+
+<footer>원본 CSV 25행(중복 LOT1003 포함) 그대로 집계 · 값 변경 시 KPI·차트가 동시에 갱신됩니다.</footer>
+
+<div id="tooltip"></div>
+
+<script>
+/* ===================== 원본 데이터 (11cha_secom_cleaned.csv 그대로 임베드) ===================== */
+const RAW_DATA = [
+  {id:"LOT1001", datetime:"2026-06-30 08:00", equip:"ETCH-01", temp:254.0, pressure:99.3,  gas:46.9, duration:66, quality:"양품"},
+  {id:"LOT1002", datetime:"2026-06-30 09:00", equip:"ETCH-02", temp:252.2, pressure:105.1, gas:43.3, duration:57, quality:"양품"},
+  {id:"LOT1003", datetime:"2026-06-30 10:00", equip:"CVD-01",  temp:251.9, pressure:90.4,  gas:39.8, duration:57, quality:"양품"},
+  {id:"LOT1004", datetime:"2026-06-30 11:00", equip:"CVD-02",  temp:246.6, pressure:96.364285714, gas:42.9, duration:51, quality:"양품"},
+  {id:"LOT1005", datetime:"2026-06-30 12:00", equip:"PVD-01",  temp:250.5, pressure:92.9,  gas:43.4, duration:60, quality:"양품"},
+  {id:"LOT1007", datetime:"2026-06-30 14:00", equip:"ETCH-02", temp:249.9, pressure:94.7,  gas:47.5, duration:55, quality:"양품"},
+  {id:"LOT1008", datetime:"2026-06-30 15:00", equip:"CVD-01",  temp:272.2, pressure:106.0, gas:44.4, duration:63, quality:"양품"},
+  {id:"LOT1011", datetime:"2026-06-30 18:00", equip:"ETCH-01", temp:244.6, pressure:103.1, gas:48.1, duration:63, quality:"양품"},
+  {id:"LOT1012", datetime:"2026-06-30 19:00", equip:"ETCH-02", temp:248.3, pressure:96.364285714, gas:40.5, duration:64, quality:"불량"},
+  {id:"LOT1013", datetime:"2026-06-30 20:00", equip:"CVD-01",  temp:241.1, pressure:94.0,  gas:47.4, duration:65, quality:"양품"},
+  {id:"LOT1014", datetime:"2026-06-30 21:00", equip:"CVD-02",  temp:241.7, pressure:99.6,  gas:47.9, duration:63, quality:"양품"},
+  {id:"LOT1016", datetime:"2026-06-30 23:00", equip:"ETCH-01", temp:238.6, pressure:105.2, gas:47.7, duration:60, quality:"양품"},
+  {id:"LOT1017", datetime:"2026-07-01 00:00", equip:"ETCH-02", temp:261.8, pressure:97.4,  gas:42.6, duration:57, quality:"양품"},
+  {id:"LOT1018", datetime:"2026-07-01 01:00", equip:"CVD-01",  temp:254.0, pressure:105.8, gas:45.8, duration:61, quality:"양품"},
+  {id:"LOT1019", datetime:"2026-07-01 02:00", equip:"CVD-02",  temp:250.8, pressure:104.8, gas:44.4, duration:58, quality:"양품"},
+  {id:"LOT1020", datetime:"2026-07-01 03:00", equip:"PVD-01",  temp:260.2, pressure:98.5,  gas:37.0, duration:61, quality:"양품"},
+  {id:"LOT1022", datetime:"2026-07-01 05:00", equip:"ETCH-02", temp:242.5, pressure:107.0, gas:44.9, duration:53, quality:"양품"},
+  {id:"LOT1023", datetime:"2026-07-01 06:00", equip:"CVD-01",  temp:250.5, pressure:96.364285714, gas:44.4, duration:61, quality:"불량"},
+  {id:"LOT1024", datetime:"2026-07-01 07:00", equip:"CVD-02",  temp:252.7, pressure:100.0, gas:47.3, duration:55, quality:"양품"},
+  {id:"LOT1025", datetime:"2026-07-01 08:00", equip:"PVD-01",  temp:256.3, pressure:95.5,  gas:49.2, duration:54, quality:"양품"},
+  {id:"LOT1027", datetime:"2026-07-01 10:00", equip:"ETCH-02", temp:250.8, pressure:97.5,  gas:40.3, duration:60, quality:"양품"},
+  {id:"LOT1028", datetime:"2026-07-01 11:00", equip:"CVD-01",  temp:254.3, pressure:95.4,  gas:46.9, duration:59, quality:"불량"},
+  {id:"LOT1029", datetime:"2026-07-01 12:00", equip:"CVD-02",  temp:243.7, pressure:98.4,  gas:47.4, duration:55, quality:"양품"},
+  {id:"LOT1030", datetime:"2026-07-01 13:00", equip:"PVD-01",  temp:260.9, pressure:112.7, gas:44.0, duration:59, quality:"양품"},
+  {id:"LOT1003", datetime:"2026-06-30 10:00", equip:"ETCH-01", temp:251.9, pressure:90.4,  gas:39.8, duration:57, quality:"양품"}
+];
+
+const METRIC_META = {
+  temp:     {label:"챔버온도", unit:"℃"},
+  pressure: {label:"압력", unit:"kPa"},
+  gas:      {label:"가스유량", unit:"sccm"},
+  duration: {label:"공정시간", unit:"분"}
+};
+const EQUIP_LIST = [...new Set(RAW_DATA.map(d=>d.equip))];
+
+/* ===================== 상태 ===================== */
+const state = {
+  equip: new Set(EQUIP_LIST),   // 활성화된 설비명들
+  quality: "ALL",                // ALL | 양품 | 불량
+  histMetric: "temp",
+  lineMetric: "temp"
+};
+
+/* ===================== 공통 유틸 ===================== */
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs={}, parent=null){
+  const e = document.createElementNS(NS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function clearSvg(svg){ while(svg.firstChild) svg.removeChild(svg.firstChild); }
+function fmt(n, digits=1){ return Number(n).toFixed(digits); }
+
+const tooltip = document.getElementById("tooltip");
+function showTooltip(html, evt){
+  tooltip.innerHTML = html;
+  tooltip.style.display = "block";
+  tooltip.style.left = (evt.clientX + 14) + "px";
+  tooltip.style.top = (evt.clientY + 14) + "px";
+}
+function hideTooltip(){ tooltip.style.display = "none"; }
+
+/* ===================== 필터링 ===================== */
+function getFilteredData(){
+  return RAW_DATA.filter(d=>{
+    if(!state.equip.has(d.equip)) return false;
+    if(state.quality !== "ALL" && d.quality !== state.quality) return false;
+    return true;
+  });
+}
+
+/* ===================== KPI 렌더 ===================== */
+function renderKPI(data){
+  const total = data.length;
+  const good = data.filter(d=>d.quality==="양품").length;
+  const bad = data.filter(d=>d.quality==="불량").length;
+  const badRate = total>0 ? (bad/total*100) : 0;
+
+  document.getElementById("kpiTotal").innerHTML = `${total}<small> 건</small>`;
+  document.getElementById("kpiQualityMain").innerHTML = `${good} : ${bad}`;
+  document.getElementById("kpiGood").textContent = `양품 ${good}건`;
+  document.getElementById("kpiBad").textContent = `불량 ${bad}건`;
+  document.getElementById("kpiBadRate").textContent = `불량률 ${fmt(badRate,1)}%`;
+
+  const avg = (key)=> total>0 ? (data.reduce((s,d)=>s+d[key],0)/total) : 0;
+  document.getElementById("avgTemp").textContent = total? `${fmt(avg("temp"),1)} ℃` : "-";
+  document.getElementById("avgPressure").textContent = total? `${fmt(avg("pressure"),1)} kPa` : "-";
+  document.getElementById("avgGas").textContent = total? `${fmt(avg("gas"),1)} sccm` : "-";
+  document.getElementById("avgDuration").textContent = total? `${fmt(avg("duration"),1)} 분` : "-";
+}
+
+/* ===================== 1. 막대차트: 설비명별 건수 ===================== */
+function renderBarChart(data){
+  const svg = document.getElementById("barChart");
+  clearSvg(svg);
+  const W=460, H=300, M={top:20,right:16,bottom:56,left:44};
+  const plotW = W-M.left-M.right, plotH = H-M.top-M.bottom;
+
+  const total = data.length;
+  const counts = EQUIP_LIST.map(eq=>({
+    label:eq,
+    count:data.filter(d=>d.equip===eq).length
+  }));
+  const maxCount = Math.max(1, ...counts.map(c=>c.count));
+
+  if(total===0){
+    el("text",{x:W/2,y:H/2,"text-anchor":"middle",class:"empty-msg"},svg).textContent="표시할 데이터가 없습니다";
+    return;
+  }
+
+  const g = el("g",{transform:`translate(${M.left},${M.top})`},svg);
+  const bandW = plotW/counts.length;
+  const barW = bandW*0.55;
+
+  // y grid + labels
+  const ticks=4;
+  for(let i=0;i<=ticks;i++){
+    const val = Math.round(maxCount*i/ticks);
+    const y = plotH - (val/maxCount)*plotH;
+    el("line",{x1:0,x2:plotW,y1:y,y2:y,class:"grid-line"},g);
+    el("text",{x:-8,y:y+4,"text-anchor":"end",class:"axis-label"},g).textContent=val;
+  }
+  el("line",{x1:0,x2:0,y1:0,y2:plotH,class:"axis-line"},g);
+  el("line",{x1:0,x2:plotW,y1:plotH,y2:plotH,class:"axis-line"},g);
+
+  counts.forEach((c,i)=>{
+    const x = i*bandW + (bandW-barW)/2;
+    const h = (c.count/maxCount)*plotH;
+    const y = plotH-h;
+    const rect = el("rect",{x,y,width:barW,height:h,rx:4,class:"bar"},g);
+    rect.addEventListener("mousemove",(e)=>{
+      const pct = total? (c.count/total*100):0;
+      showTooltip(`<b>${c.label}</b><br>건수: ${c.count}건<br>비율: ${fmt(pct,1)}%`, e);
+    });
+    rect.addEventListener("mouseleave", hideTooltip);
+
+    el("text",{x:i*bandW+bandW/2, y:plotH+18, "text-anchor":"middle", class:"axis-label"},g).textContent=c.label;
+    el("text",{x:i*bandW+bandW/2, y:y-6, "text-anchor":"middle", class:"axis-label"},g).textContent=c.count;
+  });
+
+  el("text",{x:-plotH/2,y:-32,transform:`rotate(-90)`,"text-anchor":"middle",class:"axis-label"},g).textContent="건수 (건)";
+  el("text",{x:plotW/2,y:plotH+40,"text-anchor":"middle",class:"axis-label"},g).textContent="설비명";
+}
+
+/* ===================== 2. 히스토그램: 수치 컬럼 분포 ===================== */
+function renderHistogram(data){
+  const svg = document.getElementById("histChart");
+  clearSvg(svg);
+  const W=460, H=300, M={top:20,right:16,bottom:56,left:44};
+  const plotW=W-M.left-M.right, plotH=H-M.top-M.bottom;
+  const metric = state.histMetric;
+  const meta = METRIC_META[metric];
+
+  if(data.length===0){
+    el("text",{x:W/2,y:H/2,"text-anchor":"middle",class:"empty-msg"},svg).textContent="표시할 데이터가 없습니다";
+    return;
+  }
+
+  const values = data.map(d=>d[metric]);
+  const min = Math.min(...values), max = Math.max(...values);
+  const binCount = 6;
+  const binSize = (max-min)/binCount || 1;
+  const bins = Array.from({length:binCount},(_,i)=>({
+    from: min+i*binSize,
+    to: min+(i+1)*binSize,
+    count:0
+  }));
+  values.forEach(v=>{
+    let idx = Math.floor((v-min)/binSize);
+    if(idx>=binCount) idx=binCount-1;
+    if(idx<0) idx=0;
+    bins[idx].count++;
+  });
+  const maxCount = Math.max(1,...bins.map(b=>b.count));
+  const total = data.length;
+
+  const g = el("g",{transform:`translate(${M.left},${M.top})`},svg);
+  const bandW = plotW/binCount;
+  const barW = bandW*0.82;
+
+  const ticks=4;
+  for(let i=0;i<=ticks;i++){
+    const val = Math.round(maxCount*i/ticks);
+    const y = plotH-(val/maxCount)*plotH;
+    el("line",{x1:0,x2:plotW,y1:y,y2:y,class:"grid-line"},g);
+    el("text",{x:-8,y:y+4,"text-anchor":"end",class:"axis-label"},g).textContent=val;
+  }
+  el("line",{x1:0,x2:0,y1:0,y2:plotH,class:"axis-line"},g);
+  el("line",{x1:0,x2:plotW,y1:plotH,y2:plotH,class:"axis-line"},g);
+
+  bins.forEach((b,i)=>{
+    const x = i*bandW + (bandW-barW)/2;
+    const h = (b.count/maxCount)*plotH;
+    const y = plotH-h;
+    const rect = el("rect",{x,y,width:barW,height:h,rx:3,class:"hist-bar"},g);
+    rect.addEventListener("mousemove",(e)=>{
+      const pct = total? (b.count/total*100):0;
+      showTooltip(`<b>${fmt(b.from,1)} ~ ${fmt(b.to,1)} ${meta.unit}</b><br>건수: ${b.count}건<br>비율: ${fmt(pct,1)}%`, e);
+    });
+    rect.addEventListener("mouseleave", hideTooltip);
+
+    if(i%1===0){
+      el("text",{x:i*bandW+bandW/2, y:plotH+18, "text-anchor":"middle", class:"axis-label"},g).textContent=fmt(b.from,0);
+    }
+  });
+  el("text",{x:plotW, y:plotH+18, "text-anchor":"end", class:"axis-label"},g).textContent=fmt(max,0);
+
+  el("text",{x:-plotH/2,y:-32,transform:`rotate(-90)`,"text-anchor":"middle",class:"axis-label"},g).textContent="건수 (건)";
+  el("text",{x:plotW/2,y:plotH+40,"text-anchor":"middle",class:"axis-label"},g).textContent=`${meta.label} (${meta.unit})`;
+}
+
+/* ===================== 3. 선그래프: 측정일시 기준 추이 ===================== */
+function renderLineChart(data){
+  const svg = document.getElementById("lineChart");
+  clearSvg(svg);
+  const W=960, H=300, M={top:20,right:24,bottom:70,left:56};
+  const plotW=W-M.left-M.right, plotH=H-M.top-M.bottom;
+  const metric = state.lineMetric;
+  const meta = METRIC_META[metric];
+
+  if(data.length===0){
+    el("text",{x:W/2,y:H/2,"text-anchor":"middle",class:"empty-msg"},svg).textContent="표시할 데이터가 없습니다";
+    return;
+  }
+
+  const sorted = [...data].sort((a,b)=> new Date(a.datetime) - new Date(b.datetime));
+  const times = sorted.map(d=> new Date(d.datetime).getTime());
+  const values = sorted.map(d=> d[metric]);
+  const tMin = Math.min(...times), tMax = Math.max(...times);
+  const vMin = Math.min(...values), vMax = Math.max(...values);
+  const vPad = (vMax-vMin)*0.1 || 1;
+  const yMin = vMin-vPad, yMax = vMax+vPad;
+
+  const xScale = t => tMax>tMin ? ((t-tMin)/(tMax-tMin))*plotW : plotW/2;
+  const yScale = v => plotH - ((v-yMin)/(yMax-yMin))*plotH;
+
+  const g = el("g",{transform:`translate(${M.left},${M.top})`},svg);
+
+  const ticks=4;
+  for(let i=0;i<=ticks;i++){
+    const val = yMin + (yMax-yMin)*i/ticks;
+    const y = yScale(val);
+    el("line",{x1:0,x2:plotW,y1:y,y2:y,class:"grid-line"},g);
+    el("text",{x:-8,y:y+4,"text-anchor":"end",class:"axis-label"},g).textContent=fmt(val,1);
+  }
+  el("line",{x1:0,x2:0,y1:0,y2:plotH,class:"axis-line"},g);
+  el("line",{x1:0,x2:plotW,y1:plotH,y2:plotH,class:"axis-line"},g);
+
+  // 라인
+  const pathD = sorted.map((d,i)=>{
+    const x = xScale(new Date(d.datetime).getTime());
+    const y = yScale(d[metric]);
+    return `${i===0?"M":"L"}${x},${y}`;
+  }).join(" ");
+  el("path",{d:pathD, fill:"none", stroke:"var(--accent)", "stroke-width":2},g);
+
+  // 포인트 (양품/불량 색상 구분)
+  sorted.forEach(d=>{
+    const x = xScale(new Date(d.datetime).getTime());
+    const y = yScale(d[metric]);
+    const color = d.quality==="양품" ? "var(--good)" : "var(--bad)";
+    const c = el("circle",{cx:x,cy:y,r:4.5,fill:color,stroke:"#0f172a","stroke-width":1.2},g);
+    c.style.cursor="pointer";
+    c.addEventListener("mousemove",(e)=>{
+      showTooltip(`<b>${d.id}</b> (${d.equip})<br>일시: ${d.datetime}<br>${meta.label}: ${fmt(d[metric],1)} ${meta.unit}<br>판정: ${d.quality}`, e);
+    });
+    c.addEventListener("mouseleave", hideTooltip);
+  });
+
+  // x축 라벨 (최대 8개만 표시)
+  const labelCount = Math.min(8, sorted.length);
+  const step = Math.max(1, Math.floor(sorted.length/labelCount));
+  sorted.forEach((d,i)=>{
+    if(i%step!==0 && i!==sorted.length-1) return;
+    const x = xScale(new Date(d.datetime).getTime());
+    const dt = new Date(d.datetime);
+    const label = `${String(dt.getMonth()+1).padStart(2,"0")}/${String(dt.getDate()).padStart(2,"0")} ${String(dt.getHours()).padStart(2,"0")}시`;
+    const t = el("text",{x, y:plotH+18, "text-anchor":"middle", class:"axis-label", transform:`rotate(30, ${x}, ${plotH+18})`},g);
+    t.textContent = label;
+  });
+
+  el("text",{x:-plotH/2,y:-40,transform:`rotate(-90)`,"text-anchor":"middle",class:"axis-label"},g).textContent=`${meta.label} (${meta.unit})`;
+  el("text",{x:plotW/2,y:plotH+58,"text-anchor":"middle",class:"axis-label"},g).textContent="측정일시";
+
+  // 범례
+  const legendG = el("g",{transform:`translate(${plotW-140},-8)`},g);
+  el("circle",{cx:0,cy:0,r:4.5,fill:"var(--good)"},legendG);
+  el("text",{x:10,y:4,class:"legend"},legendG).textContent="양품";
+  el("circle",{cx:60,cy:0,r:4.5,fill:"var(--bad)"},legendG);
+  el("text",{x:70,y:4,class:"legend"},legendG).textContent="불량";
+}
+
+/* ===================== 전체 렌더 ===================== */
+function renderAll(){
+  const data = getFilteredData();
+  renderKPI(data);
+  renderBarChart(data);
+  renderHistogram(data);
+  renderLineChart(data);
+}
+
+/* ===================== 필터 UI 초기화 ===================== */
+function buildEquipFilter(){
+  const row = document.getElementById("equipFilterRow");
+  row.innerHTML="";
+  EQUIP_LIST.forEach(eq=>{
+    const chip = document.createElement("div");
+    chip.className = "chip active";
+    chip.textContent = eq;
+    chip.dataset.equip = eq;
+    chip.addEventListener("click", ()=>{
+      if(state.equip.has(eq)){
+        state.equip.delete(eq);
+        chip.classList.remove("active");
+      } else {
+        state.equip.add(eq);
+        chip.classList.add("active");
+      }
+      renderAll();
+    });
+    row.appendChild(chip);
+  });
+}
+
+function buildQualityFilter(){
+  const chips = document.querySelectorAll("#qualityFilterRow .chip");
+  chips.forEach(chip=>{
+    chip.addEventListener("click", ()=>{
+      chips.forEach(c=>c.classList.remove("active","bad-active"));
+      state.quality = chip.dataset.quality;
+      if(state.quality==="불량") chip.classList.add("bad-active");
+      else chip.classList.add("active");
+      renderAll();
+    });
+  });
+}
+
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  state.equip = new Set(EQUIP_LIST);
+  state.quality = "ALL";
+  state.histMetric = "temp";
+  state.lineMetric = "temp";
+  document.getElementById("histMetricSelect").value = "temp";
+  document.getElementById("lineMetricSelect").value = "temp";
+  document.querySelectorAll("#equipFilterRow .chip").forEach(c=>c.classList.add("active"));
+  document.querySelectorAll("#qualityFilterRow .chip").forEach(c=>{
+    c.classList.remove("active","bad-active");
+    if(c.dataset.quality==="ALL") c.classList.add("active");
+  });
+  renderAll();
+});
+
+document.getElementById("histMetricSelect").addEventListener("change",(e)=>{
+  state.histMetric = e.target.value;
+  renderAll();
+});
+document.getElementById("lineMetricSelect").addEventListener("change",(e)=>{
+  state.lineMetric = e.target.value;
+  renderAll();
+});
+
+/* ===================== 초기 실행 ===================== */
+buildEquipFilter();
+buildQualityFilter();
+renderAll();
+</script>
+</body>
+</html>
