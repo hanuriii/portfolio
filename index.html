@@ -186,33 +186,85 @@ section.tight{ padding-top:0; }
 .band--paper .btn{ border-color:var(--line-paper); }
 .band--paper .btn--ghost:hover{ border-color:var(--rose); color:var(--rose); }
 
-/* 히어로 그라데이션 구체 (포트폴리오 표지 모티프) */
-.orbs{ position:relative; height:340px; }
-.orb{ position:absolute; border-radius:50%; }
-.orb--rose{
-  width:210px; height:210px; left:0; top:56px;
-  background:radial-gradient(circle at 30% 24%, #f8e4e0, #e0a19e 46%, #cb6667 100%);
-  animation:float1 11s ease-in-out infinite;
+/* ── 이름: 한 글자씩 등장 ─────────────────────────────── */
+.hero h1 .ch{ display:inline-block; opacity:0; transform:translateY(.4em); }
+body.ready .hero h1 .ch{ animation:chIn .75s var(--ease) forwards; }
+body.ready .hero h1 .ch.d{ animation:dotIn .85s cubic-bezier(.34,1.5,.64,1) forwards; }
+@keyframes chIn { to{ opacity:1; transform:none; } }
+@keyframes dotIn{ 0%{ opacity:0; transform:translateY(.4em) scale(.2); } 100%{ opacity:1; transform:none; } }
+
+/* ── 히어로 요소 순차 등장 ────────────────────────────── */
+.h-rv{ opacity:0; transform:translateY(16px); transition:opacity .85s var(--ease), transform .85s var(--ease); }
+body.ready .h-rv{ opacity:1; transform:none; }
+.hero .sec-label::before{ width:0; transition:width .8s var(--ease) .15s; }
+body.ready .hero .sec-label::before{ width:22px; }
+
+/* ── 구체 클러스터 (표지 모티프) ──────────────────────── */
+.orbs{
+  --lx:0%; --ly:0%;                  /* 커서를 따라가는 광원 위치 */
+  position:relative; height:340px;
 }
-.orb--slate{
-  width:172px; height:172px; right:0; top:96px;
-  background:radial-gradient(circle at 32% 26%, #a4aabd, #767c93 48%, #565b71 100%);
-  animation:float2 13s ease-in-out infinite;
+/* 구체 뒤 은은한 빛 번짐 — 검은 배경에 붕 뜨지 않게 */
+.orbs::before{
+  content:""; position:absolute; left:4%; top:8%; width:92%; height:84%;
+  background:
+    radial-gradient(circle at 34% 44%, rgba(224,161,158,.30), transparent 62%),
+    radial-gradient(circle at 76% 58%, rgba(118,124,147,.26), transparent 62%);
+  filter:blur(40px); pointer-events:none;
 }
-.orb--ring{
-  width:190px; height:190px; left:128px; top:74px;
-  border:1px solid rgba(242,239,236,.28); background:none;
-  animation:float2 15s ease-in-out infinite;
+/* 바깥 .orb = 커서 패럴랙스 담당 / 안쪽 i = 실제 원 + 떠다니는 움직임 */
+.orb{ position:absolute; transition:transform .55s cubic-bezier(.2,.7,.3,1); will-change:transform; }
+.orb > i{ display:block; width:100%; height:100%; border-radius:50%; opacity:0; transform:scale(.12); }
+
+.orb--rose{ width:210px; height:210px; left:0;    top:56px;  }
+.orb--ring{ width:190px; height:190px; left:128px; top:74px; }
+.orb--slate{ width:172px; height:172px; right:0;  top:96px;  }
+.orb--mini{ width:30px;  height:30px;  left:44px; top:286px; }
+
+.orb--rose > i{
+  background:radial-gradient(circle at calc(30% + var(--lx)) calc(24% + var(--ly)), #f8e4e0, #e0a19e 46%, #cb6667 100%);
+  box-shadow:0 30px 66px -30px rgba(203,102,103,.85);
 }
+.orb--slate > i{
+  background:radial-gradient(circle at calc(32% + var(--lx)) calc(26% + var(--ly)), #a4aabd, #767c93 48%, #565b71 100%);
+  box-shadow:0 30px 66px -30px rgba(86,91,113,.85);
+}
+.orb--ring > i{ border:1px solid rgba(242,239,236,.28); }
+.orb--mini > i{
+  background:radial-gradient(circle at calc(32% + var(--lx)) calc(26% + var(--ly)), #f8e4e0, var(--rose) 70%);
+  box-shadow:0 8px 20px -6px rgba(201,96,95,.8);
+}
+
+/* 등장(점 → 구체) 후 느리게 떠다니기 */
+body.ready .orb--rose  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .30s forwards, float1 11s ease-in-out 1.4s infinite; }
+body.ready .orb--ring  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .44s forwards, float2 15s ease-in-out 1.5s infinite; }
+body.ready .orb--slate > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .38s forwards, float2 13s ease-in-out 1.5s infinite; }
+body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s forwards, float1 9s  ease-in-out 1.6s infinite; }
+@keyframes orbIn{ to{ opacity:1; transform:none; } }
 @keyframes float1{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
 @keyframes float2{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(13px)} }
 
-.hero-meta{
-  display:flex; flex-wrap:wrap; gap:10px 34px; margin-top:76px;
-  padding-top:24px; border-top:1px solid var(--line-ink);
-  font-size:13.5px; color:var(--on-ink-dim);
+/* ── 히어로 하단 (문구 + 스크롤 안내) ─────────────────── */
+.hero-foot{
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+  margin-top:76px; padding-top:24px; border-top:1px solid var(--line-ink);
 }
+.hero-meta{ display:flex; flex-wrap:wrap; gap:10px 34px; font-size:13.5px; color:var(--on-ink-dim); }
 .hero-meta b{ color:var(--on-ink); font-weight:500; }
+
+.scroll-cue{
+  display:inline-flex; align-items:center; gap:13px; flex:0 0 auto;
+  font-family:var(--en); font-size:11px; font-weight:500;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--on-ink-dim);
+  transition:color .25s;
+}
+.scroll-cue:hover{ color:var(--on-ink); }
+.scroll-line{ position:relative; display:block; width:1px; height:34px; background:var(--line-ink); overflow:hidden; }
+.scroll-line i{
+  position:absolute; left:0; top:0; width:1px; height:13px;
+  background:var(--rose); animation:scrollDot 2.1s ease-in-out infinite;
+}
+@keyframes scrollDot{ 0%{ transform:translateY(-15px) } 100%{ transform:translateY(34px) } }
 
 @media (max-width:860px){
   .hero{ padding-top:calc(var(--nav-h) + 56px); padding-bottom:72px; }
@@ -221,23 +273,61 @@ section.tight{ padding-top:0; }
   .orb--rose{ width:132px; height:132px; top:34px; }
   .orb--slate{ width:108px; height:108px; top:64px; right:12%; }
   .orb--ring{ width:120px; height:120px; left:82px; top:44px; }
+  .orb--mini{ width:20px; height:20px; left:52px; top:168px; }
   .hero-cta .btn{ flex:1 1 auto; justify-content:center; }
-  .hero-meta{ margin-top:48px; gap:8px 22px; }
+  .hero-foot{ margin-top:48px; align-items:flex-end; }
+  .hero-meta{ gap:8px 22px; }
+  .scroll-line{ height:26px; }
 }
 
 /* ══════════════════ ABOUT ══════════════════ */
-.about-grid{ display:grid; grid-template-columns:190px minmax(0,1fr); gap:56px; align-items:start; }
+.about-grid{ display:grid; grid-template-columns:240px minmax(0,1fr); gap:56px; align-items:start; }
+
+/* ── 프로필 프레임 ───────────────────────────────────────────
+   표지의 "겹친 원 + 그라데이션 구체" 모티프를 그대로 가져왔습니다.
+   사진 뒤로 얇은 원이 어긋나게 겹치고, 오른쪽 아래에 로즈 구체가 걸칩니다.
+   ─────────────────────────────────────────────────────────── */
+.portrait-frame{ position:relative; flex:0 0 auto; width:180px; }
+
 .portrait{
-  width:200px; height:200px; border-radius:50%; object-fit:cover;
-  outline: 1px solid var(--line-paper);
-  outline-offset: 2px;
-  box-shadow:
-    /* 첫 번째 그림자: 아웃라인 바로 뒤에 약간 더 두꺼운 옅은 층 */
-    0 0 0 5px rgba(255, 255, 255, 0.8), /* 흰색 여백 효과 */
-    /* 두 번째 그림자: 그 뒤로 은은하게 번지는 포인트 컬러 오라 */
-    0 0 15px 1px rgba(100, 150, 250, 0.2);
+  position:relative; z-index:2;
+  width:100%; aspect-ratio:1; height:auto; border-radius:50%; object-fit:cover;
+  /* 배경색과 같은 링을 둘러 뒤 도형에서 사진이 오려낸 것처럼 보이게 합니다 */
+  box-shadow:0 0 0 6px var(--paper), 0 12px 30px -14px rgba(90,60,60,.5);
 }
-.portrait-cap{ margin-top:36px; text-align: center; font-size:23px; line-height:1.7; }
+/* 얇은 아웃라인 원 — 왼쪽 위로 어긋나게 */
+.pf-ring{
+  position:absolute; z-index:1; left:-22px; top:-16px;
+  width:100%; aspect-ratio:1; border-radius:50%;
+  border:1px solid rgba(26,26,26,.3);
+}
+/* 그라데이션 구체 — 오른쪽 아래에서 사진 뒤로 파고듦 */
+.pf-orb{
+  position:absolute; z-index:1; right:-26px; bottom:-2px;
+  width:74px; aspect-ratio:1; border-radius:50%;
+  background:radial-gradient(circle at 32% 26%, #f8e4e0, var(--rose-soft) 46%, var(--rose) 100%);
+  box-shadow:0 10px 26px -8px rgba(201,96,95,.55);
+  animation:pfFloat 9s ease-in-out infinite;
+}
+/* 작은 슬레이트 구체 — 왼쪽 아래 균형추 */
+.pf-dot{
+  position:absolute; z-index:3; left:-2px; bottom:22px;
+  width:20px; aspect-ratio:1; border-radius:50%;
+  background:radial-gradient(circle at 32% 26%, var(--slate-soft), var(--slate));
+  box-shadow:0 4px 10px -3px rgba(103,108,131,.7);
+  animation:pfFloat 11s ease-in-out infinite reverse;
+}
+@keyframes pfFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+
+/* 이름 — 한 줄에 나란히, 한글은 크고 진하게 / 영문은 작고 흐리게 */
+.portrait-cap{
+  display:flex; align-items:baseline; flex-wrap:wrap; gap:2px 8px;
+  margin-top:26px; font-size:12.5px; line-height:1.4; letter-spacing:.12em;
+}
+.portrait-cap b{
+  font-size:20px; font-weight:600; color:var(--on-paper);
+  letter-spacing:-.02em;
+}
 .about-h{
   font-size:clamp(22px,3.2vw,32px); font-weight:600; line-height:1.45;
   letter-spacing:-.03em; margin-bottom:24px;
@@ -260,8 +350,16 @@ section.tight{ padding-top:0; }
 .edu span{ font-size:14.5px; color:var(--on-paper-dim); }
 
 @media (max-width:860px){
-  .about-grid{ grid-template-columns:1fr; gap:32px; }
-  .portrait{ width:104px; height:104px; }
+  .about-grid{ grid-template-columns:1fr; gap:30px; }
+  /* 모바일에서는 사진 옆에 이름이 오도록 가로로 배치 */
+  .portrait-wrap{ display:flex; align-items:center; gap:30px; }
+  .portrait-frame{ width:112px; margin-left:14px; }   /* 왼쪽 원이 잘리지 않도록 여백 */
+  .portrait{ box-shadow:0 0 0 5px var(--paper), 0 10px 24px -12px rgba(90,60,60,.5); }
+  .pf-ring{ left:-14px; top:-11px; }
+  .pf-orb{ width:46px; right:-16px; bottom:-1px; }
+  .pf-dot{ width:13px; left:-1px; bottom:14px; }
+  .portrait-cap{ margin-top:0; }
+  .portrait-cap b{ font-size:22px; }
   .strengths{ grid-template-columns:1fr; }
 }
 
@@ -460,7 +558,10 @@ footer{ border-top:1px solid var(--line-ink); }
 @media (prefers-reduced-motion:reduce){
   html{ scroll-behavior:auto; }
   .rv{ opacity:1; transform:none; transition:none; }
-  .orb,.ring--dash,.ring--dash-2{ animation:none !important; }
+  .orb,.ring--dash,.ring--dash-2,.pf-orb,.pf-dot,.scroll-line i{ animation:none !important; }
+  /* 첫 화면 요소는 애니메이션 없이 바로 보이도록 */
+  .h-rv,.hero h1 .ch,.orb > i{ opacity:1 !important; transform:none !important; animation:none !important; }
+  .hero .sec-label::before{ width:22px !important; }
   *{ transition-duration:.01ms !important; }
 }
 </style>
@@ -492,21 +593,29 @@ footer{ border-top:1px solid var(--line-ink); }
     <div class="wrap">
       <div class="hero-grid">
         <div>
-          <p class="sec-label" id="hero-role"></p>
+          <p class="sec-label h-rv" id="hero-role"></p>
           <h1 id="hero-name"></h1>
-          <p class="hero-tag" id="hero-tag"></p>
-          <div class="hero-cta">
+          <p class="hero-tag h-rv" id="hero-tag"></p>
+          <div class="hero-cta h-rv">
             <a href="#works" class="btn btn--fill">프로젝트 보기 <span class="ar">→</span></a>
             <a href="#contact" class="btn btn--ghost">연락하기</a>
           </div>
         </div>
+        <!-- 구체는 커서를 따라 움직입니다. data-depth = 따라오는 정도 -->
         <div class="orbs" aria-hidden="true">
-          <div class="orb orb--rose"></div>
-          <div class="orb orb--ring"></div>
-          <div class="orb orb--slate"></div>
+          <div class="orb orb--rose"  data-depth="0.5"><i></i></div>
+          <div class="orb orb--ring"  data-depth="1.5"><i></i></div>
+          <div class="orb orb--slate" data-depth="0.9"><i></i></div>
+          <div class="orb orb--mini"  data-depth="1.6"><i></i></div>
         </div>
       </div>
-      <ul class="hero-meta" id="hero-meta"></ul>
+      <div class="hero-foot h-rv">
+        <ul class="hero-meta" id="hero-meta"></ul>
+        <a href="#works" class="scroll-cue" aria-label="아래로 스크롤">
+          Scroll
+          <span class="scroll-line" aria-hidden="true"><i></i></span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -517,8 +626,13 @@ footer{ border-top:1px solid var(--line-ink); }
         <h2 class="sec-title">about<span class="d">.</span>me</h2>
       </div>
       <div class="about-grid rv">
-        <div>
-          <img class="portrait" src="assets/profile_new.png" alt="김하늘 프로필 사진" width="389" height="389">
+        <div class="portrait-wrap">
+          <div class="portrait-frame">
+            <span class="pf-ring" aria-hidden="true"></span>
+            <span class="pf-orb" aria-hidden="true"></span>
+            <span class="pf-dot" aria-hidden="true"></span>
+            <img class="portrait" src="assets/profile_new.png" alt="김하늘 프로필 사진" width="389" height="389">
+          </div>
           <p class="portrait-cap dim" id="about-cap"></p>
         </div>
         <div>
@@ -642,7 +756,8 @@ const DATA = {
 
   /* ─── About ─────────────────────────────────────────── */
   about: {
-    caption: '<b>김하늘</b><br>KIM HANUL',
+    // <b>굵은 이름</b> 뒤에 <span>작은 글씨</span> — 한 줄에 나란히 놓입니다
+    caption: '<b>김하늘</b><span>KIM HANUL</span>',
     heading: '설계와 구현 사이를 오가는 디자이너, <mark>김하늘</mark>입니다.',
     paragraphs: [
       'HCI를 전공하며 사용자 경험을 연구했고 프로젝트에서는 기획부터 UX 설계, UI 디자인, 프로토타입 제작, 개발 협업까지 <b>하나의 서비스가 완성되는 전 과정</b>을 경험했습니다. 단순히 보기 좋은 화면을 만드는 것이 아니라 사용자가 왜 불편한지 고민하고 데이터를 기반으로 더 나은 해결책을 제안하는 것이 저의 강점입니다.',
@@ -856,7 +971,12 @@ const el = (id) => document.getElementById(id);
 
 /* ── HERO ── */
 el('hero-role').textContent = DATA.role;
-el('hero-name').innerHTML   = `${DATA.nameEn[0]}<span class="d">.</span>${DATA.nameEn[1]}`;
+/* 이름을 한 글자씩 쪼개서 순서대로 등장시킵니다 (가운데 점은 마지막에 톡 튀어나옴) */
+const splitChars = (s) => [...s].map(c => `<span class="ch">${c}</span>`).join('');
+el('hero-name').innerHTML = splitChars(DATA.nameEn[0]) + '<span class="ch d">.</span>' + splitChars(DATA.nameEn[1]);
+[...el('hero-name').querySelectorAll('.ch')].forEach((c, i) => {
+  c.style.animationDelay = `${200 + i * 45}ms`;
+});
 el('hero-tag').innerHTML    = DATA.tagline;
 el('hero-meta').innerHTML   = DATA.heroMeta.map(m => `<li>${m}</li>`).join('');
 
@@ -1003,6 +1123,47 @@ document.querySelectorAll('.rv').forEach((n, i) => {
   n.style.transitionDelay = `${(i % 3) * 70}ms`;
   io.observe(n);
 });
+
+/* ── 5) 첫 화면 진입 시퀀스 ──────────────────────────────
+   body에 ready가 붙으면 CSS 애니메이션이 순서대로 시작됩니다 */
+document.querySelectorAll('.h-rv').forEach((n, i) => {
+  n.style.transitionDelay = `${120 + i * 130}ms`;
+});
+requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add('ready')));
+
+/* ── 6) 커서를 따라 움직이는 구체 ────────────────────────
+   구체마다 따라오는 정도(data-depth)가 달라 깊이감이 생깁니다.
+   광원(--lx/--ly)도 커서 쪽으로 옮겨져 진짜 구체처럼 보입니다.
+   터치 기기와 모션 최소화 설정에서는 동작하지 않습니다. */
+const hero  = el('home');
+const orbs  = document.querySelector('.orbs');
+const canHover = matchMedia('(hover:hover)').matches
+              && !matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+if (hero && orbs && canHover) {
+  const items = [...orbs.querySelectorAll('.orb')];
+  let px = 0, py = 0, ticking = false;
+
+  const apply = () => {
+    ticking = false;
+    orbs.style.setProperty('--lx', `${px * 14}%`);
+    orbs.style.setProperty('--ly', `${py * 14}%`);
+    items.forEach(o => {
+      const d = parseFloat(o.dataset.depth) || 1;
+      o.style.transform = `translate3d(${px * 24 * d}px, ${py * 18 * d}px, 0)`;
+    });
+  };
+  const queue = () => { if (!ticking) { ticking = true; requestAnimationFrame(apply); } };
+
+  hero.addEventListener('pointermove', e => {
+    const r = hero.getBoundingClientRect();
+    px = (e.clientX - r.left) / r.width  - .5;   // -0.5 ~ 0.5
+    py = (e.clientY - r.top)  / r.height - .5;
+    queue();
+  }, { passive: true });
+
+  hero.addEventListener('pointerleave', () => { px = py = 0; queue(); });
+}
 </script>
 </body>
 </html>
