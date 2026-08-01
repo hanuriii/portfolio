@@ -32,6 +32,7 @@
   --ink-2:      #212121;   /* 다크 카드 배경 */
   --ink-3:      #2b2b2b;   /* 다크 카드 hover */
   --on-ink:     #f2efec;   /* 다크 위 글자 */
+  --on-ink-soft:#e3dfda;   /* 다크 위 글자 — 흰색이지만 제목보다 한 톤 낮게 */
   --on-ink-dim: #8f8a86;   /* 다크 위 보조 글자 */
   --line-ink:   rgba(242,239,236,.13);
 
@@ -417,7 +418,7 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 .skill-group:first-child{ border-top:0; padding-top:0; }
 .skill-group h3{ font-family:var(--en); font-size:13px; font-weight:600; letter-spacing:.1em;
   text-transform:uppercase; color:var(--rose); margin-bottom:12px; }
-.skill-group p{ font-size:15.5px; line-height:1.8; color:var(--on-ink-dim); }
+.skill-group p{ font-size:15.5px; line-height:1.8; color:var(--on-ink-soft); }
 
 @media (max-width:960px){
   .skills-grid{ grid-template-columns:1fr; gap:44px; }
