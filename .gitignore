@@ -1,8 +1,16 @@
 # macOS
 .DS_Store
 
+# 작업용 파일 — 수정은 여기서 하고, 확정되면 index.html로 옮깁니다.
+# GitHub에 올리면 hanuriii.github.io/portfolio/editing.html 로 미완성본이
+# 공개되므로 제외합니다. 버전 기록을 남기고 싶으면 이 줄을 지우세요.
+editing.html
+
 # 예전 버전 파일 (사이트에서 쓰지 않음)
 kimhaneul_portfolio.html
+
+# 리사이즈 전 고화질 원본 백업 (사이트에서 쓰지 않음, 로컬 보관용)
+assets/works/_original/
 
 # 용량이 큰 원본 PDF (21MB) — 사이트에서 참조하지 않습니다.
 # 사이트에 PDF 다운로드 링크를 넣고 싶으면 이 줄을 지우세요.
