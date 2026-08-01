@@ -94,6 +94,16 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 .band--paper .dim{ color:var(--on-paper-dim); }
 .dim{ color:var(--on-ink-dim); }
 
+/* ── 모바일 줄바꿈 제어 ─────────────────────────────────────
+   .br-m : PC에서는 무시되고 모바일에서만 줄바꿈이 들어갑니다.
+           글 안에 <span class="br-m"></span> 를 넣어 쓰세요.
+   ─────────────────────────────────────────────────────────── */
+.br-m{ display:none; }
+@media (max-width:860px){
+  .br-m{ display:inline; }
+  .br-m::before{ content:"\A"; white-space:pre; }
+}
+
 section{ padding-block:112px; scroll-margin-top:var(--nav-h); }
 section.tight{ padding-top:0; }
 
@@ -345,10 +355,19 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 .strength h3{ margin:10px 0 8px; font-size:16.5px; font-weight:600; letter-spacing:-.02em; }
 .strength p{ font-size:14px; line-height:1.72; color:var(--on-paper-dim); }
 
-.edu{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 24px;
-  margin-top:24px; padding:22px 24px; border:1px solid var(--line-paper); border-radius:var(--r); }
+/* 학력 — PC: 2줄 × 2칸
+   1줄: 학교명(왼쪽) + 기간(오른쪽)  /  2줄: 학과(왼쪽) + GPA(오른쪽) */
+.edu{
+  display:grid; grid-template-columns:1fr auto; gap:9px 28px; align-items:baseline;
+  margin-top:24px; padding:22px 24px; border:1px solid var(--line-paper); border-radius:var(--r);
+}
+.edu-l, .edu-r{ display:contents; }      /* 감싼 div를 투명하게 만들어 4조각을 직접 배치 */
 .edu strong{ font-weight:600; }
 .edu span{ font-size:14.5px; color:var(--on-paper-dim); }
+.edu-school{ grid-area:1 / 1; }
+.edu-period{ grid-area:1 / 2; text-align:right; white-space:nowrap; }
+.edu-major { grid-area:2 / 1; }
+.edu-gpa   { grid-area:2 / 2; text-align:right; white-space:nowrap; }
 
 @media (max-width:860px){
   .about-grid{ grid-template-columns:1fr; gap:30px; }
@@ -362,6 +381,12 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   .portrait-cap{ margin-top:0; }
   .portrait-cap b{ font-size:22px; }
   .strengths{ grid-template-columns:1fr; }
+
+  /* 학력 — 모바일에서는 3줄로 (폭이 좁아 학과와 GPA를 나란히 두면 잘립니다)
+     1줄: 학교명(왼쪽) + 기간(오른쪽)  /  2줄: 학과  /  3줄: GPA */
+  .edu{ gap:7px 14px; }
+  .edu-major{ grid-area:2 / 1 / auto / -1; }
+  .edu-gpa  { grid-area:3 / 1 / auto / -1; text-align:left; }
 }
 
 /* ══════════════════ EXPERIENCE ══════════════════ */
@@ -482,6 +507,8 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   .work--flip .work-media{ order:0; }   /* 모바일: 항상 이미지 먼저 */
   .work-media{ padding:20px; }
   .work-facts{ gap:6px; flex-direction:column; }
+  /* 폭이 좁아 강제 줄바꿈이 오히려 어색해지므로 모바일에서는 무시하고 자연스럽게 흘립니다 */
+  .work-sum br{ display:none; }
 }
 
 /* ══════════════════ AWARDS ══════════════════ */
@@ -759,7 +786,8 @@ const DATA = {
   about: {
     // <b>굵은 이름</b> 뒤에 <span>작은 글씨</span> — 한 줄에 나란히 놓입니다
     caption: '<b>김하늘</b><span>KIM HANUL</span>',
-    heading: '설계와 구현 사이를 오가는 디자이너, <mark>김하늘</mark>입니다.',
+    // <span class="br-m"></span> = 모바일에서만 줄바꿈 (PC에서는 그냥 이어집니다)
+    heading: '설계와 구현 사이를 오가는 디자이너, <span class="br-m"></span><mark>김하늘</mark>입니다.',
     paragraphs: [
       'HCI를 전공하며 사용자 경험을 연구했고 프로젝트에서는 기획부터 UX 설계, UI 디자인, 프로토타입 제작, 개발 협업까지 <b>하나의 서비스가 완성되는 전 과정</b>을 경험했습니다. 단순히 보기 좋은 화면을 만드는 것이 아니라 사용자가 왜 불편한지 고민하고 데이터를 기반으로 더 나은 해결책을 제안하는 것이 저의 강점입니다.',
       'VR/AR, AI SaaS, NFT 커뮤니티, 모바일 서비스 등 서로 성격이 다른 프로젝트를 거치며 <b>사용자와 비즈니스, 기술 사이의 균형</b>을 찾는 감각을 키워왔습니다. 특히 PM·개발자와 긴밀하게 협업하며 구현 가능성을 고려한 디자인을 제안했고 디자인 시스템 구축과 서비스 개선 경험을 통해 프로젝트의 완성도를 높였습니다.',
@@ -994,8 +1022,8 @@ el('strengths').innerHTML  = DATA.about.strengths.map((s, i) => `
 
 const edu = DATA.about.education;
 el('edu').innerHTML = `
-  <div><strong>${edu.school}</strong> <span>· ${edu.major}</span></div>
-  <div><span>${edu.period} · ${edu.gpa}</span></div>`;
+  <div class="edu-l"><strong class="edu-school">${edu.school}</strong><span class="edu-major">${edu.major}</span></div>
+  <div class="edu-r"><span class="edu-period">${edu.period}</span><span class="edu-gpa">${edu.gpa}</span></div>`;
 
 /* ── EXPERIENCE ── */
 el('exp-grid').innerHTML = DATA.experience.map(x => `
@@ -1069,7 +1097,7 @@ el('contact-mail').textContent = DATA.contact.email;
 el('contact-mail').href        = `mailto:${DATA.contact.email}`;
 el('contact-links').innerHTML  = DATA.contact.links.map(l =>
   `<a href="${l.url}" target="_blank" rel="noopener noreferrer">${l.label} <span aria-hidden="true">↗</span></a>`).join('');
-el('foot-left').textContent = `© ${new Date().getFullYear()} 김하늘 (Kim Hanul). All rights reserved.`;
+el('foot-left').textContent = `© ${new Date().getFullYear()} kim hanul. All rights reserved.`;
 
 /* ══════════════ 인터랙션 ══════════════ */
 
