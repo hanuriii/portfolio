@@ -7,7 +7,7 @@
 <title>김하늘 · kim.hanul — UX/UI Product Designer</title>
 <meta name="description" content="사용자의 행동 너머의 이유를 읽고 정교한 디테일로 경험을 구축하는 UX/UI 프로덕트 디자이너 김하늘의 포트폴리오입니다.">
 <meta name="author" content="김하늘 (Kim Hanul)">
-<meta name="theme-color" content="#1a1a1a">
+<meta name="theme-color" content="#121212">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="김하늘 · kim.hanul — UX/UI Product Designer">
@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap">
 
 <style>
 /* ══════════════════════════════════════════════════════════════
@@ -28,9 +28,9 @@
    ══════════════════════════════════════════════════════════════ */
 :root{
   /* 어두운 화면 */
-  --ink:        #1a1a1a;   /* 기본 다크 배경 */
-  --ink-2:      #212121;   /* 다크 카드 배경 */
-  --ink-3:      #2b2b2b;   /* 다크 카드 hover */
+  --ink:        #121212;   /* 기본 다크 배경 */
+  --ink-2:      #1b1b1b;   /* 다크 카드 배경 */
+  --ink-3:      #252525;   /* 다크 카드 hover */
   --on-ink:     #f2efec;   /* 다크 위 글자 */
   --on-ink-soft:#e3dfda;   /* 다크 위 글자 — 흰색이지만 제목보다 한 톤 낮게 */
   --on-ink-dim: #8f8a86;   /* 다크 위 보조 글자 */
@@ -77,6 +77,62 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 
 :focus-visible{ outline:2px solid var(--rose); outline-offset:3px; border-radius:4px; }
 
+/* ══════════════════ 커스텀 커서 ══════════════════
+   반투명 원이 커서를 대신하고, 그 뒤로 은은한 빛무리가 따라옵니다.
+   position:fixed 라서 어느 섹션으로 스크롤해도 계속 보입니다.
+   마우스가 있는 기기에서만 켜집니다.
+   ══════════════════════════════════════════════ */
+.cur{
+  position:fixed; left:0; top:0; z-index:300; pointer-events:none;
+  opacity:0; transition:opacity .3s; will-change:transform;
+}
+/* 링·점·광선 모두 커서를 중심으로 겹쳐 놓고 scale 로만 변형합니다
+   (크기를 직접 바꾸면 중심이 흔들려서 커서와 어긋나 보입니다) */
+.cur > *{
+  position:absolute; left:0; top:0; border-radius:50%;
+  transform:translate(-50%,-50%) scale(1);
+  transition:transform .3s var(--ease), opacity .3s, border-color .3s;
+}
+/* ① 기본 — 속을 아주 옅게 채운 얇은 링 */
+.cur-ring { width:26px; height:26px; border:1.3px solid rgba(242,239,236,.72);
+            background:rgba(242,239,236,.07); backdrop-filter:blur(1px);
+            transition:transform .3s var(--ease), opacity .3s, border-color .3s, background .3s; }
+.cur-ring2{ width:46px; height:46px; border:1px solid rgba(224,161,158,.55);
+            opacity:0; transform:translate(-50%,-50%) scale(.6); }
+
+body.cur-on .cur{ opacity:1; }
+
+/* ② 호버 — 링이 커지고 바깥에 두 번째 링이 겹칩니다 (동심원) */
+body.cur-tap .cur-ring { transform:translate(-50%,-50%) scale(1.55); border-color:rgba(224,161,158,.9); }
+body.cur-tap .cur-ring2{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+/* ③ 누를 때 — 링이 오므라들고 사방으로 빛살이 퍼집니다 */
+body.cur-down .cur-ring { transform:translate(-50%,-50%) scale(.6); transition-duration:.12s; }
+body.cur-down .cur-ring2{ opacity:.35; transform:translate(-50%,-50%) scale(.8); transition-duration:.12s; }
+.cur-rays{
+  width:58px; height:58px; border-radius:0; opacity:0;
+  background:repeating-conic-gradient(from 0deg,
+    rgba(224,161,158,.95) 0deg 2.4deg, transparent 2.4deg 30deg);
+  -webkit-mask:radial-gradient(circle, transparent 0 38%, #000 41% 100%);
+          mask:radial-gradient(circle, transparent 0 38%, #000 41% 100%);
+}
+body.cur-burst .cur-rays{ animation:curRays .5s ease-out; }
+@keyframes curRays{
+  0%  { opacity:.95; transform:translate(-50%,-50%) scale(.42); }
+  100%{ opacity:0;   transform:translate(-50%,-50%) scale(1.65); }
+}
+
+/* 밝은 섹션에서는 링을 어둡게 */
+body.cur-paper .cur-ring { border-color:rgba(26,26,26,.55); background:rgba(26,26,26,.05); }
+body.cur-paper .cur-ring2{ border-color:rgba(201,96,95,.6); }
+
+@media (hover:hover) and (pointer:fine){
+  body.cur-on, body.cur-on a, body.cur-on button{ cursor:none; }
+}
+@media (prefers-reduced-motion:reduce){
+  .cur{ display:none; }
+}
+
 .skip{
   position:absolute; left:16px; top:-60px; z-index:200;
   background:var(--rose); color:#fff; padding:10px 18px; border-radius:8px;
@@ -109,6 +165,8 @@ section.tight{ padding-top:0; }
 
 /* ══════════════════ 섹션 헤더 ══════════════════ */
 .sec-head{ margin-bottom:56px; }
+/* 섹션 번호 — 자동으로 매겨집니다 */
+.sec-n{ font-weight:500; opacity:.6; margin-right:7px; }
 .sec-label{
   display:inline-flex; align-items:center; gap:9px;
   font-family:var(--en); font-size:12px; font-weight:500;
@@ -126,7 +184,7 @@ section.tight{ padding-top:0; }
 /* ══════════════════ 내비게이션 ══════════════════ */
 .nav{
   position:fixed; inset:0 0 auto 0; z-index:100; height:var(--nav-h);
-  background:rgba(26,26,26,.72); backdrop-filter:blur(16px) saturate(1.4);
+  background:rgba(18,18,18,.72); backdrop-filter:blur(16px) saturate(1.4);
   border-bottom:1px solid transparent; transition:background .35s, border-color .35s, color .35s;
 }
 .nav.is-paper{ background:rgba(244,242,239,.78); color:var(--on-paper); }
@@ -174,21 +232,65 @@ section.tight{ padding-top:0; }
 }
 
 /* ══════════════════ HERO ══════════════════ */
-.hero{ padding-top:calc(var(--nav-h) + 92px); padding-bottom:96px; overflow:hidden; }
-.hero-grid{ display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:48px; align-items:center; }
+.hero{ padding-top:calc(var(--nav-h) + 26px); padding-bottom:64px; overflow:hidden; }
+/* 입자 캔버스 — 콘텐츠보다 뒤, 배경보다 앞 */
+.hero-fx{ position:absolute; inset:0; z-index:1; pointer-events:none; }
+.hero > .wrap{ position:relative; z-index:2; }
+
+/* 작은 대문자 정보 글씨 */
+.meta{
+  font-family:var(--en); font-size:10.5px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--on-ink-dim);
+}
+.meta--rose{ color:var(--rose); }
+
+/* 헤어라인으로 나눈 정보 줄 — 좌·우 끝에 붙습니다 */
+/* 가로 구분선 없이 좌·우 끝에만 정보를 붙입니다 */
+.hero-rule{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:13px 0;
+}
+.hero-split{ font-size:13.5px; color:var(--on-ink-dim); }
+.hero-split b{ color:var(--on-ink); font-weight:500; }
+
+/* 이름이 화면 폭을 거의 채우는 무대 */
+.hero-stage{ position:relative; padding:34px 0 26px; }
+/* 이름 — 가늘게 뽑고 뒷글자는 속을 비워 유리처럼 뒤가 비치게 합니다 */
 .hero h1{
-  font-family:var(--en); font-weight:600; font-size:clamp(52px,10vw,124px);
-  line-height:.92; letter-spacing:-.045em; margin:22px 0 30px;
+  position:relative; z-index:3; margin:0; white-space:nowrap;
+  font-family:var(--en); font-weight:300;
+  /* 오른쪽 구체와 겹치지 않는 최대 크기로 잡았습니다 (모바일은 아래에서 따로 지정) */
+  font-size:clamp(50px,11.8vw,170px); line-height:.88; letter-spacing:-.035em;
+}
+/* 속을 비우고 얇은 외곽선만 남긴 글자 */
+.hero h1 .ch--out{
+  color:transparent;
+  -webkit-text-stroke:.011em rgba(242,239,236,.95);
+  /* 밝은 구체 위에 올라가도 외곽선이 묻히지 않도록 아주 옅은 그림자 */
+  filter:drop-shadow(0 0 7px rgba(0,0,0,.45));
 }
 .hero h1 .d{ color:var(--rose-soft); }
-.hero-tag{ font-size:clamp(16px,2vw,19px); color:var(--on-ink-dim); line-height:1.8; }
+
+.hero-bottom{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:30px; padding-top:34px;
+}
+.hero-tag{ font-size:clamp(15px,1.6vw,18px); color:var(--on-ink-dim); line-height:1.75; }
 .hero-tag b{ color:var(--on-ink); font-weight:500; }
-.hero-cta{ display:flex; flex-wrap:wrap; gap:12px; margin-top:38px; }
+.hero-cta{ display:flex; flex-wrap:wrap; gap:10px; margin-top:26px; }
 .btn{
-  display:inline-flex; align-items:center; gap:9px; min-height:50px;
-  padding:0 26px; border-radius:100px; font-size:15px; font-weight:500;
+  display:inline-flex; align-items:center; gap:11px; min-height:50px;
+  padding:0 12px 0 24px; border-radius:100px; font-size:15px; font-weight:500;
   border:1px solid var(--line-ink); transition:.28s var(--ease);
 }
+/* 원형 화살표 아이콘 */
+.ar-c{
+  display:grid; place-items:center; width:28px; height:28px; border-radius:50%;
+  background:rgba(0,0,0,.2); font-size:12px; line-height:1;
+  transition:transform .28s var(--ease);
+}
+.btn--ghost .ar-c{ background:rgba(242,239,236,.12); }
+.btn:hover .ar-c{ transform:translate(2px,-2px); }
 .btn .ar{ transition:transform .28s var(--ease); }
 .btn:hover .ar{ transform:translateX(4px); }
 .btn--fill{ background:var(--rose); border-color:var(--rose); color:#fff; }
@@ -210,10 +312,12 @@ body.ready .h-rv{ opacity:1; transform:none; }
 .hero .sec-label::before{ width:0; transition:width .8s var(--ease) .15s; }
 body.ready .hero .sec-label::before{ width:22px; }
 
-/* ── 구체 클러스터 (표지 모티프) ──────────────────────── */
+/* ── 구체 클러스터 (표지 모티프) ──────────────────────────
+   이름 뒤 레이어에 겹쳐 놓아 타이포가 화면 폭을 다 쓰게 합니다 */
 .orbs{
   --lx:0%; --ly:0%;                  /* 커서를 따라가는 광원 위치 */
-  position:relative; height:340px;
+  position:absolute; z-index:1; right:-56px; top:50%;
+  width:370px; height:352px; margin-top:-192px;   /* 정중앙보다 살짝 위로 */
 }
 /* 구체 뒤 은은한 빛 번짐 — 검은 배경에 붕 뜨지 않게 */
 .orbs::before{
@@ -227,41 +331,54 @@ body.ready .hero .sec-label::before{ width:22px; }
 .orb{ position:absolute; transition:transform .55s cubic-bezier(.2,.7,.3,1); will-change:transform; }
 .orb > i{ display:block; width:100%; height:100%; border-radius:50%; opacity:0; transform:scale(.12); }
 
-.orb--rose{ width:210px; height:210px; left:0;    top:56px;  }
-.orb--ring{ width:190px; height:190px; left:128px; top:74px; }
-.orb--slate{ width:172px; height:172px; right:0;  top:96px;  }
-.orb--mini{ width:30px;  height:30px;  left:44px; top:286px; }
+/* 유리 토러스(도넛)를 주인공으로, 작은 유리 구슬이 조연 */
+.orb--torus{ width:318px; height:318px; right:0;   top:16px;  }
+.orb--bead { width:96px;  height:96px;  left:16px; top:214px; }
+.orb--ring { width:176px; height:176px; left:66px; top:56px;  }
+.orb--mini { width:22px;  height:22px;  left:0;    top:96px;  }
 
-.orb--rose > i{
+/* ── 유리 토러스 ─────────────────────────────────────────
+   conic-gradient 로 무지갯빛 띠를 만들고, radial mask 로
+   가운데를 뚫어 도넛 형태를 만듭니다. 위쪽 두 개의 흰 반사가
+   유리 하이라이트 역할을 합니다.
+   ─────────────────────────────────────────────────────── */
+.orb--torus > i{
+  background:
+    /* 유리 반사 — 작고 또렷하게 두 군데 */
+    radial-gradient(closest-side at calc(30% + var(--lx)) calc(15% + var(--ly)), rgba(255,255,255,.92), transparent 17%),
+    radial-gradient(closest-side at calc(78% + var(--lx)) calc(84% + var(--ly)), rgba(255,255,255,.5), transparent 14%),
+    /* 무지갯빛 띠 — 밝은 색과 짙은 색을 번갈아 넣어 입체감을 만듭니다 */
+    conic-gradient(from 202deg,
+      #f6ded9   0deg, #e2a5a0  30deg, #b8646c  72deg, #8a5f86 112deg,
+      #5f6ba8 152deg, #8f9ec4 196deg, #cfa9a6 238deg, #7d6f8e 286deg,
+      #c98d84 322deg, #f6ded9 360deg);
+  -webkit-mask:radial-gradient(circle at 50% 50%, transparent 0 36%, #000 37.5% 100%);
+          mask:radial-gradient(circle at 50% 50%, transparent 0 36%, #000 37.5% 100%);
+}
+/* 토러스 뒤로 깔리는 빛 — mask 때문에 그림자를 못 써서 따로 둡니다 */
+.orb--torus::before{
+  content:""; position:absolute; inset:6%; border-radius:50%;
+  background:radial-gradient(circle, rgba(201,96,95,.20), transparent 68%);
+  filter:blur(30px); z-index:-1;
+}
+.orb--bead > i{
   background:radial-gradient(circle at calc(30% + var(--lx)) calc(24% + var(--ly)), #f8e4e0, #e0a19e 46%, #cb6667 100%);
-  box-shadow:0 30px 66px -30px rgba(203,102,103,.85);
+  box-shadow:0 20px 44px -20px rgba(203,102,103,.85);
 }
-.orb--slate > i{
-  background:radial-gradient(circle at calc(32% + var(--lx)) calc(26% + var(--ly)), #a4aabd, #767c93 48%, #565b71 100%);
-  box-shadow:0 30px 66px -30px rgba(86,91,113,.85);
-}
-.orb--ring > i{ border:1px solid rgba(242,239,236,.28); }
+.orb--ring > i{ border:1px solid rgba(242,239,236,.22); }
 .orb--mini > i{
-  background:radial-gradient(circle at calc(32% + var(--lx)) calc(26% + var(--ly)), #f8e4e0, var(--rose) 70%);
-  box-shadow:0 8px 20px -6px rgba(201,96,95,.8);
+  background:radial-gradient(circle at calc(32% + var(--lx)) calc(26% + var(--ly)), #cfd4e2, var(--slate) 72%);
+  box-shadow:0 8px 18px -6px rgba(103,108,131,.85);
 }
 
-/* 등장(점 → 구체) 후 느리게 떠다니기 */
-body.ready .orb--rose  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .30s forwards, float1 11s ease-in-out 1.4s infinite; }
-body.ready .orb--ring  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .44s forwards, float2 15s ease-in-out 1.5s infinite; }
-body.ready .orb--slate > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .38s forwards, float2 13s ease-in-out 1.5s infinite; }
+/* 등장(점 → 형태) 후 느리게 떠다니기 */
+body.ready .orb--torus > i{ animation:orbIn 1.05s cubic-bezier(.22,.9,.3,1) .30s forwards, float1 13s ease-in-out 1.5s infinite; }
+body.ready .orb--ring  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .46s forwards, float2 17s ease-in-out 1.6s infinite; }
+body.ready .orb--bead  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .40s forwards, float2 11s ease-in-out 1.5s infinite; }
 body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s forwards, float1 9s  ease-in-out 1.6s infinite; }
 @keyframes orbIn{ to{ opacity:1; transform:none; } }
 @keyframes float1{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
 @keyframes float2{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(13px)} }
-
-/* ── 히어로 하단 (문구 + 스크롤 안내) ─────────────────── */
-.hero-foot{
-  display:flex; align-items:center; justify-content:space-between; gap:20px;
-  margin-top:76px; padding-top:24px; border-top:1px solid var(--line-ink);
-}
-.hero-meta{ display:flex; flex-wrap:wrap; gap:10px 34px; font-size:13.5px; color:var(--on-ink-dim); }
-.hero-meta b{ color:var(--on-ink); font-weight:500; }
 
 .scroll-cue{
   display:inline-flex; align-items:center; gap:13px; flex:0 0 auto;
@@ -277,17 +394,32 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 }
 @keyframes scrollDot{ 0%{ transform:translateY(-15px) } 100%{ transform:translateY(34px) } }
 
+/* 태블릿 — 구체를 조금 줄여 이름과 덜 겹치게 */
+@media (max-width:1100px){
+  .orbs{ width:320px; height:320px; margin-top:-168px; right:-40px; }
+  .orb--torus{ width:296px; height:296px; left:12px; top:0; }
+  .orb--ring { width:186px; height:186px; left:112px; top:78px; }
+  .orb--bead { width:88px;  height:88px;  left:0;    top:190px; }
+  .orb--mini { width:20px;  height:20px;  right:18px; top:50px; }
+}
+
 @media (max-width:860px){
-  .hero{ padding-top:calc(var(--nav-h) + 56px); padding-bottom:72px; }
-  .hero-grid{ grid-template-columns:1fr; gap:8px; }
-  .orbs{ height:210px; order:-1; margin-bottom:8px; }
-  .orb--rose{ width:132px; height:132px; top:34px; }
-  .orb--slate{ width:108px; height:108px; top:64px; right:12%; }
-  .orb--ring{ width:120px; height:120px; left:82px; top:44px; }
-  .orb--mini{ width:20px; height:20px; left:52px; top:168px; }
-  .hero-cta .btn{ flex:1 1 auto; justify-content:center; }
-  .hero-foot{ margin-top:48px; align-items:flex-end; }
-  .hero-meta{ gap:8px 22px; }
+  .hero{ padding-top:calc(var(--nav-h) + 18px); padding-bottom:56px; }
+  /* 모바일에서는 구체를 이름 위로 되돌려 겹치지 않게 합니다 */
+  .hero-stage{ display:flex; flex-direction:column; gap:6px; padding:16px 0 20px; }
+  .orbs{ position:relative; right:auto; top:auto; margin:0 auto; width:250px; height:250px; }
+  .orb--torus{ width:230px; height:230px; left:10px; top:0; }
+  .orb--ring { width:144px; height:144px; left:88px;  top:62px; }
+  .orb--bead { width:68px;  height:68px;  left:0;     top:150px; }
+  .orb--mini { width:16px;  height:16px;  right:14px; top:40px; }
+  .hero h1{ font-size:clamp(44px,13.6vw,90px); }
+  .hero-bottom{ flex-direction:column; align-items:flex-start; gap:22px; padding-top:26px; }
+  .hero-cta{ width:100%; }
+  .hero-cta .btn{ flex:1 1 auto; justify-content:center; padding:0 18px; }
+  .hero-rule{ padding:11px 0; }
+  /* 좁은 화면에선 세 항목이 줄바꿈되어 지저분해지므로 가운데 항목은 숨깁니다 */
+  .hero-rule #hero-role{ display:none; }
+  .hero-split{ font-size:12.5px; }
   .scroll-line{ height:26px; }
 }
 
@@ -515,16 +647,13 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   transition:transform .8s var(--ease);
 }
 .work-media:hover img{ transform:scale(1.045); }
-.work-no{
-  position:absolute; left:16px; top:14px; z-index:2;
-  font-family:var(--en); font-size:12px; font-weight:600; letter-spacing:.1em;
-  padding:5px 11px; border-radius:100px;
-  background:rgba(255,255,255,.9); color:var(--on-paper);
-}
+/* 프로젝트 번호 + 짧은 선 + 분류 — 편집 디자인식 메타 줄 */
 .work-kicker{
-  display:inline-flex; align-items:center; gap:8px; font-family:var(--en);
+  display:flex; align-items:center; gap:12px; font-family:var(--en);
   font-size:11.5px; font-weight:500; letter-spacing:.15em; text-transform:uppercase; color:var(--rose);
 }
+.work-n{ font-size:16px; font-weight:700; letter-spacing:.01em; }
+.work-rule{ flex:0 0 auto; width:42px; height:1px; background:currentColor; opacity:.45; }
 .work h3{ margin:14px 0 12px; font-size:clamp(23px,3.2vw,31px); font-weight:600; letter-spacing:-.03em; line-height:1.3; }
 .work-sum{ font-size:16px; line-height:1.8; color:var(--on-paper-dim); }
 .work-facts{ display:flex; flex-wrap:wrap; gap:8px 30px; margin:22px 0 18px;
@@ -631,6 +760,13 @@ footer{ border-top:1px solid var(--line-ink); }
 </head>
 
 <body>
+<!-- 커스텀 커서 (링 + 가운데 점, 누르면 빛살) -->
+<div class="cur" id="cur" aria-hidden="true">
+  <span class="cur-rays"></span>
+  <span class="cur-ring2"></span>
+  <span class="cur-ring"></span>
+</div>
+
 <a class="skip" href="#main">본문 바로가기</a>
 
 <header class="nav" id="nav">
@@ -653,29 +789,43 @@ footer{ border-top:1px solid var(--line-ink); }
 <main id="main">
   <!-- 아래 내용은 모두 페이지 맨 아래 script의 DATA 에서 자동으로 채워집니다 -->
   <section id="home" class="band band--ink hero">
+    <!-- 커서 잔상 + 구체 주변 먼지가 그려지는 캔버스 (글자 뒤 레이어) -->
+    <canvas class="hero-fx" id="fx" aria-hidden="true"></canvas>
     <div class="wrap">
-      <div class="hero-grid">
-        <div>
-          <p class="sec-label h-rv" id="hero-role"></p>
-          <h1 id="hero-name"></h1>
-          <p class="hero-tag h-rv" id="hero-tag"></p>
-          <div class="hero-cta h-rv">
-            <a href="#works" class="btn btn--fill">프로젝트 보기 <span class="ar">→</span></a>
-            <a href="#contact" class="btn btn--ghost">연락하기</a>
-          </div>
-        </div>
+      <!-- 상단 정보 줄 — 좌: 직무(포인트 컬러) / 우: 지역 -->
+      <div class="hero-rule h-rv">
+        <span class="meta meta--rose" id="hero-role"></span>
+        <span class="meta" id="hero-t2"></span>
+      </div>
+
+      <!-- 이름 + 그 뒤에 겹치는 구체 -->
+      <div class="hero-stage">
         <!-- 구체는 커서를 따라 움직입니다. data-depth = 따라오는 정도 -->
         <div class="orbs" aria-hidden="true">
-          <div class="orb orb--rose"  data-depth="0.5"><i></i></div>
+          <div class="orb orb--torus" data-depth="0.5"><i></i></div>
           <div class="orb orb--ring"  data-depth="1.5"><i></i></div>
-          <div class="orb orb--slate" data-depth="0.9"><i></i></div>
-          <div class="orb orb--mini"  data-depth="1.6"><i></i></div>
+          <div class="orb orb--bead"  data-depth="1.0"><i></i></div>
+          <div class="orb orb--mini"  data-depth="1.8"><i></i></div>
         </div>
+        <h1 id="hero-name"></h1>
       </div>
-      <div class="hero-foot h-rv">
-        <ul class="hero-meta" id="hero-meta"></ul>
-        <a href="#works" class="scroll-cue" aria-label="아래로 스크롤">
-          Scroll
+
+      <!-- 이름 아래 좌·우로 갈라지는 문구 -->
+      <div class="hero-rule hero-split h-rv">
+        <span id="hero-s1"></span>
+        <span id="hero-s2"></span>
+      </div>
+
+      <div class="hero-bottom h-rv">
+        <div>
+          <p class="hero-tag" id="hero-tag"></p>
+          <div class="hero-cta">
+            <a href="#works" class="btn btn--fill">프로젝트 보기 <i class="ar-c" aria-hidden="true">↗</i></a>
+            <a href="#contact" class="btn btn--ghost">연락하기 <i class="ar-c" aria-hidden="true">↗</i></a>
+          </div>
+        </div>
+        <a href="#about" class="scroll-cue" aria-label="About 섹션으로 이동">
+          See more
           <span class="scroll-line" aria-hidden="true"><i></i></span>
         </a>
       </div>
@@ -802,9 +952,10 @@ const DATA = {
   role: 'UX/UI · Product Designer',
   nameEn: ['kim', 'hanul'],          // 큰 제목 (가운데 점은 자동으로 들어갑니다)
   tagline: '사용자의 행동 <b>너머의 이유</b>를 읽고<br>정교한 디테일로 <b>경험을 구축</b>합니다',
-  heroMeta: [
-    'From <b>Dot</b> to <b>Flow</b>'
-  ],
+  // 이름 위 줄 — 왼쪽 / 오른쪽 끝에 붙는 작은 글씨
+  heroRight: 'Based in Seoul, KR',   // 이름 위 줄 오른쪽 (왼쪽은 위의 role)
+  // 이름 아래 줄 — 한 문장을 좌·우로 갈라 놓습니다
+  heroSplit: ['From <b>Dot</b>…', '…to <b>Flow</b>'],
 
   /* ─── 연락처 ─────────────────────────────────────────── */
   contact: {
@@ -1036,13 +1187,17 @@ const el = (id) => document.getElementById(id);
 /* ── HERO ── */
 el('hero-role').textContent = DATA.role;
 /* 이름을 한 글자씩 쪼개서 순서대로 등장시킵니다 (가운데 점은 마지막에 톡 튀어나옴) */
-const splitChars = (s) => [...s].map(c => `<span class="ch">${c}</span>`).join('');
-el('hero-name').innerHTML = splitChars(DATA.nameEn[0]) + '<span class="ch d">.</span>' + splitChars(DATA.nameEn[1]);
+// 두 번째 단어(hanul)는 속을 비워 외곽선만 남깁니다 → 뒤의 구체가 비쳐 보입니다
+const splitChars = (s, cls = '') => [...s].map(c => `<span class="ch ${cls}">${c}</span>`).join('');
+el('hero-name').innerHTML =
+  splitChars(DATA.nameEn[0]) + '<span class="ch d">.</span>' + splitChars(DATA.nameEn[1], 'ch--out');
 [...el('hero-name').querySelectorAll('.ch')].forEach((c, i) => {
   c.style.animationDelay = `${200 + i * 45}ms`;
 });
-el('hero-tag').innerHTML    = DATA.tagline;
-el('hero-meta').innerHTML   = DATA.heroMeta.map(m => `<li>${m}</li>`).join('');
+el('hero-tag').innerHTML = DATA.tagline;
+el('hero-t2').textContent = DATA.heroRight;
+el('hero-s1').innerHTML   = DATA.heroSplit[0];
+el('hero-s2').innerHTML   = DATA.heroSplit[1];
 
 /* ── ABOUT ── */
 el('about-cap').innerHTML  = DATA.about.caption;
@@ -1094,11 +1249,10 @@ el('skill-groups').innerHTML = DATA.skills.groups.map(g => `
 el('works-list').innerHTML = DATA.works.map((w, i) => `
   <article class="work rv${i % 2 ? ' work--flip' : ''}">
     <div class="work-media">
-      <span class="work-no">0${i + 1}</span>
       <img src="${w.image}" alt="${w.alt}" loading="lazy" decoding="async">
     </div>
     <div class="work-text">
-      <p class="work-kicker">${w.kicker}</p>
+      <p class="work-kicker"><b class="work-n">0${i + 1}</b><span class="work-rule"></span>${w.kicker}</p>
       <h3>${w.title}</h3>
       <p class="work-sum">${w.summary}</p>
       <dl class="work-facts">
@@ -1150,10 +1304,12 @@ menu.addEventListener('click', e => {
   }
 });
 
-/* 2) 스크롤에 따라 내비게이션 색/테두리 전환 */
+/* 2) 스크롤에 따라 내비게이션 색 전환 */
 const bands = [...document.querySelectorAll('.band')];
+
 const onScroll = () => {
   nav.classList.toggle('is-stuck', scrollY > 8);
+
   const probe = 34;                                  // 내비 중앙 높이
   const here = bands.find(b => {
     const r = b.getBoundingClientRect();
@@ -1162,7 +1318,13 @@ const onScroll = () => {
   nav.classList.toggle('is-paper', !!here && here.classList.contains('band--paper'));
 };
 addEventListener('scroll', onScroll, { passive: true });
+addEventListener('resize', onScroll);
 onScroll();
+
+/* 2-1) 섹션 번호 자동 매기기 — (01) About, (02) Experience … */
+document.querySelectorAll('.sec-head .sec-label').forEach((label, i) => {
+  label.insertAdjacentHTML('afterbegin', `<span class="sec-n">(0${i + 1})</span>`);
+});
 
 /* 3) 현재 보고 있는 섹션 메뉴 활성화 */
 const links = [...menu.querySelectorAll('a')];
@@ -1227,6 +1389,143 @@ if (hero && orbs && canHover) {
   }, { passive: true });
 
   hero.addEventListener('pointerleave', () => { px = py = 0; queue(); });
+}
+
+/* ── 7) 구체 주변 먼지 입자 ───────────────────────────────
+   구체 둘레를 별가루처럼 도는 입자들. 화면 밖으로 나가면 멈춥니다.
+   (커서 효과는 아래 8번의 커스텀 커서가 담당합니다)
+   ─────────────────────────────────────────────────────── */
+const fx = el('fx');
+if (fx && hero && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
+  const ctx = fx.getContext('2d');
+  const TAU = Math.PI * 2;
+  const ROSE = [224, 161, 158], SLATE = [154, 161, 182];
+
+  let W = 0, H = 0, dust = [], raf = 0, live = false;
+
+  /* 캔버스 크기를 히어로에 맞추고 먼지를 다시 뿌립니다 */
+  const resize = () => {
+    const r = hero.getBoundingClientRect();
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    fx.width = W * dpr; fx.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    seedDust();
+  };
+
+  /* 구체 클러스터의 실제 위치를 읽어 그 둘레에 먼지를 배치 */
+  const seedDust = () => {
+    const orbEl = document.querySelector('.orbs');
+    if (!orbEl) { dust = []; return; }
+    const hr = hero.getBoundingClientRect(), or_ = orbEl.getBoundingClientRect();
+    const cx = or_.left - hr.left + or_.width / 2;
+    const cy = or_.top  - hr.top  + or_.height / 2;
+    const R  = Math.max(or_.width, or_.height) * .5;
+
+    // 화면이 좁으면 개수를 줄여 산만해지지 않게 합니다
+    const count = Math.round(Math.max(28, Math.min(105, W * H / 9500)));
+
+    dust = Array.from({ length: count }, () => ({
+      cx, cy,
+      a : Math.random() * TAU,                                   // 현재 각도
+      d : R * (.55 + Math.random() * .8),                        // 중심에서의 거리
+      sp: (0.00016 + Math.random() * 0.0004) * (Math.random() < .5 ? -1 : 1),
+      s : .5 + Math.random() * 1.0,                              // 크기
+      ph: Math.random() * TAU,                                   // 반짝임 위상
+      pv: .5 + Math.random() * 1.3,                              // 반짝임 속도
+      c : Math.random() < .62 ? ROSE : SLATE
+    }));
+  };
+
+  const draw = (t) => {
+    raf = requestAnimationFrame(draw);
+    ctx.clearRect(0, 0, W, H);
+
+    // ① 구체 주변 먼지
+    for (const p of dust) {
+      p.a += p.sp;
+      const x = p.cx + Math.cos(p.a) * p.d;
+      const y = p.cy + Math.sin(p.a) * p.d * .82;          // 살짝 눌러 타원 궤도
+      const tw = .3 + .7 * Math.abs(Math.sin(t * .001 * p.pv + p.ph));
+      // 빛 번짐(헤일로) + 밝은 심 — 두 겹으로 그려 별가루처럼 보이게
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${p.c[0]},${p.c[1]},${p.c[2]},${tw * .09})`;
+      ctx.arc(x, y, p.s * 2.6, 0, TAU);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${p.c[0]},${p.c[1]},${p.c[2]},${tw * .62})`;
+      ctx.arc(x, y, p.s, 0, TAU);
+      ctx.fill();
+    }
+  };
+
+  const start = () => { if (!live) { live = true; raf = requestAnimationFrame(draw); } };
+  const stop  = () => { live = false; cancelAnimationFrame(raf); };
+
+
+  addEventListener('resize', resize);
+  // 히어로가 화면에서 벗어나면 그리기를 멈춥니다
+  new IntersectionObserver(([e]) => e.isIntersecting ? start() : stop()).observe(hero);
+  resize();
+  addEventListener('load', resize);   // 폰트 로딩 후 위치 보정
+}
+
+/* ── 8) 커스텀 커서 ───────────────────────────────────────
+   반투명 원이 커서를 대신하고 빛무리가 살짝 뒤따라옵니다.
+   position:fixed 라서 페이지 어디로 스크롤해도 계속 따라다닙니다.
+   마우스가 없는 기기(터치)와 모션 최소화 설정에서는 켜지지 않습니다.
+   ─────────────────────────────────────────────────────── */
+const curEl = el('cur');
+const usesMouse = matchMedia('(hover:hover) and (pointer:fine)').matches
+               && !matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+if (curEl && usesMouse) {
+  let tx = 0, ty = 0;          // 실제 커서 위치
+  let started = false;
+
+  const loop = () => {
+    requestAnimationFrame(loop);
+    curEl.style.transform = `translate(${tx}px, ${ty}px)`;
+  };
+
+  // 밝은 섹션 위에서는 원 테두리를 어둡게
+  const paperBands = [...document.querySelectorAll('.band--paper')];
+  const checkPaper = () => {
+    const onPaper = paperBands.some(b => {
+      const r = b.getBoundingClientRect();
+      return r.top <= ty && r.bottom > ty;
+    });
+    document.body.classList.toggle('cur-paper', onPaper);
+  };
+
+  addEventListener('pointermove', e => {
+    tx = e.clientX; ty = e.clientY;
+    if (!started) {                       // 첫 진입 시 시작
+      started = true;
+      document.body.classList.add('cur-on');
+      loop();
+    }
+    // 링크·버튼 위에서는 링이 커지고 동심원이 생깁니다
+    const hot = e.target.closest && e.target.closest('a, button, .work-media, .strength');
+    document.body.classList.toggle('cur-tap', !!hot);
+    checkPaper();
+  }, { passive: true });
+
+  addEventListener('scroll', checkPaper, { passive: true });
+
+  // 누를 때: 링 축소 + 빛살 한 번 터뜨리기
+  addEventListener('pointerdown', () => {
+    document.body.classList.add('cur-down');
+    document.body.classList.remove('cur-burst');
+    void curEl.offsetWidth;               // 같은 애니메이션을 다시 재생시키기 위한 리플로우
+    document.body.classList.add('cur-burst');
+  });
+  addEventListener('pointerup',     () => document.body.classList.remove('cur-down'));
+  addEventListener('pointercancel', () => document.body.classList.remove('cur-down'));
+
+  // 창 밖으로 나가면 숨김
+  addEventListener('pointerleave', () => document.body.classList.remove('cur-on'));
+  addEventListener('pointerenter', () => started && document.body.classList.add('cur-on'));
 }
 </script>
 </body>
