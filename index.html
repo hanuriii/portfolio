@@ -232,7 +232,7 @@ section.tight{ padding-top:0; }
 }
 
 /* ══════════════════ HERO ══════════════════ */
-.hero{ padding-top:calc(var(--nav-h) + 26px); padding-bottom:64px; overflow:hidden; }
+.hero{ padding-top:calc(var(--nav-h) + 70px); padding-bottom:100px; overflow:hidden; }
 /* 입자 캔버스 — 콘텐츠보다 뒤, 배경보다 앞 */
 .hero-fx{ position:absolute; inset:0; z-index:1; pointer-events:none; }
 .hero > .wrap{ position:relative; z-index:2; }
@@ -248,20 +248,54 @@ section.tight{ padding-top:0; }
 /* 가로 구분선 없이 좌·우 끝에만 정보를 붙입니다 */
 .hero-rule{
   display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:13px 0;
+  padding:8px 0;
 }
-.hero-split{ font-size:13.5px; color:var(--on-ink-dim); }
+.hero-split{ 
+  position: relative; 
+  z-index: 5; /* 구체(z-index: 1)보다 글자가 맨 위로 오도록 설정 */
+  font-size:13.5px; 
+  color:var(--on-ink-dim); 
+}
 .hero-split b{ color:var(--on-ink); font-weight:500; }
 
+/* 1) hero-stage 안의 content 박스 처리 */
+.hero-content {
+  position: relative;
+  z-index: 5;
+  display: inline-block;
+  width: fit-content;      /* 💡 핵심: kim.hanul 글자 너비에 상자 폭을 100% 딱 맞춤! */
+  max-width: 100%;
+}
+
 /* 이름이 화면 폭을 거의 채우는 무대 */
-.hero-stage{ position:relative; padding:34px 0 26px; }
+.hero-stage{ position:relative; padding:10px 0; }
 /* 이름 — 가늘게 뽑고 뒷글자는 속을 비워 유리처럼 뒤가 비치게 합니다 */
 .hero h1{
-  position:relative; z-index:3; margin:0; white-space:nowrap;
-  font-family:var(--en); font-weight:300;
-  /* 오른쪽 구체와 겹치지 않는 최대 크기로 잡았습니다 (모바일은 아래에서 따로 지정) */
-  font-size:clamp(50px,11.8vw,170px); line-height:.88; letter-spacing:-.035em;
+  display: block;
+  margin: 0;
+  white-space: nowrap;
+  font-family: var(--en);
+  font-weight: 300;
+  font-size: clamp(50px, 11.8vw, 170px);
+  line-height: .88;
+  letter-spacing: -.035em;
 }
+
+/* 2) 상하단 메타 행을 부모 폭(kim.hanul 폭)에 맞춰 양끝 정렬 */
+.hero-content .hero-rule {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% + 24px); /* 좌우로 총 24px 넓힘 */
+  margin-left: -10px;        /* 왼쪽으로 12px 밀어내어 k보다 U, F가 좌측으로 나오게 함 */
+  padding: 8px 0;
+}
+
+/* 3) 💡 우측 글씨들의 text-align을 right로 지정하여 R과 w의 오른쪽 끝을 l 끝선에 밀착 */
+#hero-t2, #hero-s2 {
+  text-align: right;
+}
+
 /* 속을 비우고 얇은 외곽선만 남긴 글자 */
 .hero h1 .ch--out{
   color:transparent;
@@ -317,7 +351,7 @@ body.ready .hero .sec-label::before{ width:22px; }
 .orbs{
   --lx:0%; --ly:0%;                  /* 커서를 따라가는 광원 위치 */
   position:absolute; z-index:1; right:-56px; top:50%;
-  width:370px; height:352px; margin-top:-192px;   /* 정중앙보다 살짝 위로 */
+  width:370px; height:352px; margin-top:-160px;   /* 정중앙보다 살짝 위로 */
 }
 /* 구체 뒤 은은한 빛 번짐 — 검은 배경에 붕 뜨지 않게 */
 .orbs::before{
@@ -396,7 +430,7 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 
 /* 태블릿 — 구체를 조금 줄여 이름과 덜 겹치게 */
 @media (max-width:1100px){
-  .orbs{ width:320px; height:320px; margin-top:-168px; right:-40px; }
+  .orbs{ width:320px; height:320px; margin-top:-140px; right:-40px; }[cite: 1]
   .orb--torus{ width:296px; height:296px; left:12px; top:0; }
   .orb--ring { width:186px; height:186px; left:112px; top:78px; }
   .orb--bead { width:88px;  height:88px;  left:0;    top:190px; }
@@ -792,11 +826,6 @@ footer{ border-top:1px solid var(--line-ink); }
     <!-- 커서 잔상 + 구체 주변 먼지가 그려지는 캔버스 (글자 뒤 레이어) -->
     <canvas class="hero-fx" id="fx" aria-hidden="true"></canvas>
     <div class="wrap">
-      <!-- 상단 정보 줄 — 좌: 직무(포인트 컬러) / 우: 지역 -->
-      <div class="hero-rule h-rv">
-        <span class="meta meta--rose" id="hero-role"></span>
-        <span class="meta" id="hero-t2"></span>
-      </div>
 
       <!-- 이름 + 그 뒤에 겹치는 구체 -->
       <div class="hero-stage">
@@ -807,7 +836,21 @@ footer{ border-top:1px solid var(--line-ink); }
           <div class="orb orb--bead"  data-depth="1.0"><i></i></div>
           <div class="orb orb--mini"  data-depth="1.8"><i></i></div>
         </div>
-        <h1 id="hero-name"></h1>
+
+        <!-- 이름 및 상하 텍스트 그룹 (구체 왼쪽으로 정렬) -->
+        <div class="hero-content">
+          <div class="hero-rule h-rv">
+            <span class="meta meta--rose" id="hero-role"></span>
+            <span class="meta" id="hero-t2"></span>
+          </div>
+
+          <h1 id="hero-name"></h1>
+
+          <div class="hero-rule hero-split h-rv">
+            <span id="hero-s1"></span>
+            <span id="hero-s2"></span>
+          </div>
+        </div>
       </div>
 
       <!-- 이름 아래 좌·우로 갈라지는 문구 -->
