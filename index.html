@@ -38,6 +38,7 @@
 
   /* 밝은 화면 */
   --paper:      #f4f2ef;   /* 기본 라이트 배경 */
+  --paper-alt:  #ebe8e4;   /* 섹션 구분용 보조 배경 */
   --paper-2:    #ffffff;   /* 라이트 카드 배경 */
   --on-paper:   #1a1a1a;   /* 라이트 위 글자 */
   --on-paper-dim:#6f6a66;  /* 라이트 위 보조 글자 */
@@ -147,6 +148,8 @@ body.cur-paper .cur-ring2{ border-color:rgba(201,96,95,.6); }
 .band{ position:relative; }
 .band--ink  { background:var(--ink);  color:var(--on-ink); }
 .band--paper{ background:var(--paper);color:var(--on-paper); }
+.band--paper-alt{ background:var(--paper-alt); color:var(--on-paper); }
+.band--paper-alt .dim{ color:var(--on-paper-dim); }
 .band--paper .dim{ color:var(--on-paper-dim); }
 .dim{ color:var(--on-ink-dim); }
 
@@ -164,22 +167,17 @@ section{ padding-block:112px; scroll-margin-top:var(--nav-h); }
 section.tight{ padding-top:0; }
 
 /* ══════════════════ 섹션 헤더 ══════════════════ */
-.sec-head{ margin-bottom:56px; }
-/* 섹션 번호 — 자동으로 매겨집니다 */
-.sec-n{ font-weight:500; opacity:.6; margin-right:7px; }
-.sec-label{
-  display:inline-flex; align-items:center; gap:9px;
-  font-family:var(--en); font-size:12px; font-weight:500;
-  letter-spacing:.16em; text-transform:uppercase; color:var(--rose);
-  margin-bottom:18px;
+.sec-head{
+  display:grid;
+  gap:24px;
+  margin-bottom:64px;
 }
-.sec-label::before{ content:""; width:22px; height:2px; background:var(--rose); }
 .sec-title{
   font-family:var(--en); font-weight:600; font-size:clamp(34px,5.2vw,60px);
   line-height:1.04; letter-spacing:-.03em;
 }
 .sec-title .d{ color:var(--rose); }
-.sec-desc{ margin-top:18px; max-width:620px; font-size:16px; }
+.sec-desc{ margin-top:0; max-width:620px; font-size:16px; }
 
 /* ══════════════════ 내비게이션 ══════════════════ */
 .nav{
@@ -250,52 +248,32 @@ section.tight{ padding-top:0; }
   display:flex; align-items:center; justify-content:space-between; gap:16px;
   padding:8px 0;
 }
-.hero-split{ 
-  position: relative; 
-  z-index: 5; /* 구체(z-index: 1)보다 글자가 맨 위로 오도록 설정 */
-  font-size:13.5px; 
-  color:var(--on-ink-dim); 
+.hero-split{
+  position:relative; z-index:5;
+  font-size:13.5px; color:var(--on-ink-dim);
 }
 .hero-split b{ color:var(--on-ink); font-weight:500; }
 
-/* 1) hero-stage 안의 content 박스 처리 */
-.hero-content {
-  position: relative;
-  z-index: 5;
-  display: inline-block;
-  width: fit-content;      /* 💡 핵심: kim.hanul 글자 너비에 상자 폭을 100% 딱 맞춤! */
-  max-width: 100%;
+.hero-content{
+  position:relative; z-index:5; display:inline-block;
+  width:fit-content; max-width:100%;
 }
 
 /* 이름이 화면 폭을 거의 채우는 무대 */
 .hero-stage{ position:relative; padding:10px 0; }
 /* 이름 — 가늘게 뽑고 뒷글자는 속을 비워 유리처럼 뒤가 비치게 합니다 */
 .hero h1{
-  display: block;
-  margin: 0;
-  white-space: nowrap;
-  font-family: var(--en);
-  font-weight: 300;
-  font-size: clamp(50px, 11.8vw, 170px);
-  line-height: .88;
-  letter-spacing: -.035em;
+  display:block; margin:0; white-space:nowrap;
+  font-family:var(--en); font-weight:300;
+  font-size:clamp(50px,11.8vw,170px); line-height:.88; letter-spacing:-.035em;
 }
 
-/* 2) 상하단 메타 행을 부모 폭(kim.hanul 폭)에 맞춰 양끝 정렬 */
-.hero-content .hero-rule {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: calc(100% + 24px); /* 좌우로 총 24px 넓힘 */
-  margin-left: -10px;        /* 왼쪽으로 12px 밀어내어 k보다 U, F가 좌측으로 나오게 함 */
-  padding: 8px 0;
+.hero-content .hero-rule{
+  display:flex; align-items:center; justify-content:space-between;
+  width:calc(100% + 24px); margin-left:-10px; padding:8px 0;
 }
 
-/* 3) 💡 우측 글씨들의 text-align을 right로 지정하여 R과 w의 오른쪽 끝을 l 끝선에 밀착 */
-#hero-t2, #hero-s2 {
-  text-align: right;
-}
-
+#hero-t2, #hero-s2{ text-align:right; }
 /* 속을 비우고 얇은 외곽선만 남긴 글자 */
 .hero h1 .ch--out{
   color:transparent;
@@ -343,8 +321,6 @@ body.ready .hero h1 .ch.d{ animation:dotIn .85s cubic-bezier(.34,1.5,.64,1) forw
 /* ── 히어로 요소 순차 등장 ────────────────────────────── */
 .h-rv{ opacity:0; transform:translateY(16px); transition:opacity .85s var(--ease), transform .85s var(--ease); }
 body.ready .h-rv{ opacity:1; transform:none; }
-.hero .sec-label::before{ width:0; transition:width .8s var(--ease) .15s; }
-body.ready .hero .sec-label::before{ width:22px; }
 
 /* ── 구체 클러스터 (표지 모티프) ──────────────────────────
    이름 뒤 레이어에 겹쳐 놓아 타이포가 화면 폭을 다 쓰게 합니다 */
@@ -430,7 +406,7 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 
 /* 태블릿 — 구체를 조금 줄여 이름과 덜 겹치게 */
 @media (max-width:1100px){
-  .orbs{ width:320px; height:320px; margin-top:-140px; right:-40px; }[cite: 1]
+  .orbs{ width:320px; height:320px; margin-top:-168px; right:-40px; }
   .orb--torus{ width:296px; height:296px; left:12px; top:0; }
   .orb--ring { width:186px; height:186px; left:112px; top:78px; }
   .orb--bead { width:88px;  height:88px;  left:0;    top:190px; }
@@ -513,48 +489,133 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 .about-body p{ margin-bottom:16px; font-size:16.5px; line-height:1.85; color:var(--on-paper-dim); }
 .about-body p b{ color:var(--on-paper); font-weight:500; }
 
-/* ── 핵심 역량 카드 ─────────────────────────────────────────
-   칸막이로 나눈 표 대신 낱장 카드로 띄웠습니다.
-   번호 옆 작은 로즈 구체와 배경에 옅게 깔리는 큰 숫자가 포인트입니다.
-   ─────────────────────────────────────────────────────────── */
-.strengths{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:44px; }
-.strength{
-  position:relative; overflow:hidden;
-  padding:26px 24px 28px; border-radius:14px;
-  background:var(--paper-2); border:1px solid var(--line-paper);
-  transition:transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s;
+/* ── 핵심 역량: 6개 추상 오브젝트 + 선택형 상세 패널 ── */
+.strengths{ margin-top:64px; }
+.strength-explorer{
+  min-height:280px; padding-block:18px;
 }
-/* 배경에 옅게 깔리는 큰 번호 */
-.strength::after{
-  content:attr(data-n); position:absolute; right:-14px; bottom:-26px; z-index:0;
-  font-family:var(--en); font-weight:700; font-size:82px; line-height:1;
-  color:var(--rose); opacity:.07;
-  transition:opacity .4s var(--ease), transform .4s var(--ease);
+.strength-objects{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; min-height:188px; padding:18px 4px;
 }
-.strength:hover{
-  transform:translateY(-5px);
-  border-color:rgba(201,96,95,.38);
-  box-shadow:0 20px 38px -24px rgba(90,60,60,.55);
+.strength-object{
+  position:relative; display:grid; place-items:center;
+  width:96px; height:150px; flex:1 1 96px;
+  border-radius:52px; isolation:isolate;
+  animation:strengthWave 3.4s ease-in-out infinite;
+  animation-delay:calc(var(--i) * -.32s);
+  transition:filter .5s var(--ease), opacity .5s, flex-basis .5s var(--ease), transform .5s var(--ease);
 }
-.strength:hover::after{ opacity:.11; transform:translateY(-5px); }
+@keyframes strengthWave{ 0%,100%{ translate:0 0; } 50%{ translate:0 -12px; } }
+.strength-objects.has-selection .strength-object{ animation-play-state:paused; filter:grayscale(1); opacity:.28; transform:scale(.88); }
+.strength-objects.has-selection .strength-object[aria-selected="true"]{
+  flex-basis:122px; filter:none; opacity:1; transform:scale(1.18); z-index:3;
+}
+.strength-object::after{
+  content:attr(data-n); position:absolute; bottom:2px; left:50%; transform:translateX(-50%);
+  font-family:var(--en); font-size:10px; font-weight:600; letter-spacing:.12em;
+  color:var(--on-paper-dim); opacity:.7;
+}
+.shape-core,.shape-core::before,.shape-core::after{
+  position:absolute; display:block; content:"";
+  transition:transform .55s var(--ease), filter .55s var(--ease), opacity .4s;
+}
+.shape-core{ width:72px; height:72px; }
+.strength-object:hover .shape-core,
+.strength-object[aria-selected="true"] .shape-core{ transform:scale(1.12) rotate(4deg); filter:drop-shadow(0 16px 14px rgba(61,43,60,.22)); }
+.strength-object[aria-selected="true"]::after{ color:var(--rose); opacity:1; }
 
-.strength > *{ position:relative; z-index:1; }
-.strength .n{
-  display:inline-flex; align-items:center; gap:9px;
-  font-family:var(--en); font-size:12px; font-weight:500;
-  color:var(--rose); letter-spacing:.1em;
-}
-/* 표지·프로필과 같은 그라데이션 구체 */
-.strength .n i{
-  width:9px; height:9px; border-radius:50%; flex:0 0 auto;
-  background:radial-gradient(circle at 32% 28%, #f8e4e0, var(--rose) 72%);
-  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
-}
-.strength:hover .n i{ transform:scale(1.4); box-shadow:0 0 14px -1px rgba(201,96,95,.75); }
-.strength h3{ margin:12px 0 9px; font-size:16.5px; font-weight:600; letter-spacing:-.02em; }
-.strength p{ font-size:14px; line-height:1.72; color:var(--on-paper-dim); }
+/* 01 사용자 중심: 중심 구체 + 동심원 */
+.shape--sphere .shape-core{ border-radius:50%; border:1px solid rgba(255,81,117,.72); box-shadow:inset 0 0 18px rgba(255,255,255,.9),0 12px 22px rgba(147,44,101,.2); }
+.shape--sphere .shape-core::before{ inset:13px; border-radius:50%; background:radial-gradient(circle at 28% 22%,#fff 0 8%,#ff9aab 25%,#ea4f75 58%,#6c59b5 100%); box-shadow:inset -8px -10px 18px rgba(44,24,93,.28),0 8px 18px rgba(133,39,92,.28); }
+.shape--sphere .shape-core::after{ inset:-7px; border:1px solid rgba(77,102,203,.58); border-radius:50%; transform:rotateX(62deg); }
+/* 02 정량 검증: 기준 격자·축·측정점을 갖춘 유리 레이더 차트 */
+.shape--torus .shape-core{ width:80px; height:80px; filter:drop-shadow(0 11px 12px rgba(82,53,137,.2)); }
+.radar-chart{ width:100%; height:100%; overflow:visible; }
+.radar-grid,.radar-axis,.radar-area,.radar-point{ vector-effect:non-scaling-stroke; }
+.radar-grid{ fill:none; stroke:rgba(91,88,128,.25); stroke-width:1; }
+.radar-grid--outer{ fill:rgba(109,98,194,.035); stroke:rgba(91,88,128,.42); }
+.radar-axis{ stroke:rgba(91,88,128,.18); stroke-width:1; }
+.radar-area{ fill:url(#radar-fill); fill-opacity:.72; stroke:url(#radar-stroke); stroke-width:1.8; stroke-linejoin:round; transform-box:fill-box; transform-origin:center; transition:transform .55s var(--ease),fill-opacity .4s; }
+.radar-point{ fill:#fff; stroke:#d85f82; stroke-width:1.8; filter:drop-shadow(0 2px 2px rgba(70,45,122,.2)); transform-box:fill-box; transform-origin:center; transition:transform .42s var(--ease); }
+.radar-point:nth-of-type(2),.radar-point:nth-of-type(5){ stroke:#7568ca; }
+.radar-point:nth-of-type(3),.radar-point:nth-of-type(4){ stroke:#34bfd9; }
+.shape--torus:hover .radar-area,.shape--torus[aria-selected="true"] .radar-area{ transform:scale(1.055); fill-opacity:.9; }
+.shape--torus:hover .radar-point,.shape--torus[aria-selected="true"] .radar-point{ transform:scale(1.35); }
+/* 03 협업: 맞물린 유리 링 */
+.shape--cube .shape-core{ border:9px solid rgba(255,84,111,.86); border-radius:50%; box-shadow:inset 0 0 0 2px rgba(255,255,255,.72),0 10px 19px rgba(209,35,89,.2); transform:translateX(-10px); }
+.shape--cube .shape-core::before{ inset:-9px; border:9px solid rgba(83,93,190,.82); border-radius:50%; transform:translateX(28px); box-shadow:inset 0 0 0 2px rgba(255,255,255,.68),0 10px 18px rgba(53,58,141,.18); }
+.shape--cube:hover .shape-core,.shape--cube[aria-selected="true"] .shape-core{ transform:scale(1.1) translateX(-14px); }
+.shape--cube:hover .shape-core::before{ transform:translateX(36px); }
+/* 04 다중 플랫폼: 겹쳐진 유리 화면 */
+.shape--capsule .shape-core{ width:54px; height:66px; border-radius:14px; background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(255,94,126,.72)); border:1px solid rgba(255,69,110,.7); box-shadow:0 13px 22px rgba(77,53,134,.2),inset 0 0 12px rgba(255,255,255,.86); }
+.shape--capsule .shape-core::before,.shape--capsule .shape-core::after{ inset:0; border-radius:14px; border:1px solid rgba(255,255,255,.68); }
+.shape--capsule .shape-core::before{ background:linear-gradient(145deg,rgba(76,206,235,.82),rgba(91,75,182,.76)); transform:translate(-14px,8px) rotate(-8deg); }
+.shape--capsule .shape-core::after{ background:linear-gradient(145deg,rgba(255,179,56,.8),rgba(255,69,115,.78)); transform:translate(14px,-7px) rotate(7deg); }
+.shape--capsule:hover .shape-core::before{ transform:translate(-20px,10px) rotate(-12deg); }
+.shape--capsule:hover .shape-core::after{ transform:translate(20px,-10px) rotate(12deg); }
+/* 05 AI 활용: 선은 최하단, 다섯 노드는 상단에 분리 배치 */
+.shape--rings .shape-core{ width:76px; height:76px; filter:drop-shadow(0 9px 9px rgba(82,53,137,.18)); }
+.ai-line{ position:absolute; left:8px; top:37px; z-index:0; width:60px; height:1px; background:rgba(103,108,131,.34); transform-origin:center; }
+.ai-line--a{ transform:rotate(36deg); }
+.ai-line--b{ transform:rotate(-38deg); }
+.ai-node{ position:absolute; z-index:2; width:19px; height:19px; border-radius:50%; border:1px solid rgba(255,255,255,.76); box-shadow:inset -4px -5px 8px rgba(57,35,104,.18),0 5px 9px rgba(74,47,117,.16); }
+.ai-node--center{ left:29px; top:29px; z-index:3; background:radial-gradient(circle at 28% 24%,#fff 0 8%,#ff6a82 48%,#6757bd 100%); }
+.ai-node--tl{ left:2px; top:5px; background:linear-gradient(145deg,#ffb4c2,#ff6683); }
+.ai-node--tr{ right:1px; top:7px; background:linear-gradient(145deg,#83ebf5,#25bad8); }
+.ai-node--bl{ left:6px; bottom:3px; background:linear-gradient(145deg,#9d8ff0,#6555cf); }
+.ai-node--br{ right:3px; bottom:4px; background:linear-gradient(145deg,#ffc176,#ff9134); }
+.shape--rings:hover .shape-core{ transform:scale(1.15) rotate(8deg); }
+/* 06 설계에서 구현까지: 세 막대를 분리한 H → N 구조 */
+.shape--bars .shape-core{ width:72px; height:72px; }
+.n-stroke{ position:absolute; display:block; border:1px solid rgba(255,255,255,.84); box-shadow:inset 0 0 8px rgba(255,255,255,.5),0 8px 14px rgba(71,50,105,.17); }
+.n-stroke--left,.n-stroke--right{ top:5px; z-index:2; width:12px; height:62px; border-radius:7px; }
+.n-stroke--left{ left:5px; background:linear-gradient(100deg,#ffd4de,#ff5e7c); }
+.n-stroke--right{ right:5px; background:linear-gradient(100deg,#8c83e3,#625ac0); }
+.n-stroke--middle{ left:5px; top:31px; z-index:1; width:62px; height:10px; border-radius:7px; background:linear-gradient(100deg,#ff9db2,#ff6685 42%,#54cfe5); transform:rotate(0); transform-origin:center; transition:transform .55s var(--ease); }
+.shape--bars:hover .n-stroke--middle,.shape--bars[aria-selected="true"] .n-stroke--middle{ transform:rotate(45deg) scaleX(1.08); }
 
-@media (max-width:1080px){ .strengths{ grid-template-columns:repeat(2,1fr); } }
+.strength-detail{
+  position:relative; width:min(310px,28vw); min-height:194px; flex:0 0 min(310px,28vw);
+  padding:28px 26px; overflow:hidden;
+  animation:detailIn .48s var(--ease) both;
+}
+@keyframes detailIn{ from{ opacity:0; transform:translateX(24px); } to{ opacity:1; transform:none; } }
+.strength-detail::before{
+  content:""; position:absolute; width:170px; height:170px; right:-78px; top:-84px;
+  border:1px solid rgba(201,96,95,.24); border-radius:50%;
+}
+.strength-detail-inner{ transition:opacity .22s, transform .38s var(--ease); }
+.strength-detail.is-changing .strength-detail-inner{ opacity:0; transform:translateX(22px); }
+.strength-detail h3{ margin:8px 0 14px; font-size:24px; font-weight:650; letter-spacing:-.035em; }
+.strength-detail p{ font-size:15px; line-height:1.8; color:var(--on-paper-dim); }
+.strength-hint{ margin-top:16px; font-size:11px; color:var(--on-paper-dim); letter-spacing:.08em; }
+.strength-empty-hint{
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  margin-bottom:4px; font-family:var(--en); font-size:11px; font-weight:500;
+  color:var(--on-paper-dim); letter-spacing:.16em;
+}
+.strength-empty-hint::before{ content:""; width:28px; height:1px; background:var(--rose); }
+.strength-empty-hint[hidden]{ display:none; }
+
+@media (max-width:960px){
+  .strength-objects{ flex-wrap:wrap; justify-content:flex-start; }
+  .strength-object{ flex:1 1 92px; }
+  .strength-detail{ width:100%; flex:1 0 100%; min-height:160px; margin-top:34px; border-left:0; border-top:1px solid var(--line-paper); }
+}
+@media (max-width:680px){
+  .strengths{ margin-top:42px; }
+  .strength-explorer{ min-height:250px; }
+  .strength-objects{ overflow-x:visible; gap:6px; padding:18px 2px 26px; }
+  .strength-object{ flex:1 1 calc(33.333% - 6px); width:auto; height:118px; }
+  .strength-objects.has-selection .strength-object{ flex-basis:calc(33.333% - 6px); }
+  .strength-objects.has-selection .strength-object[aria-selected="true"]{ flex-basis:calc(33.333% - 6px); transform:scale(1.08); }
+  .shape-core{ width:58px; height:58px; }
+  .shape--rings .shape-core{ width:68px; height:68px; }
+  .shape--rings .ai-line{ left:7px; top:33px; width:54px; }
+  .shape--rings .ai-node--center{ left:25px; top:25px; }
+  .strength-detail{ order:2; width:100%; flex-basis:100%; padding:26px 18px; }
+}
 
 /* 학력 — PC: 2줄 × 2칸
    1줄: 학교명(왼쪽) + 기간(오른쪽)  /  2줄: 학과(왼쪽) + GPA(오른쪽) */
@@ -590,29 +651,10 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   .edu-gpa  { grid-area:3 / 1 / auto / -1; text-align:left; }
 }
 
-/* ══════════════════ EXPERIENCE ══════════════════ */
-.exp-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
-.exp-card{
-  position:relative; padding:30px 28px 26px; border-radius:var(--r);
-  background:var(--ink-2); border:1px solid var(--line-ink);
-  transition:transform .35s var(--ease), border-color .35s, background .35s, box-shadow .35s;
-}
-.exp-card:hover{
-  transform:translateY(-5px); background:var(--ink-3); border-color:rgba(201,96,95,.45);
-  box-shadow:0 22px 44px -26px rgba(0,0,0,.9);
-}
-.exp-top{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; }
-.exp-card h3{ font-size:18.5px; font-weight:600; letter-spacing:-.02em; }
-.exp-period{ font-family:var(--en); font-size:12.5px; color:var(--on-ink-dim); white-space:nowrap; }
-.exp-role{ margin-top:7px; font-size:14px; color:var(--rose-soft); font-weight:500; }
-.exp-card ul{ margin-top:16px; display:grid; gap:8px; }
-.exp-card li{ position:relative; padding-left:15px; font-size:14.5px; line-height:1.7; color:var(--on-ink-dim); }
-.exp-card li::before{ content:""; position:absolute; left:0; top:10px; width:5px; height:1px; background:var(--rose); }
-.exp-card li b{ color:var(--on-ink); font-weight:500; }
+/* 프로젝트와 경력 태그 */
 .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:18px; }
 .chip{ padding:5px 11px; border-radius:100px; border:1px solid var(--line-ink);
   font-size:11.5px; letter-spacing:.02em; color:var(--on-ink-dim); }
-@media (max-width:860px){ .exp-grid{ grid-template-columns:1fr; } }
 
 /* ══════════════════ SKILLS (궤도 그래픽) ══════════════════ */
 .skills-grid{ display:grid; grid-template-columns:400px minmax(0,1fr); gap:60px; align-items:center; }
@@ -665,7 +707,7 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   display:grid; grid-template-columns:repeat(2,1fr); gap:56px; align-items:center;
   padding-block:64px; border-top:1px solid var(--line-paper);
 }
-.work:first-of-type{ border-top:0; padding-top:8px; }
+.work:first-of-type{ border-top:0; padding-top:0; }
 .work--flip .work-media{ order:2; }
 .work-media{
   position:relative; aspect-ratio:3/2; display:grid; place-items:center;
@@ -681,14 +723,20 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   transition:transform .8s var(--ease);
 }
 .work-media:hover img{ transform:scale(1.045); }
-/* 프로젝트 번호 + 짧은 선 + 분류 — 편집 디자인식 메타 줄 */
+/* 프로젝트 번호 + 분류 — 장식을 덜어낸 편집 디자인식 메타 줄 */
 .work-kicker{
-  display:flex; align-items:center; gap:12px; font-family:var(--en);
-  font-size:11.5px; font-weight:500; letter-spacing:.15em; text-transform:uppercase; color:var(--rose);
+  display:flex; align-items:center; gap:14px; font-family:var(--en);
+  font-size:11.5px; font-weight:600; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--rose);
 }
-.work-n{ font-size:16px; font-weight:700; letter-spacing:.01em; }
-.work-rule{ flex:0 0 auto; width:42px; height:1px; background:currentColor; opacity:.45; }
-.work h3{ margin:14px 0 12px; font-size:clamp(23px,3.2vw,31px); font-weight:600; letter-spacing:-.03em; line-height:1.3; }
+.work-n{
+  display:grid; place-items:center; flex:0 0 auto;
+  width:38px; height:32px; background:var(--rose); color:#fff;
+  font-size:12px; font-weight:600; letter-spacing:.04em;
+}
+.work:nth-child(odd) .work-n{ border-radius:9px 9px 9px 0; }
+.work:nth-child(even) .work-n{ border-radius:9px 9px 0 9px; }
+.work h3{ margin:18px 0 12px; font-size:clamp(23px,3.2vw,31px); font-weight:600; letter-spacing:-.03em; line-height:1.3; }
 .work-sum{ font-size:16px; line-height:1.8; color:var(--on-paper-dim); }
 .work-facts{ display:flex; flex-wrap:wrap; gap:8px 30px; margin:22px 0 18px;
   padding:16px 0; border-block:1px solid var(--line-paper); font-size:14px; }
@@ -772,7 +820,7 @@ footer{ border-top:1px solid var(--line-ink); }
 @media (max-width:640px){
   .wrap{ padding-inline:22px; }
   section{ padding-block:76px; }
-  .sec-head{ margin-bottom:38px; }
+  .sec-head{ gap:18px; margin-bottom:48px; }
   .contact{ padding-block:96px 76px; }
   .links a{ flex:1 1 45%; justify-content:center; }
 }
@@ -787,7 +835,6 @@ footer{ border-top:1px solid var(--line-ink); }
   .orb,.ring--dash,.ring--dash-2,.pf-orb,.pf-dot,.scroll-line i{ animation:none !important; }
   /* 첫 화면 요소는 애니메이션 없이 바로 보이도록 */
   .h-rv,.hero h1 .ch,.orb > i{ opacity:1 !important; transform:none !important; animation:none !important; }
-  .hero .sec-label::before{ width:22px !important; }
   *{ transition-duration:.01ms !important; }
 }
 </style>
@@ -808,7 +855,6 @@ footer{ border-top:1px solid var(--line-ink); }
     <a href="#home" class="brand">kim<span class="d">.</span>hanul</a>
     <nav class="nav-menu" id="menu" aria-label="주요 메뉴">
       <a href="#about">About</a>
-      <a href="#experience">Experience</a>
       <a href="#skills">Skills</a>
       <a href="#works">Works</a>
       <a href="#awards">Awards</a>
@@ -826,7 +872,6 @@ footer{ border-top:1px solid var(--line-ink); }
     <!-- 커서 잔상 + 구체 주변 먼지가 그려지는 캔버스 (글자 뒤 레이어) -->
     <canvas class="hero-fx" id="fx" aria-hidden="true"></canvas>
     <div class="wrap">
-
       <!-- 이름 + 그 뒤에 겹치는 구체 -->
       <div class="hero-stage">
         <!-- 구체는 커서를 따라 움직입니다. data-depth = 따라오는 정도 -->
@@ -837,7 +882,6 @@ footer{ border-top:1px solid var(--line-ink); }
           <div class="orb orb--mini"  data-depth="1.8"><i></i></div>
         </div>
 
-        <!-- 이름 및 상하 텍스트 그룹 (구체 왼쪽으로 정렬) -->
         <div class="hero-content">
           <div class="hero-rule h-rv">
             <span class="meta meta--rose" id="hero-role"></span>
@@ -878,7 +922,6 @@ footer{ border-top:1px solid var(--line-ink); }
   <section id="about" class="band band--paper">
     <div class="wrap">
       <div class="sec-head rv">
-        <p class="sec-label">About</p>
         <h2 class="sec-title">about<span class="d">.</span>me</h2>
       </div>
       <div class="about-grid rv">
@@ -901,21 +944,9 @@ footer{ border-top:1px solid var(--line-ink); }
     </div>
   </section>
 
-  <section id="experience" class="band band--ink">
+  <section id="skills" class="band band--ink">
     <div class="wrap">
       <div class="sec-head rv">
-        <p class="sec-label">Experience</p>
-        <h2 class="sec-title">activity<span class="d">.</span>log</h2>
-        <p class="sec-desc dim">연구실, 오픈소스 컨퍼런스, 기업 부트캠프 등 여러 환경에서 경험한 기록입니다.</p>
-      </div>
-      <div class="exp-grid" id="exp-grid"></div>
-    </div>
-  </section>
-
-  <section id="skills" class="band band--ink tight">
-    <div class="wrap">
-      <div class="sec-head rv">
-        <p class="sec-label">Skills</p>
         <h2 class="sec-title">what i<span class="d">.</span>use</h2>
       </div>
       <div class="skills-grid">
@@ -938,7 +969,6 @@ footer{ border-top:1px solid var(--line-ink); }
   <section id="works" class="band band--paper">
     <div class="wrap">
       <div class="sec-head rv">
-        <p class="sec-label">Selected Works</p>
         <h2 class="sec-title">my<span class="d">.</span>works</h2>
         <p class="sec-desc dim">AI SaaS부터 블록체인 커뮤니티까지 서로 성격이 다른 다섯 개의 서비스를 설계했습니다.</p>
       </div>
@@ -946,10 +976,9 @@ footer{ border-top:1px solid var(--line-ink); }
     </div>
   </section>
 
-  <section id="awards" class="band band--paper tight">
+  <section id="awards" class="band band--paper-alt">
     <div class="wrap">
       <div class="sec-head rv">
-        <p class="sec-label">Awards &amp; Research</p>
         <h2 class="sec-title">achievements<span class="d">.</span></h2>
         <p class="sec-desc dim">설계한 결과를 수상, 특허, 논문으로 검증받았습니다.</p>
       </div>
@@ -1038,74 +1067,6 @@ const DATA = {
       gpa: 'GPA 3.98 / 4.5'
     }
   },
-
-  /* ─── Experience (카드 하나 = { } 한 덩어리) ─────────── */
-  experience: [
-    {
-      org: 'kt cloud TECH UP 1기',
-      role: '프로덕트 디자인 과정',
-      period: '2025.09 – 2026.04',
-      points: [
-        'AI 기반 조직 리더십 개발 SaaS <b>〈Bloom〉</b> 기획·디자인 담당',
-        '조직원용 팟캐스트 콘텐츠와 관리자용 마인드 온톨로지 대시보드를 동시에 설계해 서로 다른 두 타깃의 니즈를 하나의 서비스로 통합',
-        'PM·프론트엔드·백엔드·AI·보안·클라우드 인프라 등 타 직군과 협업하여 <b>실무 통합 프로젝트 우수상</b> 수상',
-        '여행 날씨 대비 서비스 <b><날씨몽></b>, 식습관 관리 서비스 <b><밥풀></b> 기획·디자인 참여'
-      ],
-      tags: ['AI', 'B2B SaaS', 'Web·Mobile App', 'Figma']
-    },
-    {
-      org: 'PyCon Korea 2025',
-      role: '준비위원회 (디자인팀, 굿즈팀)',
-      period: '2025.03 – 2025.08',
-      points: [
-        '매년 재구축되던 비효율적 홈페이지 구조 개선을 위해 <b>반응형 웹 리뉴얼 및 재사용 가능한 디자인 시스템</b> 구축',
-        '사용자 만족도 조사 결과 <b>69.83점</b> 달성(평균 68점 대비 만족스러운 사용자 경험), 유지보수 효율 향상',
-        '행사 전체 비주얼 가이드 수립 및 굿즈 판매 프로모션 기획'
-      ],
-      tags: ['Design System', 'Web', 'UMUX-Lite', 'Figma', 'Adobe Illustrator']
-    },
-    {
-      org: '동덕여자대학교 TED LAB',
-      role: '학생연구원 (실험 설계·진행·분석)',
-      period: '2023.09 – 2025.03',
-      points: [
-        '국가연구과제(NRF) <b>HMD 기반 가상현실 사용자 멀미 예측 및 저감 방안</b> 연구에 실험 설계·진행·분석 담당으로 참여',
-        '연구 성과를 국제인간공학회(IEA 2024)에서 발표, 국제 학술 무대에서 연구 역량 검증'
-      ],
-      tags: ['VR', '실험 설계·분석', 'Steam', 'HTC VIVE Pro 2']
-    },
-    {
-      org: '한이음 ICT 멘토링',
-      role: '기획 · UX/UI 디자인 · 프론트엔드',
-      period: '2024.04 – 2024.10',
-      points: [
-        '대학생 러너 대상 NFT 기반 러닝 커뮤니티 플랫폼 <b>〈UniRun〉</b> 설계·구현',
-        '관련 논문 작성 및 <b>한국정보처리학회 ACK 2024 우수상</b> 수상, 블록체인 기반 보상 시스템 <b>특허 출원</b>',
-        '「방송과 기술」 vol.349에 프로젝트 성과 게재'
-      ],
-      tags: ['Blockchain', 'Mobile App', 'React Native', '논문·특허', 'Figma']
-    },
-    {
-      org: '서비스디자인학회 Cresol 10·11기',
-      role: '기획 · UX/UI 디자인',
-      period: '2023.09 – 2024.05',
-      points: [
-        '1인 가구 부동산 정보 서비스 기획 및 UX/UI 디자인',
-        '성인 ADHD 대상 AI 헬스케어 서비스 기획 및 UX/UI 디자인'
-      ],
-      tags: ['Service Design', 'Mobile App', 'Healthcare', 'Figma']
-    },
-    {
-      org: 'World Friends Korea ICT 봉사단',
-      role: '기획 · UX/UI 디자인 · 프론트엔드',
-      period: '2023.05 – 2023.11',
-      points: [
-        '네팔 SWOPNA SANSAR SCHOOL 협력 앱 개발 참여',
-        '다국어 사용자 가이드 및 글로벌 스토어 디자인 전담'
-      ],
-      tags: ['Android Studio', 'Mobile App', '다국어 UX']
-    }
-  ],
 
   /* ─── Skills ─────────────────────────────────────────── */
   skills: {
@@ -1246,29 +1207,106 @@ el('hero-s2').innerHTML   = DATA.heroSplit[1];
 el('about-cap').innerHTML  = DATA.about.caption;
 el('about-h').innerHTML    = DATA.about.heading;
 el('about-body').innerHTML = DATA.about.paragraphs.map(p => `<p>${p}</p>`).join('');
-el('strengths').innerHTML  = DATA.about.strengths.map((s, i) => `
-  <article class="strength" data-n="0${i + 1}">
-    <span class="n"><i></i>(0${i + 1})</span>
-    <h3>${s.title}</h3>
-    <p>${s.desc}</p>
-  </article>`).join('');
+const strengthShapes = ['sphere','torus','cube','capsule','rings','bars'];
+const strengthShapeParts = [
+  '',
+  `<svg class="radar-chart" viewBox="0 0 100 100" aria-hidden="true">
+    <defs>
+      <linearGradient id="radar-fill" x1="16" y1="15" x2="84" y2="88" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#ff6685"/><stop offset=".5" stop-color="#7668ca"/><stop offset="1" stop-color="#39c2de"/>
+      </linearGradient>
+      <linearGradient id="radar-stroke" x1="16" y1="15" x2="84" y2="88" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#e95d7e"/><stop offset="1" stop-color="#2fb9d4"/>
+      </linearGradient>
+    </defs>
+    <polygon class="radar-grid radar-grid--outer" points="50,5 93,36 77,87 23,87 7,36"/>
+    <polygon class="radar-grid" points="50,20 79,41 68,75 32,75 21,41"/>
+    <polygon class="radar-grid" points="50,35 65,46 59,63 41,63 35,46"/>
+    <path class="radar-axis" d="M50 50V5M50 50L93 36M50 50L77 87M50 50L23 87M50 50L7 36"/>
+    <polygon class="radar-area" points="50,12 84,39 70,78 29,72 16,39"/>
+    <circle class="radar-point" cx="50" cy="12" r="2.7"/><circle class="radar-point" cx="84" cy="39" r="2.7"/>
+    <circle class="radar-point" cx="70" cy="78" r="2.7"/><circle class="radar-point" cx="29" cy="72" r="2.7"/>
+    <circle class="radar-point" cx="16" cy="39" r="2.7"/>
+  </svg>`,
+  '', '',
+  `<i class="ai-line ai-line--a"></i><i class="ai-line ai-line--b"></i>
+   <i class="ai-node ai-node--center"></i><i class="ai-node ai-node--tl"></i>
+   <i class="ai-node ai-node--tr"></i><i class="ai-node ai-node--bl"></i><i class="ai-node ai-node--br"></i>`,
+  `<i class="n-stroke n-stroke--left"></i><i class="n-stroke n-stroke--middle"></i><i class="n-stroke n-stroke--right"></i>`
+];
+el('strengths').innerHTML = `
+  <div class="strength-explorer">
+    <p class="strength-empty-hint">SELECT AN OBJECT</p>
+    <div class="strength-objects" role="tablist" aria-label="핵심 역량 선택">
+      ${DATA.about.strengths.map((s, i) => `
+        <button class="strength-object shape--${strengthShapes[i]}" type="button"
+          role="tab" aria-selected="false" aria-controls="strength-detail" data-i="${i}" data-n="0${i + 1}"
+          aria-label="${s.title}" style="--i:${i}">
+          <span class="shape-core" aria-hidden="true">${strengthShapeParts[i]}</span>
+        </button>`).join('')}
+      <article class="strength-detail" id="strength-detail" role="tabpanel" aria-live="polite" hidden>
+        <div class="strength-detail-inner"></div>
+      </article>
+    </div>
+  </div>`;
+
+const strengthButtons = [...document.querySelectorAll('.strength-object')];
+const strengthObjects = document.querySelector('.strength-objects');
+const strengthDetail = el('strength-detail');
+const strengthDetailInner = strengthDetail.querySelector('.strength-detail-inner');
+const strengthEmptyHint = document.querySelector('.strength-empty-hint');
+const resetStrength = index => {
+  strengthButtons.forEach((button, i) => {
+    button.setAttribute('aria-selected', 'false');
+    button.tabIndex = i === index ? 0 : -1;
+  });
+  strengthObjects.classList.remove('has-selection');
+  strengthEmptyHint.hidden = false;
+  strengthDetail.classList.add('is-changing');
+  setTimeout(() => {
+    strengthDetail.hidden = true;
+    strengthDetail.classList.remove('is-changing');
+    strengthDetailInner.innerHTML = '';
+  }, 220);
+};
+const showStrength = (index, animate = true) => {
+  const s = DATA.about.strengths[index];
+  const selectedButton = strengthButtons[index];
+  strengthButtons.forEach((button, i) => {
+    button.setAttribute('aria-selected', String(i === index));
+    button.tabIndex = i === index ? 0 : -1;
+  });
+  strengthObjects.classList.add('has-selection');
+  strengthEmptyHint.hidden = true;
+  selectedButton.insertAdjacentElement('afterend', strengthDetail);
+  strengthDetail.hidden = false;
+  if (animate) strengthDetail.classList.add('is-changing');
+  setTimeout(() => {
+    strengthDetailInner.innerHTML = `
+      <h3>${s.title}</h3>
+      <p>${s.desc}</p>`;
+    strengthDetail.classList.remove('is-changing');
+  }, animate ? 190 : 0);
+};
+strengthButtons.forEach((button, index) => {
+  button.addEventListener('click', () => {
+    if (button.getAttribute('aria-selected') === 'true') resetStrength(index);
+    else showStrength(index);
+  });
+  button.addEventListener('keydown', e => {
+    if (!['ArrowLeft','ArrowRight'].includes(e.key)) return;
+    e.preventDefault();
+    const next = (index + (e.key === 'ArrowRight' ? 1 : -1) + strengthButtons.length) % strengthButtons.length;
+    strengthButtons[next].focus();
+    showStrength(next);
+  });
+});
+strengthButtons[0].tabIndex = 0;
 
 const edu = DATA.about.education;
 el('edu').innerHTML = `
   <div class="edu-l"><strong class="edu-school">${edu.school}</strong><span class="edu-major">${edu.major}</span></div>
   <div class="edu-r"><span class="edu-period">${edu.period}</span><span class="edu-gpa">${edu.gpa}</span></div>`;
-
-/* ── EXPERIENCE ── */
-el('exp-grid').innerHTML = DATA.experience.map(x => `
-  <article class="exp-card rv">
-    <div class="exp-top">
-      <h3>${x.org}</h3>
-      <span class="exp-period">${x.period}</span>
-    </div>
-    <p class="exp-role">${x.role}</p>
-    <ul>${x.points.map(p => `<li>${p}</li>`).join('')}</ul>
-    <div class="chips">${x.tags.map(t => `<span class="chip">${t}</span>`).join('')}</div>
-  </article>`).join('');
 
 /* ── SKILLS : 태그를 원형 궤도 위에 자동 배치 ── */
 const orbit = el('orbit');
@@ -1295,7 +1333,7 @@ el('works-list').innerHTML = DATA.works.map((w, i) => `
       <img src="${w.image}" alt="${w.alt}" loading="lazy" decoding="async">
     </div>
     <div class="work-text">
-      <p class="work-kicker"><b class="work-n">0${i + 1}</b><span class="work-rule"></span>${w.kicker}</p>
+      <p class="work-kicker"><b class="work-n">0${i + 1}</b><span>${w.kicker}</span></p>
       <h3>${w.title}</h3>
       <p class="work-sum">${w.summary}</p>
       <dl class="work-facts">
@@ -1358,16 +1396,12 @@ const onScroll = () => {
     const r = b.getBoundingClientRect();
     return r.top <= probe && r.bottom > probe;
   });
-  nav.classList.toggle('is-paper', !!here && here.classList.contains('band--paper'));
+  nav.classList.toggle('is-paper', !!here &&
+    (here.classList.contains('band--paper') || here.classList.contains('band--paper-alt')));
 };
 addEventListener('scroll', onScroll, { passive: true });
 addEventListener('resize', onScroll);
 onScroll();
-
-/* 2-1) 섹션 번호 자동 매기기 — (01) About, (02) Experience … */
-document.querySelectorAll('.sec-head .sec-label').forEach((label, i) => {
-  label.insertAdjacentHTML('afterbegin', `<span class="sec-n">(0${i + 1})</span>`);
-});
 
 /* 3) 현재 보고 있는 섹션 메뉴 활성화 */
 const links = [...menu.querySelectorAll('a')];
@@ -1532,7 +1566,7 @@ if (curEl && usesMouse) {
   };
 
   // 밝은 섹션 위에서는 원 테두리를 어둡게
-  const paperBands = [...document.querySelectorAll('.band--paper')];
+  const paperBands = [...document.querySelectorAll('.band--paper, .band--paper-alt')];
   const checkPaper = () => {
     const onPaper = paperBands.some(b => {
       const r = b.getBoundingClientRect();
