@@ -6,6 +6,9 @@
 # 공개되므로 제외합니다. 버전 기록을 남기고 싶으면 이 줄을 지우세요.
 editing.html
 
+# 단계별 버전 스냅샷 (editing_v0.0.html 등) — 미완성본이라 공개하지 않습니다.
+editing_v*.html
+
 # 예전 버전 파일 (사이트에서 쓰지 않음)
 kimhaneul_portfolio.html
 
@@ -18,3 +21,10 @@ assets/works/_original/
 
 # 작업 지침 파일 — Claude 작업용 내부 지침이라 공개 저장소에 올리지 않습니다.
 AGENTS.md
+
+# 이미지 인라인(base64) 미리보기 전용 파일 — 사이트에서 쓰지 않습니다.
+preview.html
+
+# 로컬 작업 폴더 (PDF 변환 등) — 사이트에서 쓰지 않습니다.
+output/
+tmp/
