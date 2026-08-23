@@ -722,6 +722,9 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   filter:drop-shadow(0 14px 26px rgba(60,40,40,.13));
   transition:transform .8s var(--ease);
 }
+.work-slides img.is-feature-enlarged{ scale:1.35; }
+.work-slides img:is([src*="bloom_4.png"],[src*="bloom_9.png"]){ scale:1.15; }
+.work-slides img.is-feature-shifted{ translate:-5% 0; }
 .work-media:hover img{ transform:scale(1.045); }
 
 /* ── 프로젝트 이미지 슬라이드쇼 (2초마다 크로스페이드) ──────────
@@ -815,11 +818,12 @@ body.lens-on #cur{ opacity:0 !important; }
 }
 .lightbox-image-stage{ min-height:0; position:relative; display:grid; place-items:center; overflow:hidden; padding:20px; border-radius:12px; background:#f6f4f2; }
 .lightbox-img{
-  display:block; max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain;
+  display:block; width:100%; height:100%; min-width:0; min-height:0; object-fit:contain;
   filter:drop-shadow(0 14px 28px rgba(45,30,34,.14));
   animation:lightboxImageIn .35s var(--ease) both;
 }
-.lightbox-image-stage.is-series .lightbox-img{ width:100%; height:auto; max-width:100%; max-height:100%; }
+.lightbox-image-stage.is-series .lightbox-img{ width:100%; height:100%; }
+.lightbox-image-stage.is-enlarged .lightbox-img{ scale:var(--lightbox-scale,1.45); translate:var(--lightbox-shift-x,0) 0; }
 .lightbox-lens{
   position:absolute; z-index:3; left:0; top:0; width:168px; height:168px; display:none; overflow:hidden;
   border:2px solid rgba(201,96,95,.78); border-radius:50%; pointer-events:none;
@@ -1252,8 +1256,15 @@ const DATA = {
       ],
       tags: ['AI', 'B2B SaaS', 'Web App', 'Design System', 'Figma'],
       images: [
-        { src: 'assets/works/01_bloom/bloom_1.png', alt: 'Bloom 서비스의 데스크톱과 모바일 화면' },
-        { src: 'assets/works/01_bloom/bloom_2.png', alt: 'Bloom 관리자용 조직 키워드 인사이트와 키워드 클러스터 맵' }
+        { src: 'assets/works/01_bloom/bloom_1.png', label: '서비스 핵심 화면', alt: 'Bloom의 직원용·관리자용 웹앱 핵심 화면' },
+        { src: 'assets/works/01_bloom/bloom_2.png', label: '핵심가치와 솔루션', alt: '조직 멘탈 웰니스의 문제를 개인 케어와 조직 진단 솔루션으로 연결한 핵심 가치 체계' },
+        { src: 'assets/works/01_bloom/bloom_3.png', label: '서비스 타깃', alt: '상반된 니즈를 지닌 조직원과 관리자를 동시에 만족시키는 이중 타깃 서비스 구조' },
+        { src: 'assets/works/01_bloom/bloom_4.png?v=20260823-3', label: '핵심 서비스 구조', alt: '직원용 그린룸과 관리자용 마인드 온톨로지를 하나의 흐름으로 보여주는 핵심 서비스 구조', enlarge: true, enlargeScale: 1.15 },
+        { src: 'assets/works/01_bloom/bloom_5.png?v=20260823-2', label: '그린룸(입장권)', alt: '채팅형 UI로 입력 부담을 낮추고 안전한 개인 정서 케어를 제공하는 그린룸' },
+        { src: 'assets/works/01_bloom/bloom_6.png', label: '그린룸(팟캐스트)', alt: '입장권에 기록한 감정과 고민을 바탕으로 맞춤형 AI 팟캐스트를 제공하는 사용자 흐름' },
+        { src: 'assets/works/01_bloom/bloom_7.png', label: '마인드 온톨로지', alt: '그린룸의 조직 키워드와 관계 데이터를 시각화한 관리자용 마인드 온톨로지' },
+        { src: 'assets/works/01_bloom/bloom_8.png', label: '스토리보드', alt: '조직원과 관리자가 각자의 핵심 경험에서 Bloom을 사용하는 과정을 담은 스토리보드' },
+        { src: 'assets/works/01_bloom/bloom_9.png?v=20260823-2', label: '협업 과정', alt: 'Figma 컴포넌트 체계와 전달 기준을 바탕으로 PM·개발·AI 등 여러 직군과 협업한 과정', enlarge: true, enlargeScale: 1.15 }
       ]
     },
     {
@@ -1269,7 +1280,12 @@ const DATA = {
       ],
       tags: ['Responsive Web', 'Design System', 'Brand Identity', 'Figma', 'Adobe Illustrator'],
       images: [
-        { src: 'assets/works/02_pycon/pycon_1.png', alt: '파이콘 한국 2025 홈페이지 비주얼 아이덴티티' }
+        { src: 'assets/works/02_pycon/pycon_1.png', label: '리뉴얼 웹사이트', alt: 'Weave with Python 키 비주얼을 적용한 파이콘 한국 2025 반응형 홈페이지' },
+        { src: 'assets/works/02_pycon/pycon_2.png', label: '사용자 문제 정의', alt: '기존 파이콘 웹사이트의 정보 탐색과 티켓 확인 불편을 정리한 사용자 리뷰 분석', enlarge: true, enlargeScale: 1.25, shiftX: '-4%', mainEnlarge: true, mainShift: true },
+        { src: 'assets/works/02_pycon/pycon_3.png', label: '브랜드 아이덴티티', alt: 'Weave with Python 슬로건과 연결의 의미를 담은 로고·컬러 시스템' },
+        { src: 'assets/works/02_pycon/pycon_5.png', label: '행사 티셔츠 디자인 3종', alt: '발표자·튜토리얼 진행자·운영진을 구분해 제작한 파이콘 한국 2025 티셔츠', enlarge: true, mainEnlarge: true },
+        { src: 'assets/works/02_pycon/pycon_6.png', label: '통합 디자인 산출물', alt: '홈페이지, 포스터, PPT, 행사 배너, 굿즈까지의 파이콘 한국 2025 브랜드 산출물' },
+        { src: 'assets/works/02_pycon/pycon_7.png', label: '현장 스케치', alt: '동국대학교에서 진행한 파이콘 한국 2025 행사 이미지 스케치' }
       ]
     },
     {
@@ -1499,7 +1515,7 @@ el('works-list').innerHTML = DATA.works.map((w, i) => `
   <article class="work rv${i % 2 ? ' work--flip' : ''}">
     <div class="work-media" data-slideshow>
       <div class="work-slides" role="button" tabindex="0" aria-label="${w.title} 이미지 크게 보기">
-        ${w.images.map((im, k) => `<img class="${k ? '' : 'is-on'}" src="${im.src}" alt="${im.alt}" loading="lazy" decoding="async">`).join('')}
+        ${w.images.map((im, k) => `<img class="${[k ? '' : 'is-on',im.mainEnlarge ? 'is-feature-enlarged' : '',im.mainShift ? 'is-feature-shifted' : ''].filter(Boolean).join(' ')}" src="${im.src}" alt="${im.alt}" loading="lazy" decoding="async">`).join('')}
       </div>
       ${w.images.length > 1 ? `
       <button class="sl-nav sl-prev" type="button" aria-label="${w.title} 이전 이미지">‹</button>
@@ -1611,6 +1627,9 @@ const renderLightbox = () => {
   lightboxLensImg.src = item.src;
   lightboxStage.classList.remove('is-magnifying');
   lightboxStage.classList.toggle('is-series',!!item.series);
+  lightboxStage.classList.toggle('is-enlarged',!!item.enlarge);
+  lightboxStage.style.setProperty('--lightbox-scale',item.enlargeScale || 1.45);
+  lightboxStage.style.setProperty('--lightbox-shift-x',item.shiftX || '0');
   document.body.classList.remove('lens-on');
   lightboxCount.textContent = `${lightboxIndex + 1} / ${lightboxItems.length}`;
   lightboxCaption.textContent = item.alt;
@@ -1624,7 +1643,7 @@ const openLightbox = slides => {
   const imgs = [...slides.querySelectorAll('img')];
   const workIndex = [...document.querySelectorAll('.work-slides')].indexOf(slides);
   const workImages = DATA.works[workIndex]?.images || [];
-  lightboxItems = imgs.map((img,index) => ({ src:img.src, alt:img.alt, label:workImages[index]?.label, series:workImages[index]?.series }));
+  lightboxItems = imgs.map((img,index) => ({ src:img.src, alt:img.alt, label:workImages[index]?.label, series:workImages[index]?.series, enlarge:workImages[index]?.enlarge, enlargeScale:workImages[index]?.enlargeScale, shiftX:workImages[index]?.shiftX }));
   lightboxIndex = Math.max(0, imgs.findIndex(img => img.classList.contains('is-on')));
   lightboxTrigger = slides;
   lightboxTitle.textContent = slides.closest('.work')?.querySelector('h3')?.textContent || 'Project images';
@@ -1664,24 +1683,32 @@ lightboxFiles.addEventListener('click', e => {
 function updateLightboxLens(e) {
   if (e.pointerType === 'touch') return;
   const stageRect = lightboxStage.getBoundingClientRect();
-  const imageRect = lightboxImg.getBoundingClientRect();
-  if (e.clientX < imageRect.left || e.clientX > imageRect.right || e.clientY < imageRect.top || e.clientY > imageRect.bottom) {
+  const imageBox = lightboxImg.getBoundingClientRect();
+  const imageRatio = lightboxImg.naturalWidth / lightboxImg.naturalHeight;
+  const boxRatio = imageBox.width / imageBox.height;
+  const shownWidth = imageRatio > boxRatio ? imageBox.width : imageBox.height * imageRatio;
+  const shownHeight = imageRatio > boxRatio ? imageBox.width / imageRatio : imageBox.height;
+  const imageLeft = imageBox.left + (imageBox.width - shownWidth) / 2;
+  const imageTop = imageBox.top + (imageBox.height - shownHeight) / 2;
+  const imageRight = imageLeft + shownWidth;
+  const imageBottom = imageTop + shownHeight;
+  if (e.clientX < imageLeft || e.clientX > imageRight || e.clientY < imageTop || e.clientY > imageBottom) {
     lightboxStage.classList.remove('is-magnifying');
     document.body.classList.remove('lens-on');
     return;
   }
   const x = e.clientX - stageRect.left;
   const y = e.clientY - stageRect.top;
-  const imageX = e.clientX - imageRect.left;
-  const imageY = e.clientY - imageRect.top;
+  const imageX = e.clientX - imageLeft;
+  const imageY = e.clientY - imageTop;
   const zoom = 2.6;
   const lensRadius = lightboxLens.offsetWidth / 2;
   lightboxStage.classList.add('is-magnifying');
   document.body.classList.add('lens-on');
   lightboxLens.style.left = `${x}px`;
   lightboxLens.style.top = `${y}px`;
-  lightboxLensImg.style.width = `${imageRect.width * zoom}px`;
-  lightboxLensImg.style.height = `${imageRect.height * zoom}px`;
+  lightboxLensImg.style.width = `${shownWidth * zoom}px`;
+  lightboxLensImg.style.height = `${shownHeight * zoom}px`;
   lightboxLensImg.style.left = `${lensRadius - imageX * zoom}px`;
   lightboxLensImg.style.top = `${lensRadius - imageY * zoom}px`;
 }
