@@ -84,7 +84,7 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
    마우스가 있는 기기에서만 켜집니다.
    ══════════════════════════════════════════════ */
 .cur{
-  position:fixed; left:0; top:0; z-index:300; pointer-events:none;
+  position:fixed; left:0; top:0; z-index:10020; pointer-events:none;
   opacity:0; transition:opacity .3s; will-change:transform;
 }
 /* 링·점·광선 모두 커서를 중심으로 겹쳐 놓고 scale 로만 변형합니다
@@ -726,7 +726,8 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 
 /* ── 프로젝트 이미지 슬라이드쇼 (2초마다 크로스페이드) ──────────
    이미지를 겹쳐 쌓고 opacity만 바꿔 부드럽게 교차시킵니다.      */
-.work-slides{ position:relative; width:100%; height:100%; }
+.work-slides{ position:relative; width:100%; height:100%; cursor:zoom-in; }
+.work-slides:focus-visible{ outline:2px solid var(--rose); outline-offset:7px; border-radius:10px; }
 .work-slides img{
   position:absolute; inset:0;
   opacity:0; transition:opacity .75s var(--ease), transform .8s var(--ease);
@@ -766,6 +767,103 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 .sl-nav:focus-visible{ opacity:1; outline:2px solid var(--rose); outline-offset:2px; }
 .sl-prev{ left:12px; }
 .sl-next{ right:12px; }
+
+/* ── 프로젝트 이미지 크게 보기 ─────────────────────────────── */
+body.lightbox-open{ overflow:hidden; }
+body.lightbox-open .cur-ring{ border-color:rgba(201,96,95,.95); background:rgba(201,96,95,.12); }
+body.lightbox-open .cur-ring2{ border-color:rgba(224,161,158,.9); }
+body.lens-on #cur{ opacity:0 !important; }
+.work-lightbox[hidden]{ display:none; }
+.work-lightbox{
+  position:fixed; inset:0; z-index:10000;
+  display:grid; place-items:center; padding:32px;
+  background:rgba(22,19,21,.7); backdrop-filter:blur(8px);
+  animation:lightboxIn .28s ease both;
+}
+@keyframes lightboxIn{ from{ opacity:0; } to{ opacity:1; } }
+.lightbox-window{
+  width:min(1000px,calc(100vw - 64px)); height:min(620px,calc(100vh - 64px)); padding:0;
+  display:grid; grid-template-rows:auto minmax(0,1fr); overflow:hidden;
+  border:1px solid rgba(58,45,48,.14); border-radius:22px;
+  background:var(--paper); box-shadow:0 30px 90px rgba(15,10,12,.3);
+  animation:lightboxWindowIn .35s var(--ease) both;
+}
+@keyframes lightboxWindowIn{ from{ opacity:0; transform:translateY(12px) scale(.98); } to{ opacity:1; transform:none; } }
+.lightbox-header{
+  display:flex; align-items:center; justify-content:space-between; gap:24px;
+  min-height:82px; padding:18px 20px 18px 26px; border-bottom:1px solid var(--line-paper);
+}
+.lightbox-eyebrow{ display:block; margin-bottom:4px; color:var(--rose); font-family:var(--en); font-size:10px; font-weight:600; letter-spacing:.16em; }
+.lightbox-title{ margin:0; color:var(--on-paper); font-size:18px; font-weight:600; letter-spacing:-.02em; }
+.lightbox-body{ min-height:0; display:grid; grid-template-columns:220px minmax(0,1fr); }
+.lightbox-sidebar{ min-height:0; padding:22px 16px; overflow:auto; border-right:1px solid var(--line-paper); background:var(--paper-2); }
+.lightbox-index-head{ display:flex; justify-content:space-between; padding:0 8px 14px; color:var(--on-paper-dim); font-family:var(--en); font-size:10px; font-weight:600; letter-spacing:.13em; }
+.lightbox-files{ display:grid; gap:5px; }
+.lightbox-file{
+  width:100%; min-width:0; display:grid; grid-template-columns:28px minmax(0,1fr); align-items:center; gap:9px;
+  padding:11px 10px; border:0; border-radius:9px; background:transparent; color:var(--on-paper-dim);
+  text-align:left; cursor:pointer; transition:background .2s,color .2s,transform .2s;
+}
+.lightbox-file:hover{ background:rgba(207,94,97,.08); color:var(--on-paper); transform:translateX(2px); }
+.lightbox-file[aria-current="true"]{ background:var(--rose); color:#fff; }
+.lightbox-file:focus-visible,.lightbox-close:focus-visible{ outline:2px solid var(--rose); outline-offset:2px; }
+.lightbox-file-no{ font-family:var(--en); font-size:11px; font-weight:600; letter-spacing:.08em; }
+.lightbox-file-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11.5px; }
+.lightbox-preview{
+  min-width:0; min-height:0; position:relative; display:grid; grid-template-rows:minmax(0,1fr) auto;
+  gap:14px; margin:0; padding:26px; background:#ebe8e6;
+}
+.lightbox-image-stage{ min-height:0; position:relative; display:grid; place-items:center; overflow:hidden; padding:20px; border-radius:12px; background:#f6f4f2; }
+.lightbox-img{
+  display:block; max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain;
+  filter:drop-shadow(0 14px 28px rgba(45,30,34,.14));
+  animation:lightboxImageIn .35s var(--ease) both;
+}
+.lightbox-image-stage.is-series .lightbox-img{ width:100%; height:auto; max-width:100%; max-height:100%; }
+.lightbox-lens{
+  position:absolute; z-index:3; left:0; top:0; width:168px; height:168px; display:none; overflow:hidden;
+  border:2px solid rgba(201,96,95,.78); border-radius:50%; pointer-events:none;
+  background:#fff; box-shadow:0 12px 34px rgba(42,25,30,.22),inset 0 0 0 4px rgba(255,255,255,.7);
+  translate:-50% -50%;
+}
+.lightbox-lens-img{ position:absolute; display:block; max-width:none; max-height:none; pointer-events:none; }
+.lightbox-image-stage.is-magnifying .lightbox-lens{ display:block; }
+.lightbox-zoom-hint{
+  position:absolute; z-index:2; top:14px; right:14px; display:flex; align-items:center; gap:7px;
+  padding:8px 11px; border:1px solid rgba(75,60,64,.12); border-radius:999px;
+  background:rgba(255,255,255,.82); color:#695f61; font-size:10.5px; font-weight:500;
+  box-shadow:0 5px 18px rgba(45,30,34,.08); backdrop-filter:blur(7px);
+  pointer-events:none; transition:opacity .2s,transform .2s;
+}
+.lightbox-zoom-hint::before{ content:'⌕'; color:var(--rose); font-family:var(--en); font-size:15px; line-height:1; }
+.lightbox-image-stage.is-magnifying .lightbox-zoom-hint{ opacity:0; transform:translateY(-3px); }
+@keyframes lightboxImageIn{ from{ opacity:0; transform:scale(.975); } to{ opacity:1; transform:none; } }
+.lightbox-close{ flex:0 0 auto; display:grid; place-items:center; width:42px; height:42px; padding:0 0 2px; border:1px solid var(--line-paper); border-radius:50%; background:transparent; color:var(--on-paper); font-size:24px; font-weight:300; line-height:1; cursor:pointer; transition:background .2s,transform .2s; }
+.lightbox-close:hover{ background:var(--rose); color:#fff; border-color:var(--rose); transform:rotate(5deg); }
+.lightbox-meta{
+  min-width:0; display:flex; align-items:center; justify-content:space-between; gap:22px; color:var(--on-paper-dim); font-size:12px; line-height:1.5;
+}
+.lightbox-count{ flex:0 0 auto; margin-left:auto; color:var(--rose); font-family:var(--en); font-weight:600; letter-spacing:.08em; }
+.lightbox-caption{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+@media (max-width:700px){
+  .work-lightbox{ padding:10px; }
+  .lightbox-window{ width:calc(100vw - 20px); height:min(86vh,760px); border-radius:17px; }
+  .lightbox-header{ min-height:70px; padding:14px 14px 14px 18px; }
+  .lightbox-title{ font-size:15px; }
+  .lightbox-close{ width:38px; height:38px; }
+  .lightbox-body{ grid-template-columns:1fr; grid-template-rows:auto minmax(0,1fr); }
+  .lightbox-sidebar{ padding:10px 12px; overflow-x:auto; overflow-y:hidden; border-right:0; border-bottom:1px solid var(--line-paper); }
+  .lightbox-index-head{ display:none; }
+  .lightbox-files{ display:flex; width:max-content; gap:6px; }
+  .lightbox-file{ width:auto; grid-template-columns:auto; padding:9px 13px; }
+  .lightbox-file:hover{ transform:none; }
+  .lightbox-file-name{ display:none; }
+  .lightbox-preview{ padding:14px; gap:10px; }
+  .lightbox-image-stage{ padding:10px 12px; border-radius:9px; }
+  .lightbox-lens{ display:none !important; }
+  .lightbox-zoom-hint{ display:none; }
+  .lightbox-caption{ display:none; }
+}
 
 @media (max-width:860px){
   /* 터치 기기에는 hover가 없으므로 조작 요소를 항상 보여줍니다 */
@@ -1186,7 +1284,14 @@ const DATA = {
       ],
       tags: ['Mobile UX', 'Design System', 'UT', 'Figma'],
       images: [
-        { src: 'assets/works/03_nalssimong/nalssimong_1.png', alt: '날씨몽 앱의 지도, 체크리스트, 캘린더 화면' }
+        { src: 'assets/works/03_nalssimong/nalssimong_1.png', label: '서비스 핵심 화면', alt: '날씨몽 앱의 지도, 체크리스트, 홈, 코디 캘린더 주요 화면' },
+        { src: 'assets/works/03_nalssimong/nalssimong_2.png', label: '사용자 여정 지도', alt: '여행 전·중·후 사용자 행동과 페인포인트를 연결한 사용자 여정 지도' },
+        { src: 'assets/works/03_nalssimong/nalssimong_3.png', label: '디자인 시스템', alt: '일관된 서비스 경험을 위한 로고·컬러·컴포넌트 디자인 시스템' },
+        { src: 'assets/works/03_nalssimong/nalssimong_4.png', label: '서비스 정보 구조', alt: '일정, 체크리스트, 대응 지도, 현지인 옷차림으로 구성된 날씨몽 정보 구조' },
+        { src: 'assets/works/03_nalssimong/nalssimong_5.png?v=20260823-4', label: '여행 날씨 홈', alt: '일정별 예보와 필요한 대응 행동을 함께 제안하는 여행 날씨 홈', series: true },
+        { src: 'assets/works/03_nalssimong/nalssimong_6.png?v=20260823-3', label: '상황별 대응 지도', alt: '현재 날씨에 맞는 장소와 준비물을 추천하는 상황별 대응 지도', series: true },
+        { src: 'assets/works/03_nalssimong/nalssimong_7.png?v=20260823-3', label: '맞춤 체크리스트', alt: '공통 준비물과 현지 날씨 맞춤 항목을 관리하는 체크리스트 화면', series: true },
+        { src: 'assets/works/03_nalssimong/nalssimong_8.png', label: '사용성 테스트 개선', alt: '사용성 테스트에서 발견한 문제와 개선 결과를 비교한 체크리스트 고도화 과정' }
       ]
     },
     {
@@ -1393,7 +1498,7 @@ el('skill-groups').innerHTML = DATA.skills.groups.map(g => `
 el('works-list').innerHTML = DATA.works.map((w, i) => `
   <article class="work rv${i % 2 ? ' work--flip' : ''}">
     <div class="work-media" data-slideshow>
-      <div class="work-slides">
+      <div class="work-slides" role="button" tabindex="0" aria-label="${w.title} 이미지 크게 보기">
         ${w.images.map((im, k) => `<img class="${k ? '' : 'is-on'}" src="${im.src}" alt="${im.alt}" loading="lazy" decoding="async">`).join('')}
       </div>
       ${w.images.length > 1 ? `
@@ -1458,6 +1563,145 @@ document.querySelectorAll('.work-media[data-slideshow]').forEach(media => {
     { threshold: .25 }).observe(media);
 
   still.addEventListener?.('change', sync);
+});
+
+/* ── 프로젝트 이미지 라이트박스 ──────────────────────────────
+   이미지를 클릭하거나 Enter/Space를 누르면 크게 열립니다.
+   좌우 버튼·방향키로 같은 프로젝트의 이미지를 넘길 수 있습니다. */
+document.body.insertAdjacentHTML('beforeend', `
+  <div class="work-lightbox" role="dialog" aria-modal="true" aria-label="프로젝트 이미지 크게 보기" hidden>
+    <section class="lightbox-window">
+      <header class="lightbox-header">
+        <div><span class="lightbox-eyebrow">PROJECT FILES</span><h2 class="lightbox-title"></h2></div>
+        <button class="lightbox-close" type="button" aria-label="크게 보기 닫기">×</button>
+      </header>
+      <div class="lightbox-body">
+        <nav class="lightbox-sidebar" aria-label="프로젝트 이미지 파일">
+          <div class="lightbox-index-head"><span>INDEX</span><span class="lightbox-total"></span></div>
+          <div class="lightbox-files"></div>
+        </nav>
+        <figure class="lightbox-preview">
+          <div class="lightbox-image-stage"><img class="lightbox-img" src="" alt=""><span class="lightbox-zoom-hint">이미지 위에 커서를 올려 자세히 보세요</span><span class="lightbox-lens" aria-hidden="true"><img class="lightbox-lens-img" src="" alt=""></span></div>
+          <figcaption class="lightbox-meta"><span class="lightbox-caption"></span><span class="lightbox-count"></span></figcaption>
+        </figure>
+      </div>
+    </section>
+  </div>`);
+
+const lightbox = document.querySelector('.work-lightbox');
+const lightboxImg = lightbox.querySelector('.lightbox-img');
+const lightboxCount = lightbox.querySelector('.lightbox-count');
+const lightboxCaption = lightbox.querySelector('.lightbox-caption');
+const lightboxClose = lightbox.querySelector('.lightbox-close');
+const lightboxTitle = lightbox.querySelector('.lightbox-title');
+const lightboxTotal = lightbox.querySelector('.lightbox-total');
+const lightboxFiles = lightbox.querySelector('.lightbox-files');
+const lightboxStage = lightbox.querySelector('.lightbox-image-stage');
+const lightboxLens = lightbox.querySelector('.lightbox-lens');
+const lightboxLensImg = lightbox.querySelector('.lightbox-lens-img');
+let lightboxItems = [], lightboxIndex = 0, lightboxTrigger = null;
+
+const renderLightbox = () => {
+  const item = lightboxItems[lightboxIndex];
+  lightboxImg.classList.remove('lightbox-img');
+  void lightboxImg.offsetWidth;
+  lightboxImg.classList.add('lightbox-img');
+  lightboxImg.src = item.src;
+  lightboxImg.alt = item.alt;
+  lightboxLensImg.src = item.src;
+  lightboxStage.classList.remove('is-magnifying');
+  lightboxStage.classList.toggle('is-series',!!item.series);
+  document.body.classList.remove('lens-on');
+  lightboxCount.textContent = `${lightboxIndex + 1} / ${lightboxItems.length}`;
+  lightboxCaption.textContent = item.alt;
+  [...lightboxFiles.children].forEach((button,index) => button.setAttribute('aria-current',String(index === lightboxIndex)));
+};
+const moveLightbox = step => {
+  lightboxIndex = (lightboxIndex + step + lightboxItems.length) % lightboxItems.length;
+  renderLightbox();
+};
+const openLightbox = slides => {
+  const imgs = [...slides.querySelectorAll('img')];
+  const workIndex = [...document.querySelectorAll('.work-slides')].indexOf(slides);
+  const workImages = DATA.works[workIndex]?.images || [];
+  lightboxItems = imgs.map((img,index) => ({ src:img.src, alt:img.alt, label:workImages[index]?.label, series:workImages[index]?.series }));
+  lightboxIndex = Math.max(0, imgs.findIndex(img => img.classList.contains('is-on')));
+  lightboxTrigger = slides;
+  lightboxTitle.textContent = slides.closest('.work')?.querySelector('h3')?.textContent || 'Project images';
+  lightboxTotal.textContent = `${lightboxItems.length} FILES`;
+  lightboxFiles.innerHTML = lightboxItems.map((item,index) => {
+    const filename = decodeURIComponent(new URL(item.src).pathname.split('/').pop());
+    const label = item.label || item.alt || filename;
+    return `<button class="lightbox-file" type="button" data-index="${index}" aria-current="false" aria-label="${label} 보기"><span class="lightbox-file-no">${String(index + 1).padStart(2,'0')}</span><span class="lightbox-file-name">${label}</span></button>`;
+  }).join('');
+  renderLightbox();
+  lightbox.hidden = false;
+  document.body.classList.add('lightbox-open');
+  lightboxClose.focus();
+};
+const closeLightbox = () => {
+  lightbox.hidden = true;
+  lightboxImg.src = '';
+  document.body.classList.remove('lightbox-open','lens-on');
+  lightboxTrigger?.focus();
+};
+
+document.querySelectorAll('.work-slides').forEach(slides => {
+  slides.addEventListener('click', () => openLightbox(slides));
+  slides.addEventListener('keydown', e => {
+    if (!['Enter',' '].includes(e.key)) return;
+    e.preventDefault();
+    openLightbox(slides);
+  });
+});
+lightboxClose.addEventListener('click', closeLightbox);
+lightboxFiles.addEventListener('click', e => {
+  const button = e.target.closest('.lightbox-file');
+  if (!button) return;
+  lightboxIndex = Number(button.dataset.index);
+  renderLightbox();
+});
+function updateLightboxLens(e) {
+  if (e.pointerType === 'touch') return;
+  const stageRect = lightboxStage.getBoundingClientRect();
+  const imageRect = lightboxImg.getBoundingClientRect();
+  if (e.clientX < imageRect.left || e.clientX > imageRect.right || e.clientY < imageRect.top || e.clientY > imageRect.bottom) {
+    lightboxStage.classList.remove('is-magnifying');
+    document.body.classList.remove('lens-on');
+    return;
+  }
+  const x = e.clientX - stageRect.left;
+  const y = e.clientY - stageRect.top;
+  const imageX = e.clientX - imageRect.left;
+  const imageY = e.clientY - imageRect.top;
+  const zoom = 2.6;
+  const lensRadius = lightboxLens.offsetWidth / 2;
+  lightboxStage.classList.add('is-magnifying');
+  document.body.classList.add('lens-on');
+  lightboxLens.style.left = `${x}px`;
+  lightboxLens.style.top = `${y}px`;
+  lightboxLensImg.style.width = `${imageRect.width * zoom}px`;
+  lightboxLensImg.style.height = `${imageRect.height * zoom}px`;
+  lightboxLensImg.style.left = `${lensRadius - imageX * zoom}px`;
+  lightboxLensImg.style.top = `${lensRadius - imageY * zoom}px`;
+}
+lightboxStage.addEventListener('pointermove', updateLightboxLens);
+lightboxStage.addEventListener('pointerleave', () => {
+  lightboxStage.classList.remove('is-magnifying');
+  document.body.classList.remove('lens-on');
+});
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (lightbox.hidden) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') moveLightbox(-1);
+  if (e.key === 'ArrowRight') moveLightbox(1);
+  if (e.key === 'Tab') {
+    const controls = [...lightbox.querySelectorAll('button')].filter(button => !button.hidden);
+    const first = controls[0], last = controls.at(-1);
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
 });
 
 /* ── AWARDS ── */
@@ -1698,7 +1942,7 @@ if (curEl && usesMouse) {
       loop();
     }
     // 링크·버튼 위에서는 링이 커지고 동심원이 생깁니다
-    const hot = e.target.closest && e.target.closest('a, button, .work-media, .strength');
+    const hot = e.target.closest && e.target.closest('a, button, .work-media, .lightbox-image-stage, .strength');
     document.body.classList.toggle('cur-tap', !!hot);
     checkPaper();
   }, { passive: true });
