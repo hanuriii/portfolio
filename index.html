@@ -724,6 +724,7 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 }
 .work-slides img.is-feature-enlarged{ scale:1.35; }
 .work-slides img:is([src*="bloom_4.png"],[src*="bloom_9.png"]){ scale:1.15; }
+.work-slides img:is([src*="bappul_2.png"],[src*="bappul_3.png"],[src*="bappul_4.png"],[src*="bappul_9.png"]){ scale:1.12; }
 .work-slides img.is-feature-shifted{ translate:-5% 0; }
 .work-media:hover img{ transform:scale(1.045); }
 
@@ -811,7 +812,10 @@ body.lens-on #cur{ opacity:0 !important; }
 .lightbox-file[aria-current="true"]{ background:var(--rose); color:#fff; }
 .lightbox-file:focus-visible,.lightbox-close:focus-visible{ outline:2px solid var(--rose); outline-offset:2px; }
 .lightbox-file-no{ font-family:var(--en); font-size:11px; font-weight:600; letter-spacing:.08em; }
-.lightbox-file-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11.5px; }
+.lightbox-file-name{
+  display:-webkit-box; overflow:hidden; font-size:11.5px; line-height:1.45;
+  -webkit-box-orient:vertical; -webkit-line-clamp:2;
+}
 .lightbox-preview{
   min-width:0; min-height:0; position:relative; display:grid; grid-template-rows:minmax(0,1fr) auto;
   gap:14px; margin:0; padding:26px; background:#ebe8e6;
@@ -1323,7 +1327,17 @@ const DATA = {
       ],
       tags: ['Figma', 'BM', 'Mobile UX', 'Gamification'],
       images: [
-        { src: 'assets/works/04_bappul/bappul_1.png', alt: '밥풀 서비스의 캐릭터 일러스트레이션' }
+        { src: 'assets/works/04_bappul/bappul_1.png?v=20260824', label: '서비스 핵심 화면', alt: '개인 식사 미션과 팀 챌린지를 중심으로 구성한 밥풀의 핵심 화면' },
+        { src: 'assets/works/04_bappul/bappul_2.png?v=20260824', label: '시장·사용자 배경', alt: '1인 가구 증가와 청년층의 불규칙한 식사 문제를 보여주는 시장 및 사용자 데이터', enlarge: true, enlargeScale: 1.12 },
+        { src: 'assets/works/04_bappul/bappul_3.png?v=20260824', label: '사용자 문제와 솔루션', alt: '1인 가구의 식습관 문제를 네 가지 서비스 솔루션으로 연결한 문제 정의', enlarge: true, enlargeScale: 1.12 },
+        { src: 'assets/works/04_bappul/bappul_4.png?v=20260824', label: '밥풀의 이점', alt: '스트레스 없는 인증, 함께 만드는 책임감, 일상 속 밀착, 지속 가능한 선순환으로 정리한 밥풀의 이점', enlarge: true, enlargeScale: 1.12 },
+        { src: 'assets/works/04_bappul/bappul_5.png?v=20260824', label: '개인화 습관 형성', alt: '식습관 유형 진단 결과를 캐릭터와 맞춤 미션으로 연결한 개인화 경험' },
+        { src: 'assets/works/04_bappul/bappul_6.png?v=20260824', label: '월간 캘린더와 주간 AI 리포트', alt: '월간 캘린더와 주간 AI 리포트로 식사 리듬을 분석하고 다음 미션을 제안하여 지속적으로 앱을 사용하게끔 유도하는 화면' },
+        { src: 'assets/works/04_bappul/bappul_7.png?v=20260824', label: '밥상머리대결', alt: '파트너 매칭부터 공동 미션 수행과 결과 확인까지 이어지는 팀 챌린지 사용자 흐름' },
+        { src: 'assets/works/04_bappul/bappul_8.png?v=20260824', label: '소프트 페이월', alt: '핵심 경험을 방해하지 않으면서 유료 기능의 가치를 전달하는 단계별 소프트 페이월 설계' },
+        { src: 'assets/works/04_bappul/bappul_9.png?v=20260824', label: '마이페이지 UT 개선 화면', alt: '탐색과 구매가 쉽도록 아이템 정보 구조와 화면 구성을 개선한 AS-IS 및 TO-BE 비교', enlarge: true, enlargeScale: 1.12 },
+        { src: 'assets/works/04_bappul/bappul_10.png?v=20260824', label: '사용자 여정 지도', alt: '식습관 개선 과정의 행동, 접점, 감정 변화를 단계별로 정리한 사용자 여정 지도' },
+        { src: 'assets/works/04_bappul/bappul_11.png?v=20260824', label: '디자인 시스템', alt: '밥풀의 캐릭터, 컬러, 타이포그래피, 아이콘과 UI 요소를 정리한 통합 디자인 시스템' }
       ]
     },
     {
