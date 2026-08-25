@@ -193,8 +193,10 @@ section.tight{ padding-top:0; }
 .nav.is-stuck{ border-bottom-color:var(--line-ink); }
 .nav.is-paper.is-stuck{ border-bottom-color:var(--line-paper); }
 .nav-in{ display:flex; align-items:center; justify-content:space-between; height:100%; }
-.brand{ font-family:var(--en); font-weight:600; font-size:19px; letter-spacing:-.02em; }
-.brand .d{ color:var(--rose); }
+.brand{ display:flex; align-items:center; width:102px; height:28px; }
+.brand-mark{ display:block; width:100%; height:auto; filter:invert(1); transition:filter .3s,opacity .25s; }
+.nav.is-paper .brand-mark{ filter:none; }
+.brand:hover .brand-mark{ opacity:.68; }
 .nav-menu{ display:flex; align-items:center; gap:6px; }
 .nav-menu a{
   position:relative; padding:9px 14px; border-radius:8px;
@@ -479,12 +481,19 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 /* 이름 — 한 줄에 나란히, 한글은 크고 진하게 / 영문은 작고 흐리게 */
 .portrait-cap{
   display:flex; align-items:baseline; flex-wrap:wrap; gap:2px 8px;
-  margin-top:26px; font-size:12.5px; line-height:1.4; letter-spacing:.12em;
+  font-size:12.5px; line-height:1.4; letter-spacing:.12em;
 }
 .portrait-cap b{
   font-size:20px; font-weight:600; color:var(--on-paper);
   letter-spacing:-.02em;
 }
+.portrait-meta{ margin-top:26px; min-width:0; }
+.portrait-edu{
+  display:grid; gap:5px; margin-top:16px; padding-top:15px;
+  border-top:1px solid rgba(103,108,131,.18);
+}
+.portrait-edu strong{ font-size:13.5px; font-weight:600; color:var(--on-paper); letter-spacing:-.015em; }
+.portrait-edu span{ font-size:12.5px; line-height:1.55; color:var(--on-paper-dim); letter-spacing:-.01em; }
 .about-h{
   font-size:clamp(22px,3.2vw,32px); font-weight:600; line-height:1.45;
   letter-spacing:-.03em; margin-bottom:24px;
@@ -498,9 +507,27 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 .strength-explorer{
   min-height:280px; padding-block:18px;
 }
+.strength-intro{
+  display:grid; justify-items:end; gap:12px;
+  margin-bottom:30px; padding-inline:4px; text-align:right;
+}
+.strength-heading{
+  display:inline-block;
+  font-family:"IvyPresto Display","IvyPrestoDisplay",Georgia,"Times New Roman",serif;
+  font-size:clamp(34px,4vw,46px); font-weight:400; line-height:1.02;
+  letter-spacing:.015em; color:transparent;
+  -webkit-text-stroke:.8px rgba(103,108,131,.68);
+  transform:scaleX(1.16); transform-origin:right center;
+}
+.strength-heading .fill{
+  color:rgba(103,108,131,.88); -webkit-text-stroke:0;
+}
 .strength-objects{
   display:flex; align-items:center; justify-content:space-between;
-  gap:12px; min-height:188px; padding:18px 4px;
+  gap:12px; height:250px; min-height:250px; padding:28px 22px;
+  border:1px solid rgba(143,158,196,.16); border-radius:24px;
+  background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(207,212,226,.22) 50%,rgba(255,255,255,.72));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.82),0 22px 54px -46px rgba(95,107,168,.24);
 }
 .strength-object{
   position:relative; display:grid; place-items:center;
@@ -581,9 +608,10 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 
 .strength-detail{
   position:relative; width:min(310px,28vw); min-height:194px; flex:0 0 min(310px,28vw);
-  padding:28px 26px; overflow:hidden;
+  padding:28px 26px; overflow:hidden; cursor:pointer;
   animation:detailIn .48s var(--ease) both;
 }
+.strength-detail:focus-visible{ outline:2px solid var(--rose); outline-offset:4px; border-radius:12px; }
 @keyframes detailIn{ from{ opacity:0; transform:translateX(24px); } to{ opacity:1; transform:none; } }
 .strength-detail::before{
   content:""; position:absolute; width:170px; height:170px; right:-78px; top:-84px;
@@ -595,22 +623,23 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 .strength-detail p{ font-size:15px; line-height:1.8; color:var(--on-paper-dim); }
 .strength-hint{ margin-top:16px; font-size:11px; color:var(--on-paper-dim); letter-spacing:.08em; }
 .strength-empty-hint{
-  display:flex; align-items:center; justify-content:center; gap:12px;
-  margin-bottom:4px; font-family:var(--en); font-size:11px; font-weight:500;
-  color:var(--on-paper-dim); letter-spacing:.16em;
+  display:flex; align-items:center; justify-content:flex-end;
+  max-width:620px; font-size:13.5px; font-weight:400; line-height:1.7;
+  color:var(--on-paper-dim); letter-spacing:-.01em;
 }
-.strength-empty-hint::before{ content:""; width:28px; height:1px; background:var(--rose); }
 .strength-empty-hint[hidden]{ display:none; }
 
 @media (max-width:960px){
-  .strength-objects{ flex-wrap:wrap; justify-content:flex-start; }
+  .strength-objects{ height:auto; min-height:250px; flex-wrap:wrap; justify-content:flex-start; }
   .strength-object{ flex:1 1 92px; }
   .strength-detail{ width:100%; flex:1 0 100%; min-height:160px; margin-top:34px; border-left:0; border-top:1px solid var(--line-paper); }
 }
 @media (max-width:680px){
   .strengths{ margin-top:42px; }
   .strength-explorer{ min-height:250px; }
-  .strength-objects{ overflow-x:visible; gap:6px; padding:18px 2px 26px; }
+  .strength-intro{ margin-bottom:20px; padding-inline:0; }
+  .strength-heading{ transform:scaleX(1.04); }
+  .strength-objects{ overflow-x:visible; gap:6px; padding:22px 10px 28px; border-radius:18px; }
   .strength-object{ flex:1 1 calc(33.333% - 6px); width:auto; height:118px; }
   .strength-objects.has-selection .strength-object{ flex-basis:calc(33.333% - 6px); }
   .strength-objects.has-selection .strength-object[aria-selected="true"]{ flex-basis:calc(33.333% - 6px); transform:scale(1.08); }
@@ -620,20 +649,6 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   .shape--rings .ai-node--center{ left:25px; top:25px; }
   .strength-detail{ order:2; width:100%; flex-basis:100%; padding:26px 18px; }
 }
-
-/* 학력 — PC: 2줄 × 2칸
-   1줄: 학교명(왼쪽) + 기간(오른쪽)  /  2줄: 학과(왼쪽) + GPA(오른쪽) */
-.edu{
-  display:grid; grid-template-columns:1fr auto; gap:9px 28px; align-items:baseline;
-  margin-top:24px; padding:22px 24px; border:1px solid var(--line-paper); border-radius:var(--r);
-}
-.edu-l, .edu-r{ display:contents; }      /* 감싼 div를 투명하게 만들어 4조각을 직접 배치 */
-.edu strong{ font-weight:600; }
-.edu span{ font-size:14.5px; color:var(--on-paper-dim); }
-.edu-school{ grid-area:1 / 1; }
-.edu-period{ grid-area:1 / 2; text-align:right; white-space:nowrap; }
-.edu-major { grid-area:2 / 1; }
-.edu-gpa   { grid-area:2 / 2; text-align:right; white-space:nowrap; }
 
 @media (max-width:860px){
   .about-grid{ grid-template-columns:1fr; gap:30px; }
@@ -646,13 +661,9 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   .pf-dot{ width:13px; left:-1px; bottom:14px; }
   .portrait-cap{ margin-top:0; }
   .portrait-cap b{ font-size:22px; }
+  .portrait-meta{ flex:1; margin-top:0; }
+  .portrait-edu{ margin-top:10px; padding-top:10px; }
   .strengths{ grid-template-columns:1fr; }
-
-  /* 학력 — 모바일에서는 3줄로 (폭이 좁아 학과와 GPA를 나란히 두면 잘립니다)
-     1줄: 학교명(왼쪽) + 기간(오른쪽)  /  2줄: 학과  /  3줄: GPA */
-  .edu{ gap:7px 14px; }
-  .edu-major{ grid-area:2 / 1 / auto / -1; }
-  .edu-gpa  { grid-area:3 / 1 / auto / -1; text-align:left; }
 }
 
 /* 프로젝트와 경력 태그 */
@@ -664,7 +675,7 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 .skills-grid{ display:grid; grid-template-columns:400px minmax(0,1fr); gap:60px; align-items:center; }
 .orbit{ --orbit-r:150px; position:relative; width:100%; aspect-ratio:1; max-width:400px; margin-inline:auto; }
 .orbit svg{ position:absolute; inset:0; width:100%; height:100%; }
-.orbit .ring{ fill:none; stroke:var(--line-ink); }
+.orbit .ring{ fill:none; stroke:rgba(143,158,196,.27); }
 .orbit .ring--dash{ stroke-dasharray:2 8; stroke-linecap:round; transform-origin:50% 50%;
   animation:spin 46s linear infinite; }
 .orbit .ring--dash-2{ animation:spin 66s linear infinite reverse; }
@@ -681,10 +692,15 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 .orbit-tag{
   position:absolute; transform:translate(-50%,-50%); white-space:nowrap;
   padding:7px 14px; border-radius:100px; font-size:12.5px; font-weight:500;
-  background:var(--ink-2); border:1px solid var(--line-ink); color:var(--on-ink);
-  transition:border-color .25s, color .25s, transform .25s var(--ease);
+  background:linear-gradient(135deg, rgba(207,212,226,.18), rgba(103,108,131,.14));
+  border:1px solid rgba(207,212,226,.34); color:#eef1f8;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 8px 24px rgba(95,107,168,.08);
+  transition:background .25s, border-color .25s, color .25s, transform .25s var(--ease);
 }
-.orbit-tag:hover{ border-color:var(--rose); color:var(--rose-soft); }
+.orbit-tag:hover{
+  background:linear-gradient(135deg, rgba(207,212,226,.26), rgba(143,158,196,.20));
+  border-color:rgba(207,212,226,.62); color:#fff;
+}
 
 .skill-group{ padding:22px 0; border-top:1px solid var(--line-ink); }
 .skill-group:first-child{ border-top:0; padding-top:0; }
@@ -998,9 +1014,62 @@ body.lens-on #cur{ opacity:0 !important; }
 }
 .links a:hover{ background:var(--on-ink); color:var(--ink); border-color:var(--on-ink); }
 
-footer{ border-top:1px solid var(--line-ink); }
+footer{ border-top:0; overflow:hidden; }
+.foot-signature{ display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:stretch; padding-block:clamp(46px,5vw,64px); }
+.foot-signature::before,.foot-signature::after{ content:""; height:1px; background:rgba(242,239,236,.5); }
+.foot-signature::before{ align-self:start; margin-top:1px; }
+.foot-signature::after{ align-self:end; margin-bottom:1px; }
+.foot-signature img{ display:block; width:clamp(168px,19vw,248px); height:auto; filter:invert(1); opacity:.72; }
 .foot{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px;
   padding-block:26px; font-size:12.5px; color:var(--on-ink-dim); }
+@media (max-width:640px){
+  .foot-signature{ padding-block:40px; }
+  .foot-signature img{ width:142px; }
+}
+
+/* ══════════════════ ENTRY INTRO — HANUL DESIGN PRINCIPLES ══════════════════ */
+body.intro-active{ overflow:hidden; }
+.entry-intro{
+  position:fixed; inset:0; z-index:1000; display:grid; place-items:center;
+  padding:clamp(24px,5vw,72px); overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(103,108,131,.12),transparent 42%),
+    var(--ink);
+  color:var(--on-ink); opacity:1; visibility:visible;
+  transition:opacity .65s var(--ease),visibility .65s;
+}
+.entry-intro.is-leaving{ opacity:0; visibility:hidden; pointer-events:none; }
+.entry-skip{
+  position:absolute; top:24px; right:28px; padding:8px 0;
+  font-family:var(--en); font-size:10px; font-weight:500; letter-spacing:.16em;
+  color:var(--on-ink-dim); border-bottom:1px solid var(--line-ink);
+}
+.cur-enabled .entry-intro,.cur-enabled .entry-intro *{ cursor:auto; }
+.entry-card{ --entry-dx:0px; --entry-dy:0px; --entry-scale:1; width:min(860px,82vw); display:grid; place-items:center; transform-origin:center; }
+.entry-symbol-stage{ position:relative; width:100%; }
+.entry-symbol{ display:block; width:100%; height:auto; filter:invert(1); }
+.entry-symbol--base{ opacity:.075; }
+.entry-symbol--lit{ position:absolute; inset:0; opacity:1; clip-path:inset(0 100% 0 0); animation:entryLogoReveal 1.9s cubic-bezier(.58,.04,.22,1) .18s forwards; }
+.entry-light-trails{ position:absolute; z-index:3; left:-8%; top:-88%; width:116%; height:276%; overflow:visible; pointer-events:none; }
+.entry-light-trails path{ fill:none; stroke-linecap:round; stroke-dasharray:150 980; stroke-dashoffset:1080; }
+.entry-trail--glow{ stroke:rgba(255,255,255,.35); stroke-width:18; filter:blur(11px); }
+.entry-trail--core{ stroke:rgba(255,255,255,.96); stroke-width:2.2; filter:drop-shadow(0 0 7px rgba(255,255,255,.9)); }
+.entry-trail--two.entry-trail--glow{ stroke:url(#entryTrailGradient); stroke-width:12; filter:blur(13px); }
+.entry-trail--two.entry-trail--core{ stroke:url(#entryTrailGradient); stroke-width:1.55; filter:drop-shadow(0 0 5px rgba(188,174,203,.32)); }
+.entry-trail--one{ animation:entryTrailOne 1.55s cubic-bezier(.4,.02,.28,1) .12s forwards; }
+.entry-trail--two{ animation:entryTrailTwo 1.48s cubic-bezier(.4,.02,.28,1) .48s forwards; }
+@keyframes entryLogoReveal{ to{ clip-path:inset(0 0 0 0); } }
+@keyframes entryTrailOne{ 0%{ stroke-dashoffset:1080; opacity:0; } 12%{ opacity:1; } 82%{ opacity:1; } 100%{ stroke-dashoffset:-180; opacity:0; } }
+@keyframes entryTrailTwo{ 0%{ stroke-dashoffset:1120; opacity:0; } 12%{ opacity:1; } 82%{ opacity:1; } 100%{ stroke-dashoffset:-160; opacity:0; } }
+.entry-intro.is-collapsing .entry-symbol--base{ opacity:1; transition:opacity .28s; }
+.entry-intro.is-collapsing .entry-symbol--lit{ opacity:0; transition:opacity .22s; }
+.entry-intro.is-collapsing .entry-light-trails{ opacity:0; transition:opacity .18s; }
+.entry-intro.is-collapsing .entry-card{ transform:translate3d(var(--entry-dx),var(--entry-dy),0) scale(var(--entry-scale)); transition:transform .88s cubic-bezier(.76,0,.24,1); }
+
+@media (max-width:640px){
+  .entry-card{ width:min(84vw,560px); }
+  .entry-skip{ top:18px; right:20px; }
+}
 
 @media (max-width:640px){
   .wrap{ padding-inline:22px; }
@@ -1020,12 +1089,36 @@ footer{ border-top:1px solid var(--line-ink); }
   .orb,.ring--dash,.ring--dash-2,.pf-orb,.pf-dot,.scroll-line i{ animation:none !important; }
   /* 첫 화면 요소는 애니메이션 없이 바로 보이도록 */
   .h-rv,.hero h1 .ch,.orb > i{ opacity:1 !important; transform:none !important; animation:none !important; }
+  .entry-intro,.entry-intro *{ animation:none !important; transition:none !important; }
   *{ transition-duration:.01ms !important; }
 }
 </style>
 </head>
 
-<body>
+<body class="intro-active">
+<div class="entry-intro" id="entry-intro" role="dialog" aria-modal="true" aria-label="HANUL 인트로">
+  <button class="entry-skip" id="entry-skip" type="button" aria-label="인트로 건너뛰기">SKIP</button>
+  <div class="entry-card">
+    <div class="entry-symbol-stage">
+      <img class="entry-symbol entry-symbol--base" src="assets/brand/hanul-wordmark.svg" alt="HANUL">
+      <img class="entry-symbol entry-symbol--lit" src="assets/brand/hanul-wordmark.svg" alt="" aria-hidden="true">
+      <svg class="entry-light-trails" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="entryTrailGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#aeb8d5" stop-opacity=".58"/>
+            <stop offset=".48" stop-color="#c1b4c9" stop-opacity=".55"/>
+            <stop offset=".78" stop-color="#d7afb4" stop-opacity=".58"/>
+            <stop offset="1" stop-color="#ead8d2" stop-opacity=".52"/>
+          </linearGradient>
+        </defs>
+        <path class="entry-trail--glow entry-trail--one" d="M-80 235 C80 -40 210 325 390 105 S690 15 1080 205"/>
+        <path class="entry-trail--core entry-trail--one" d="M-80 235 C80 -40 210 325 390 105 S690 15 1080 205"/>
+        <path class="entry-trail--glow entry-trail--two" d="M-60 70 C130 300 250 -80 470 145 S760 260 1060 55"/>
+        <path class="entry-trail--core entry-trail--two" d="M-60 70 C130 300 250 -80 470 145 S760 260 1060 55"/>
+      </svg>
+    </div>
+  </div>
+</div>
 <!-- 커스텀 커서 (링 + 가운데 점, 누르면 빛살) -->
 <div class="cur" id="cur" aria-hidden="true">
   <span class="cur-rays"></span>
@@ -1037,7 +1130,9 @@ footer{ border-top:1px solid var(--line-ink); }
 
 <header class="nav" id="nav">
   <div class="wrap nav-in">
-    <a href="#home" class="brand">kim<span class="d">.</span>hanul</a>
+    <a href="#home" class="brand" aria-label="김하늘 포트폴리오 홈">
+      <img class="brand-mark" src="assets/brand/hanul-wordmark.svg" alt="HANUL">
+    </a>
     <nav class="nav-menu" id="menu" aria-label="주요 메뉴">
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
@@ -1117,7 +1212,10 @@ footer{ border-top:1px solid var(--line-ink); }
             <span class="pf-dot" aria-hidden="true"></span>
             <img class="portrait" src="assets/profile_new.png" alt="김하늘 프로필 사진" width="389" height="389">
           </div>
-          <p class="portrait-cap dim" id="about-cap"></p>
+          <div class="portrait-meta">
+            <p class="portrait-cap dim" id="about-cap"></p>
+            <div class="portrait-edu" id="about-edu"></div>
+          </div>
         </div>
         <div>
           <h3 class="about-h" id="about-h"></h3>
@@ -1125,7 +1223,6 @@ footer{ border-top:1px solid var(--line-ink); }
         </div>
       </div>
       <div class="strengths rv" id="strengths"></div>
-      <div class="edu rv" id="edu"></div>
     </div>
   </section>
 
@@ -1192,6 +1289,9 @@ footer{ border-top:1px solid var(--line-ink); }
 </main>
 
 <footer class="band band--ink">
+  <div class="wrap foot-signature" aria-hidden="true">
+    <img src="assets/brand/hanul-wordmark-outline.svg" alt="">
+  </div>
   <div class="wrap foot">
     <span id="foot-left"></span>
     <span>Designed &amp; Built by 김하늘</span>
@@ -1233,8 +1333,7 @@ const DATA = {
     heading: '설계와 구현 사이를 오가는 디자이너, <span class="br-m"></span><mark>김하늘</mark>입니다.',
     paragraphs: [
       'HCI를 전공하며 사용자 경험을 연구했고 프로젝트에서는 기획부터 UX 설계, UI 디자인, 프로토타입 제작, 개발 협업까지 <b>하나의 서비스가 완성되는 전 과정</b>을 경험했습니다. 단순히 보기 좋은 화면을 만드는 것이 아니라 사용자가 왜 불편한지 고민하고 데이터를 기반으로 더 나은 해결책을 제안하는 것이 저의 강점입니다.',
-      'VR/AR, AI SaaS, NFT 커뮤니티, 모바일 서비스 등 서로 성격이 다른 프로젝트를 거치며 <b>사용자와 비즈니스, 기술 사이의 균형</b>을 찾는 감각을 키워왔습니다. 특히 PM·개발자와 긴밀하게 협업하며 구현 가능성을 고려한 디자인을 제안했고 디자인 시스템 구축과 서비스 개선 경험을 통해 프로젝트의 완성도를 높였습니다.',
-      '저는 감각보다 <b>근거</b>를 바탕으로 디자인합니다. 리서치 – 설계 – 검증 – 발표로 이어지는 사이클을 여러 번 반복하다 보니 이제는 ‘좋아 보이는 디자인’보다 <b>‘근거를 댈 수 있는 디자인’</b>을 만드는 것이 더 익숙합니다.'
+      'VR/AR, AI SaaS, NFT 커뮤니티, 모바일 서비스 등 서로 성격이 다른 프로젝트를 거치며 <b>사용자와 비즈니스, 기술 사이의 균형</b>을 찾는 감각을 키워왔습니다. 특히 PM·개발자와 긴밀하게 협업하며 구현 가능성을 고려한 디자인을 제안했고 디자인 시스템 구축과 서비스 개선 경험을 통해 프로젝트의 완성도를 높였습니다.'
     ],
     // 핵심 역량 (이력서 Core Competency)
     strengths: [
@@ -1247,9 +1346,8 @@ const DATA = {
     ],
     education: {
       school: '동덕여자대학교',
-      major: '컴퓨터학과(주전공) · HCI사이언스전공(복수전공)',
+      major: '컴퓨터학과 · HCI사이언스전공 (학사)',
       period: '2021.03 – 2025.08',
-      gpa: 'GPA 3.98 / 4.5'
     }
   },
 
@@ -1465,7 +1563,10 @@ const strengthShapeParts = [
 ];
 el('strengths').innerHTML = `
   <div class="strength-explorer">
-    <p class="strength-empty-hint">SELECT AN OBJECT</p>
+    <div class="strength-intro">
+      <h3 class="strength-heading"><span class="fill">Core</span> Competency</h3>
+      <p class="strength-empty-hint" aria-live="polite">리서치부터 구현까지, 프로젝트에서 검증한 6가지 역량입니다. 아이콘을 클릭해 확인해보세요</p>
+    </div>
     <div class="strength-objects" role="tablist" aria-label="핵심 역량 선택">
       ${DATA.about.strengths.map((s, i) => `
         <button class="strength-object shape--${strengthShapes[i]}" type="button"
@@ -1473,7 +1574,8 @@ el('strengths').innerHTML = `
           aria-label="${s.title}" style="--i:${i}">
           <span class="shape-core" aria-hidden="true">${strengthShapeParts[i]}</span>
         </button>`).join('')}
-      <article class="strength-detail" id="strength-detail" role="tabpanel" aria-live="polite" hidden>
+      <article class="strength-detail" id="strength-detail" role="button" tabindex="0"
+        aria-label="핵심 역량 설명 닫기" aria-live="polite" hidden>
         <div class="strength-detail-inner"></div>
       </article>
     </div>
@@ -1484,13 +1586,16 @@ const strengthObjects = document.querySelector('.strength-objects');
 const strengthDetail = el('strength-detail');
 const strengthDetailInner = strengthDetail.querySelector('.strength-detail-inner');
 const strengthEmptyHint = document.querySelector('.strength-empty-hint');
+let activeStrengthIndex = null;
 const resetStrength = index => {
   strengthButtons.forEach((button, i) => {
     button.setAttribute('aria-selected', 'false');
     button.tabIndex = i === index ? 0 : -1;
   });
   strengthObjects.classList.remove('has-selection');
+  activeStrengthIndex = null;
   strengthEmptyHint.hidden = false;
+  strengthEmptyHint.textContent = '리서치부터 구현까지, 프로젝트에서 검증한 6가지 역량입니다. 아이콘을 클릭해 확인해보세요';
   strengthDetail.classList.add('is-changing');
   setTimeout(() => {
     strengthDetail.hidden = true;
@@ -1506,7 +1611,9 @@ const showStrength = (index, animate = true) => {
     button.tabIndex = i === index ? 0 : -1;
   });
   strengthObjects.classList.add('has-selection');
-  strengthEmptyHint.hidden = true;
+  activeStrengthIndex = index;
+  strengthEmptyHint.hidden = false;
+  strengthEmptyHint.textContent = '선택한 아이콘이나 설명을 클릭해 돌아가세요';
   selectedButton.insertAdjacentElement('afterend', strengthDetail);
   strengthDetail.hidden = false;
   if (animate) strengthDetail.classList.add('is-changing');
@@ -1531,11 +1638,20 @@ strengthButtons.forEach((button, index) => {
   });
 });
 strengthButtons[0].tabIndex = 0;
+strengthDetail.addEventListener('click', () => {
+  if (activeStrengthIndex !== null) resetStrength(activeStrengthIndex);
+});
+strengthDetail.addEventListener('keydown', e => {
+  if (!['Enter', ' '].includes(e.key) || activeStrengthIndex === null) return;
+  e.preventDefault();
+  resetStrength(activeStrengthIndex);
+});
 
 const edu = DATA.about.education;
-el('edu').innerHTML = `
-  <div class="edu-l"><strong class="edu-school">${edu.school}</strong><span class="edu-major">${edu.major}</span></div>
-  <div class="edu-r"><span class="edu-period">${edu.period}</span><span class="edu-gpa">${edu.gpa}</span></div>`;
+el('about-edu').innerHTML = `
+  <strong>${edu.school}</strong>
+  <span>${edu.major}</span>
+  <span>${edu.period}</span>`;
 
 /* ── SKILLS : 태그를 원형 궤도 위에 자동 배치 ── */
 const orbit = el('orbit');
@@ -1864,11 +1980,58 @@ document.querySelectorAll('.rv').forEach((n, i) => {
 });
 
 /* ── 5) 첫 화면 진입 시퀀스 ──────────────────────────────
-   body에 ready가 붙으면 CSS 애니메이션이 순서대로 시작됩니다 */
+   HANUL 워드마크를 보여준 뒤 기존 히어로를 시작합니다 */
 document.querySelectorAll('.h-rv').forEach((n, i) => {
   n.style.transitionDelay = `${120 + i * 130}ms`;
 });
-requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add('ready')));
+const entryIntro = el('entry-intro');
+const entrySkip = el('entry-skip');
+const reduceEntryMotion = matchMedia('(prefers-reduced-motion:reduce)').matches;
+let entryCollapseTimer;
+let entryLeaveTimer;
+let entryRemoveTimer;
+let entryFinished = false;
+const startHero = () => requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add('ready')));
+const finishEntryIntro = (immediate = false) => {
+  if (entryFinished) return;
+  entryFinished = true;
+  clearTimeout(entryCollapseTimer);
+  clearTimeout(entryLeaveTimer);
+  clearTimeout(entryRemoveTimer);
+  if (immediate) {
+    entryIntro?.remove();
+    document.body.classList.remove('intro-active');
+    startHero();
+    return;
+  }
+  const entryCard = entryIntro?.querySelector('.entry-card');
+  const headerMark = document.querySelector('.brand-mark');
+  if (entryCard && headerMark) {
+    const from = entryCard.getBoundingClientRect();
+    const to = headerMark.getBoundingClientRect();
+    entryCard.style.setProperty('--entry-dx', `${to.left + to.width / 2 - (from.left + from.width / 2)}px`);
+    entryCard.style.setProperty('--entry-dy', `${to.top + to.height / 2 - (from.top + from.height / 2)}px`);
+    entryCard.style.setProperty('--entry-scale', String(to.width / from.width));
+  }
+  entryIntro?.classList.add('is-collapsing');
+  entryLeaveTimer = setTimeout(() => {
+    entryIntro?.classList.add('is-leaving');
+    document.body.classList.remove('intro-active');
+    startHero();
+    entryRemoveTimer = setTimeout(() => entryIntro?.remove(), 700);
+  }, 900);
+};
+if (reduceEntryMotion) finishEntryIntro(true);
+else {
+  entryCollapseTimer = setTimeout(() => finishEntryIntro(false), 2300);
+  entrySkip?.addEventListener('click', () => finishEntryIntro(false));
+  entryIntro?.addEventListener('click', e => {
+    if (e.target !== entrySkip) finishEntryIntro(false);
+  });
+  addEventListener('keydown', e => {
+    if (['Escape','Enter',' '].includes(e.key)) finishEntryIntro(false);
+  }, { once:true });
+}
 
 /* ── 6) 커서를 따라 움직이는 구체 ────────────────────────
    구체마다 따라오는 정도(data-depth)가 달라 깊이감이 생깁니다.
