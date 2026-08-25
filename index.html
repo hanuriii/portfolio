@@ -1050,6 +1050,7 @@ body.intro-active{ overflow:hidden; }
 .entry-symbol{ display:block; width:100%; height:auto; filter:invert(1); }
 .entry-symbol--base{ opacity:.075; }
 .entry-symbol--lit{ position:absolute; inset:0; opacity:1; clip-path:inset(0 100% 0 0); animation:entryLogoReveal 1.9s cubic-bezier(.58,.04,.22,1) .18s forwards; }
+.entry-symbol .entry-n{ transform-box:fill-box; transform-origin:center; animation:entryNRotate .72s cubic-bezier(.65,0,.2,1) .72s both; }
 .entry-light-trails{ position:absolute; z-index:3; left:-8%; top:-88%; width:116%; height:276%; overflow:visible; pointer-events:none; }
 .entry-light-trails path{ fill:none; stroke-linecap:round; stroke-dasharray:150 980; stroke-dashoffset:1080; }
 .entry-trail--glow{ stroke:rgba(255,255,255,.35); stroke-width:18; filter:blur(11px); }
@@ -1059,6 +1060,7 @@ body.intro-active{ overflow:hidden; }
 .entry-trail--one{ animation:entryTrailOne 1.55s cubic-bezier(.4,.02,.28,1) .12s forwards; }
 .entry-trail--two{ animation:entryTrailTwo 1.48s cubic-bezier(.4,.02,.28,1) .48s forwards; }
 @keyframes entryLogoReveal{ to{ clip-path:inset(0 0 0 0); } }
+@keyframes entryNRotate{ from{ transform:rotate(-90deg); } to{ transform:rotate(0deg); } }
 @keyframes entryTrailOne{ 0%{ stroke-dashoffset:1080; opacity:0; } 12%{ opacity:1; } 82%{ opacity:1; } 100%{ stroke-dashoffset:-180; opacity:0; } }
 @keyframes entryTrailTwo{ 0%{ stroke-dashoffset:1120; opacity:0; } 12%{ opacity:1; } 82%{ opacity:1; } 100%{ stroke-dashoffset:-160; opacity:0; } }
 .entry-intro.is-collapsing .entry-symbol--base{ opacity:1; transition:opacity .28s; }
@@ -1100,8 +1102,20 @@ body.intro-active{ overflow:hidden; }
   <button class="entry-skip" id="entry-skip" type="button" aria-label="인트로 건너뛰기">SKIP</button>
   <div class="entry-card">
     <div class="entry-symbol-stage">
-      <img class="entry-symbol entry-symbol--base" src="assets/brand/hanul-wordmark.svg" alt="HANUL">
-      <img class="entry-symbol entry-symbol--lit" src="assets/brand/hanul-wordmark.svg" alt="" aria-hidden="true">
+      <svg class="entry-symbol entry-symbol--base" viewBox="0 0 532 100" fill="#121212" role="img" aria-label="HANUL">
+        <path d="M0 0h13a13 13 0 0 1 13 13v24h48V0h26v100H74V63H26v37H0Z"/>
+        <path d="M108 100V50A50 50 0 0 1 208 50V100Z"/>
+        <path class="entry-n" d="M216 0h50a50 50 0 0 1 50 50v50h-50a50 50 0 0 1-50-50Z"/>
+        <path d="M324 0h100v50a50 50 0 0 1-100 0Z"/>
+        <path d="M432 0h26v74h48a26 26 0 0 1 26 26H432Z"/>
+      </svg>
+      <svg class="entry-symbol entry-symbol--lit" viewBox="0 0 532 100" fill="#121212" aria-hidden="true">
+        <path d="M0 0h13a13 13 0 0 1 13 13v24h48V0h26v100H74V63H26v37H0Z"/>
+        <path d="M108 100V50A50 50 0 0 1 208 50V100Z"/>
+        <path class="entry-n" d="M216 0h50a50 50 0 0 1 50 50v50h-50a50 50 0 0 1-50-50Z"/>
+        <path d="M324 0h100v50a50 50 0 0 1-100 0Z"/>
+        <path d="M432 0h26v74h48a26 26 0 0 1 26 26H432Z"/>
+      </svg>
       <svg class="entry-light-trails" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id="entryTrailGradient" x1="0" y1="0" x2="1" y2="0">
