@@ -19,8 +19,6 @@
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
 
-
-
 <script>
 /* 단독 미리보기에서 상대 이미지 경로가 끊길 때 사용하는 최적화 내장 자산 */
 (() => {
@@ -66,9 +64,9 @@
   --line-paper: rgba(26,26,26,.12);
 
   /* 포인트 컬러 */
-  --rose:       #c9605f;   /* 메인 포인트 (더스티 로즈) */
-  --rose-soft:  #dc8e8d;
-  --rose-pale:  #f6dcd8;
+  --rose:       #7188e8;   /* 메인 포인트 (퍼리윙클 블루) */
+  --rose-soft:  #93a8ff;
+  --rose-pale:  #e5eaff;
   --slate:      #676c83;   /* 서브 포인트 (슬레이트 블루) */
   --slate-soft: #9aa1b6;
 
@@ -119,13 +117,13 @@ button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; 
 .cur-ring { width:26px; height:26px; border:1.3px solid rgba(242,239,236,.72);
             background:rgba(242,239,236,.07); backdrop-filter:blur(1px);
             transition:transform .3s var(--ease), opacity .3s, border-color .3s, background .3s; }
-.cur-ring2{ width:46px; height:46px; border:1px solid rgba(224,161,158,.55);
+.cur-ring2{ width:46px; height:46px; border:1px solid rgba(147,168,255,.55);
             opacity:0; transform:translate(-50%,-50%) scale(.6); }
 
 body.cur-on .cur{ opacity:1; }
 
 /* ② 호버 — 링이 커지고 바깥에 두 번째 링이 겹칩니다 (동심원) */
-body.cur-tap .cur-ring { transform:translate(-50%,-50%) scale(1.55); border-color:rgba(224,161,158,.9); }
+body.cur-tap .cur-ring { transform:translate(-50%,-50%) scale(1.55); border-color:rgba(147,168,255,.9); }
 body.cur-tap .cur-ring2{ opacity:1; transform:translate(-50%,-50%) scale(1); }
 
 /* ③ 누를 때 — 링이 오므라들고 사방으로 빛살이 퍼집니다 */
@@ -134,7 +132,7 @@ body.cur-down .cur-ring2{ opacity:.35; transform:translate(-50%,-50%) scale(.8);
 .cur-rays{
   width:58px; height:58px; border-radius:0; opacity:0;
   background:repeating-conic-gradient(from 0deg,
-    rgba(224,161,158,.95) 0deg 2.4deg, transparent 2.4deg 30deg);
+    rgba(147,168,255,.95) 0deg 2.4deg, transparent 2.4deg 30deg);
   -webkit-mask:radial-gradient(circle, transparent 0 38%, #000 41% 100%);
           mask:radial-gradient(circle, transparent 0 38%, #000 41% 100%);
 }
@@ -146,7 +144,7 @@ body.cur-burst .cur-rays{ animation:curRays .5s ease-out; }
 
 /* 밝은 섹션에서는 링을 어둡게 */
 body.cur-paper .cur-ring { border-color:rgba(26,26,26,.55); background:rgba(26,26,26,.05); }
-body.cur-paper .cur-ring2{ border-color:rgba(201,96,95,.6); }
+body.cur-paper .cur-ring2{ border-color:rgba(113,136,232,.6); }
 
 body.cur-enabled.cur-on,
 body.cur-enabled.cur-on a,
@@ -282,6 +280,10 @@ section.tight{ padding-top:0; }
   position:relative; z-index:5; display:inline-block;
   width:fit-content; max-width:100%;
 }
+/* 모서리 문구는 제거하되 기존 문구 줄의 높이는 남겨 표지 비율을 유지 */
+.hero-content::before{ content:""; display:block; height:33px; }
+.hero-content::after{ content:""; display:block; height:27px; }
+.hero-stage{ margin-bottom:27.5px; }
 
 /* 이름이 화면 폭을 거의 채우는 무대 */
 .hero-stage{ position:relative; padding:10px 0; }
@@ -330,7 +332,7 @@ section.tight{ padding-top:0; }
 .btn .ar{ transition:transform .28s var(--ease); }
 .btn:hover .ar{ transform:translateX(4px); }
 .btn--fill{ background:var(--rose); border-color:var(--rose); color:#fff; }
-.btn--fill:hover{ background:#b8514f; border-color:#b8514f; box-shadow:0 10px 30px -10px rgba(201,96,95,.75); }
+.btn--fill:hover{ background:#5f73c9; border-color:#5f73c9; box-shadow:0 10px 30px -10px rgba(113,136,232,.75); }
 .btn--ghost:hover{ border-color:var(--rose); color:var(--rose-soft); }
 .band--paper .btn{ border-color:var(--line-paper); }
 .band--paper .btn--ghost:hover{ border-color:var(--rose); color:var(--rose); }
@@ -457,6 +459,223 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   .scroll-line{ height:26px; }
 }
 
+/* ── 표지 재구성: 이름 + 라벨 없는 시그니처 오브제 + 핵심 문장 ── */
+.hero{
+  min-height:100vh; min-height:100svh;
+  padding-top:calc(var(--nav-h) + 30px); padding-bottom:36px;
+  position:relative; isolation:isolate;
+}
+.hero::before{
+  content:""; position:absolute; z-index:0; inset:-14%; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 48% 62%,rgba(109,122,180,.12),transparent 34%),
+    radial-gradient(ellipse at 63% 70%,rgba(113,136,232,.10),transparent 29%),
+    radial-gradient(ellipse at 26% 28%,rgba(255,255,255,.025),transparent 27%);
+  filter:blur(7px); animation:heroAtmosphere 18s ease-in-out infinite alternate;
+}
+.hero::after{
+  content:""; position:absolute; z-index:0; inset:0; pointer-events:none; opacity:.16;
+  background-image:
+    linear-gradient(rgba(242,239,236,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(242,239,236,.025) 1px,transparent 1px);
+  background-size:96px 96px;
+  mask-image:radial-gradient(ellipse at 50% 58%,#000 0 22%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 58%,#000 0 22%,transparent 70%);
+}
+@keyframes heroAtmosphere{
+  from{ transform:translate3d(-1.5%,-1%,0) scale(1); opacity:.76; }
+  to{ transform:translate3d(1.5%,1.5%,0) scale(1.05); opacity:1; }
+}
+.hero > .wrap{ min-height:calc(100vh - var(--nav-h) - 66px); min-height:calc(100svh - var(--nav-h) - 66px); }
+.hero-content{ display:block; width:100%; }
+.hero-content::before,.hero-content::after{ display:none; content:none; }
+.hero-stage{
+  display:grid; grid-template-rows:auto minmax(360px,1fr) auto;
+  gap:10px; min-height:inherit; margin:0; padding:0;
+}
+.hero h1{
+  width:max-content; max-width:100%; margin-inline:auto;
+  --name-x:0px; --name-skew:0deg;
+  font-size:clamp(82px,13vw,190px); line-height:.86;
+  transform:translateX(var(--name-x)) skewX(var(--name-skew));
+  transform-origin:center; transition:transform .55s cubic-bezier(.2,.7,.3,1);
+}
+.hero-signature{
+  display:grid; grid-template-columns:minmax(190px,1fr) 350px minmax(190px,1fr);
+  align-items:center; align-self:center; gap:clamp(20px,3.5vw,56px); min-height:380px;
+  transform:translateY(28px);
+}
+.hero-signature .orbs{
+  position:relative; right:auto; top:auto; justify-self:center;
+  width:350px; height:330px; margin:0; transform:scale(1.16); transform-origin:center;
+}
+.hero-claim{
+  position:relative; z-index:4; margin:0;
+  color:rgba(242,239,236,.72); font-size:clamp(13px,1.15vw,16px); line-height:1.65;
+  letter-spacing:-.015em; white-space:nowrap;
+}
+.hero-claim.is-typing::after{
+  content:""; display:inline-block; width:1px; height:1em; margin-left:4px;
+  vertical-align:-.12em; background:var(--rose-soft); animation:typeCaret .72s steps(1,end) infinite;
+}
+@keyframes typeCaret{ 0%,48%{ opacity:1; } 49%,100%{ opacity:0; } }
+.hero-claim--right{ justify-self:end; width:auto; text-align:left; }
+.hero-claim--left,.hero-claim--right{ transform:translateY(42px); }
+.hero-actions{
+  position:relative; z-index:6; justify-content:center; margin:20px 0 0;
+}
+.hero-actions .btn{
+  position:relative; min-height:48px;
+  border-color:rgba(255,255,255,.18); color:rgba(255,255,255,.88);
+  background:linear-gradient(135deg,rgba(255,255,255,.105),rgba(255,255,255,.035));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 12px 34px -22px rgba(0,0,0,.9);
+  -webkit-backdrop-filter:blur(16px) saturate(125%);
+  backdrop-filter:blur(16px) saturate(125%);
+}
+.hero-actions .btn::before{
+  content:""; position:absolute; inset:1px; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.10),transparent 42%);
+  opacity:.75;
+}
+.hero-actions .btn--fill{
+  border-color:rgba(147,168,255,.32);
+  background:linear-gradient(135deg,rgba(113,136,232,.24),rgba(255,255,255,.045));
+}
+.hero-actions .btn:hover{
+  color:#fff; border-color:rgba(255,255,255,.35);
+  background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.07));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 16px 38px -20px rgba(113,136,232,.5);
+}
+.hero-stage > .scroll-cue{ justify-self:center; align-self:end; }
+
+@media (max-width:860px){
+  .hero{
+    min-height:100vh; min-height:100svh;
+    padding-top:calc(var(--nav-h) + 22px); padding-bottom:28px;
+  }
+  .hero > .wrap{ min-height:calc(100vh - var(--nav-h) - 50px); min-height:calc(100svh - var(--nav-h) - 50px); }
+  .hero-stage{ display:grid; grid-template-rows:auto minmax(0,1fr) auto; gap:18px; min-height:inherit; padding:0; }
+  .hero h1{ width:max-content; font-size:clamp(50px,15vw,82px); text-align:center; }
+  .hero-signature{
+    display:grid; grid-template-columns:1fr; align-self:center; gap:10px; min-height:0;
+    transform:translateY(10px);
+  }
+  .hero-signature .orbs{ grid-row:2; width:270px; height:270px; transform:scale(1.1); }
+  .hero-claim{ font-size:12.5px; white-space:normal; }
+  .hero-claim--left{ grid-row:1; text-align:left; transform:none; }
+  .hero-claim--right{ grid-row:3; justify-self:end; width:auto; max-width:100%; text-align:left; transform:none; }
+  .hero-actions{
+    width:100%; justify-content:center; margin-top:14px;
+  }
+  .hero-actions .btn{ min-height:44px; padding-left:18px; font-size:13px; }
+  .hero-stage > .scroll-cue{ margin-top:0; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .hero::before,.hero-claim.is-typing::after{ animation:none !important; }
+  .hero h1{ transform:none !important; transition:none; }
+}
+
+/* ── 최종 표지 방향: 정보는 좌측, 시그니처 오브제는 우측 보조 요소 ── */
+.hero{
+  min-height:clamp(680px,84vh,780px); min-height:clamp(680px,84svh,780px); min-height:clamp(680px,84dvh,780px);
+}
+.hero > .wrap{
+  min-height:calc(clamp(680px,84vh,780px) - var(--nav-h) - 66px);
+  min-height:calc(clamp(680px,84svh,780px) - var(--nav-h) - 66px);
+  min-height:calc(clamp(680px,84dvh,780px) - var(--nav-h) - 66px);
+}
+.hero::before{
+  inset:0; opacity:.72; filter:blur(12px);
+  background:
+    radial-gradient(ellipse at 78% 55%,rgba(109,122,180,.105),transparent 31%),
+    radial-gradient(ellipse at 84% 66%,rgba(201,96,95,.085),transparent 27%);
+}
+.hero::after{ display:none; }
+.hero-stage{
+  grid-template-columns:minmax(0,1.42fr) minmax(300px,.72fr);
+  grid-template-rows:minmax(0,1fr) auto; column-gap:clamp(42px,6vw,100px);
+}
+.hero-content{
+  grid-column:1; grid-row:1; align-self:center; width:100%; translate:0 -18px;
+}
+.hero-role{
+  margin:0 0 16px; color:var(--rose-soft); font-family:var(--en);
+  font-size:11px; font-weight:600; letter-spacing:.18em; text-transform:uppercase;
+}
+.hero h1{
+  margin:0; font-size:clamp(76px,10.1vw,150px); line-height:.88;
+}
+.hero-copy{ display:grid; gap:1px; margin-top:24px; }
+.hero-copy .hero-claim{
+  justify-self:start; width:auto !important; transform:none; text-align:left;
+  font-size:clamp(14px,1.25vw,17px); line-height:1.7;
+}
+.hero-actions{ justify-content:flex-start; margin-top:20px; }
+.hero-signature{
+  grid-column:2; grid-row:1; display:block; align-self:center; min-height:330px;
+  transform:none;
+}
+.hero-signature .orbs{
+  width:350px; height:330px; transform:scale(.95); transform-origin:center;
+}
+.hero-actions .btn{
+  transition:transform .28s var(--ease), color .28s var(--ease),
+    border-color .28s var(--ease), background .28s var(--ease), box-shadow .28s var(--ease);
+}
+.hero-actions .btn--fill{
+  color:#fff; border-color:rgba(180,194,255,.5);
+  background:linear-gradient(135deg,rgba(113,136,232,.38),rgba(76,94,174,.24));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),
+    0 6px 24px -5px rgba(113,136,232,.32),0 0 12px rgba(255,255,255,.09);
+}
+.hero-actions .btn--ghost{
+  color:rgba(255,255,255,.72); border-color:rgba(255,255,255,.13);
+  background:rgba(255,255,255,.035); box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+.hero-actions .btn:hover{ transform:translateY(-2px); }
+.hero-actions .btn--fill:hover{
+  color:#fff; border-color:rgba(205,214,255,.78);
+  background:linear-gradient(135deg,#8097f0,#5f73c9);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),
+    0 10px 30px -4px rgba(113,136,232,.5),0 0 16px rgba(255,255,255,.14);
+}
+.hero-actions .btn--ghost:hover{
+  color:rgba(255,255,255,.92); border-color:rgba(255,255,255,.28);
+  background:rgba(255,255,255,.075);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 24px -18px rgba(255,255,255,.28);
+}
+.hero-actions .btn--fill:hover .ar-c{ transform:translate(2px,2px); }
+.hero-stage > .scroll-cue{
+  grid-column:1 / -1; grid-row:2; justify-self:center; align-self:end;
+}
+@media (max-width:860px){
+  .hero{
+    min-height:clamp(650px,86vh,720px); min-height:clamp(650px,86svh,720px); min-height:clamp(650px,86dvh,720px);
+  }
+  .hero > .wrap{
+    min-height:calc(clamp(650px,86vh,720px) - var(--nav-h) - 50px);
+    min-height:calc(clamp(650px,86svh,720px) - var(--nav-h) - 50px);
+    min-height:calc(clamp(650px,86dvh,720px) - var(--nav-h) - 50px);
+  }
+  .hero-stage{
+    grid-template-columns:1fr; grid-template-rows:auto minmax(230px,1fr) auto;
+    gap:16px;
+  }
+  .hero-content{ grid-column:1; grid-row:1; align-self:start; translate:none; }
+  .hero-role{ margin-bottom:12px; font-size:9.5px; }
+  .hero h1{ margin:0; font-size:clamp(51px,15vw,80px); text-align:left; }
+  .hero-copy{ gap:0; margin-top:18px; }
+  .hero-copy .hero-claim{ font-size:12.5px; }
+  .hero-actions{ justify-content:flex-start; margin-top:16px; }
+  .hero-signature{
+    grid-column:1; grid-row:2; align-self:center; justify-self:end;
+    width:250px; min-height:250px; transform:none;
+  }
+  .hero-signature .orbs{ width:250px; height:250px; transform:scale(.87); transform-origin:center; }
+  .hero-stage > .scroll-cue{ grid-column:1; grid-row:3; justify-self:center; }
+}
+
 /* ══════════════════ ABOUT ══════════════════ */
 .about-grid{ display:grid; grid-template-columns:240px minmax(0,1fr); gap:56px; align-items:start; }
 
@@ -482,8 +701,8 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 .pf-orb{
   position:absolute; z-index:1; right:-26px; bottom:-2px;
   width:74px; aspect-ratio:1; border-radius:50%;
-  background:radial-gradient(circle at 32% 26%, #f8e4e0, var(--rose-soft) 46%, var(--rose) 100%);
-  box-shadow:0 10px 26px -8px rgba(201,96,95,.55);
+  background:radial-gradient(circle at 32% 26%, #edf0ff, var(--rose-soft) 46%, var(--rose) 100%);
+  box-shadow:0 10px 26px -8px rgba(113,136,232,.55);
   animation:pfFloat 9s ease-in-out infinite;
 }
 /* 작은 슬레이트 구체 — 왼쪽 아래 균형추 */
@@ -516,7 +735,7 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   font-size:clamp(22px,3.2vw,32px); font-weight:600; line-height:1.45;
   letter-spacing:-.03em; margin-bottom:24px;
 }
-.about-h mark{ background:linear-gradient(transparent 62%, rgba(201,96,95,.26) 0); color:inherit; }
+.about-h mark{ background:linear-gradient(transparent 62%, rgba(113,136,232,.26) 0); color:inherit; }
 .about-body p{ margin-bottom:16px; font-size:16.5px; line-height:1.85; color:var(--on-paper-dim); }
 .about-body p b{ color:var(--on-paper); font-weight:500; }
 
@@ -633,7 +852,7 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 @keyframes detailIn{ from{ opacity:0; transform:translateX(24px); } to{ opacity:1; transform:none; } }
 .strength-detail::before{
   content:""; position:absolute; width:170px; height:170px; right:-78px; top:-84px;
-  border:1px solid rgba(201,96,95,.24); border-radius:50%;
+  border:1px solid rgba(113,136,232,.24); border-radius:50%;
 }
 .strength-detail-inner{ transition:opacity .22s, transform .38s var(--ease); }
 .strength-detail.is-changing .strength-detail-inner{ opacity:0; transform:translateX(22px); }
@@ -702,8 +921,8 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
   position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
   width:132px; height:132px; border-radius:50%;
   display:grid; place-content:center; text-align:center;
-  background:radial-gradient(circle at 32% 26%, #f8e4e0, #dd9291 44%, #c05e5e 100%);
-  color:#fff; box-shadow:0 0 60px -12px rgba(201,96,95,.6);
+  background:radial-gradient(circle at 32% 26%, #e9edff, #9cacf1 44%, #7188e8 100%);
+  color:#fff; box-shadow:0 0 60px -12px rgba(113,136,232,.6);
 }
 .orbit-core .en{ font-family:var(--en); font-weight:600; font-size:19px; letter-spacing:-.02em; }
 .orbit-core .ko{ font-size:11.5px; opacity:.9; margin-top:2px; }
@@ -830,8 +1049,8 @@ body.ready .orb--mini  > i{ animation:orbIn .95s cubic-bezier(.22,.9,.3,1) .58s 
 
 /* ── 프로젝트 이미지 크게 보기 ─────────────────────────────── */
 body.lightbox-open{ overflow:hidden; }
-body.lightbox-open .cur-ring{ border-color:rgba(201,96,95,.95); background:rgba(201,96,95,.12); }
-body.lightbox-open .cur-ring2{ border-color:rgba(224,161,158,.9); }
+body.lightbox-open .cur-ring{ border-color:rgba(113,136,232,.95); background:rgba(113,136,232,.12); }
+body.lightbox-open .cur-ring2{ border-color:rgba(147,168,255,.9); }
 body.lens-on #cur{ opacity:0 !important; }
 .work-lightbox[hidden]{ display:none; }
 .work-lightbox{
@@ -885,7 +1104,7 @@ body.lens-on #cur{ opacity:0 !important; }
 .lightbox-image-stage.is-enlarged .lightbox-img{ scale:var(--lightbox-scale,1.45); translate:var(--lightbox-shift-x,0) 0; }
 .lightbox-lens{
   position:absolute; z-index:3; left:0; top:0; width:220px; height:220px; display:none; overflow:hidden;
-  border:2px solid rgba(201,96,95,.78); border-radius:50%; pointer-events:none;
+  border:2px solid rgba(113,136,232,.78); border-radius:50%; pointer-events:none;
   background:#f6f4f2; box-shadow:0 12px 34px rgba(42,25,30,.22),inset 0 0 0 4px rgba(255,255,255,.7);
   translate:-50% -50%;
 }
@@ -941,6 +1160,7 @@ body.lens-on #cur{ opacity:0 !important; }
 @media (prefers-reduced-motion:reduce){
   /* 움직임 최소화 설정에서도 기능은 유지하고 전환 효과만 즉시 처리합니다 */
   .work-slides img{ transition:none; }
+  .work-par li::before,.work-par li::after{ animation:none !important; }
 }
 /* 프로젝트 번호는 제목의 시작점, 역할·팀은 북마크형 메타 정보로 분리 */
 .work-heading{ display:flex; align-items:center; gap:13px; margin:0 0 12px; }
@@ -956,21 +1176,17 @@ body.lens-on #cur{ opacity:0 !important; }
 .work-identity{
   display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
   gap:1px; margin:18px 0 20px; overflow:hidden;
-  border:1px solid rgba(120,90,90,.18);
-  background:rgba(120,90,90,.14);
   border:1px solid color-mix(in srgb,var(--work-accent) 24%,transparent); border-radius:10px;
   background:color-mix(in srgb,var(--work-accent) 24%,transparent);
 }
 .work-id-card{
   position:relative; display:grid; grid-template-columns:52px 1fr; align-items:center; gap:8px;
-  min-height:43px; padding:9px 15px 9px 12px; background:#faf9f8;
-  background:color-mix(in srgb,var(--work-accent) 5%,#fff);
+  min-height:43px; padding:9px 15px 9px 12px; background:color-mix(in srgb,var(--work-accent) 5%,#fff);
   color:var(--on-paper-dim); font-size:12.5px; line-height:1.4;
 }
 .work-id-card::before{
   content:""; position:absolute; top:50%; left:0; transform:translateY(-50%);
   width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent;
-  border-left:7px solid rgba(120,90,90,.16);
   border-left:7px solid color-mix(in srgb,var(--work-accent) 28%,#fff);
 }
 .work-id-card::after{ display:none !important; content:none !important; }
@@ -978,13 +1194,11 @@ body.lens-on #cur{ opacity:0 !important; }
 .work-id-card b{ color:var(--work-ink); font-family:var(--en); font-size:9.5px; font-weight:600; letter-spacing:.09em; }
 .work-par{ position:relative; display:grid; gap:0; margin:8px 0 26px; padding-left:28px; }
 .work-par::before{
-  content:""; position:absolute; left:10px; top:19px; bottom:16px; width:1px;
-  background:var(--work-accent);
+  content:""; position:absolute; left:10px; top:22px; bottom:var(--story-end-bottom,22px); width:1px;
   background:linear-gradient(to bottom,color-mix(in srgb,var(--work-accent) 22%,transparent),var(--work-accent));
 }
 .work-par::after{
-  content:""; position:absolute; left:6.5px; bottom:13px; width:7px; height:7px;
-  border-right:1.5px solid var(--work-accent); border-bottom:1.5px solid var(--work-accent); transform:rotate(45deg);
+  display:none; content:none;
 }
 .work-par li{
   position:relative; display:grid; grid-template-columns:72px 1fr; gap:12px;
@@ -996,24 +1210,30 @@ body.lens-on #cur{ opacity:0 !important; }
   content:""; position:absolute; left:-22px; top:19px; width:7px; height:7px; border-radius:50%;
   border:1.5px solid var(--work-accent); background:var(--paper);
 }
+.work-par li::after{
+  content:""; position:absolute; z-index:1; left:-27px; top:14px; width:17px; height:17px;
+  border:1px solid var(--work-accent); border-radius:50%; opacity:0; pointer-events:none;
+}
+.work-par.is-active li::before{ animation:workStoryNode 3.15s ease-in-out infinite; }
+.work-par.is-active li::after{ animation:workStoryRipple 3.15s ease-out infinite; }
+.work-par.is-active li:nth-child(1)::before,.work-par.is-active li:nth-child(1)::after{ animation-delay:.12s; }
+.work-par.is-active li:nth-child(2)::before,.work-par.is-active li:nth-child(2)::after{ animation-delay:.86s; }
+.work-par.is-active li:nth-child(3)::before,.work-par.is-active li:nth-child(3)::after{ animation-delay:1.6s; }
+@keyframes workStoryNode{
+  0%,18%,100%{ background:var(--paper); box-shadow:none; transform:scale(1); }
+  27%,43%{ background:var(--work-accent); box-shadow:0 0 0 3px color-mix(in srgb,var(--work-accent) 11%,transparent); transform:scale(1.07); }
+  56%{ background:var(--paper); box-shadow:none; transform:scale(1); }
+}
+@keyframes workStoryRipple{
+  0%,18%{ opacity:0; transform:scale(.58); }
+  28%{ opacity:.58; }
+  52%,100%{ opacity:0; transform:scale(1.72); }
+}
 .work-par li:nth-child(3){ border-bottom:0; }
 .work-par li > b{ padding-top:2px; color:var(--work-ink); font-family:var(--en); font-size:10.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; }
 .work-par li > span{ min-width:0; }
 .work-par li span b{ color:var(--on-paper); font-weight:600; }
-.work .chip{ border-color:rgba(120,90,90,.18); border-color:color-mix(in srgb,var(--work-accent) 28%,transparent); color:var(--work-ink); }
-
-/* 작은 점은 그대로 보이되 클릭 영역은 24px로 확보 */
-.sl-dot{
-  position:relative; width:24px; height:24px; background:transparent;
-}
-.sl-dot::after{
-  content:""; position:absolute; left:50%; top:50%; width:7px; height:7px;
-  border-radius:50%; background:rgba(90,60,60,.26); transform:translate(-50%,-50%);
-  transition:background .3s var(--ease),width .3s var(--ease);
-}
-.sl-dot[aria-current="true"]{ width:24px; background:transparent; }
-.sl-dot[aria-current="true"]::after{ width:18px; border-radius:999px; background:var(--rose); }
-.sl-dots{ gap:0; padding:3px 7px; }
+.work .chip{ border-color:color-mix(in srgb,var(--work-accent) 28%,transparent); color:var(--work-ink); }
 
 @media (max-width:860px){
   .work{ grid-template-columns:1fr; gap:26px; padding-block:48px; }
@@ -1025,10 +1245,6 @@ body.lens-on #cur{ opacity:0 !important; }
   .work-id-card{ grid-template-columns:48px 1fr; font-size:12px; }
   .work-par{ padding-left:25px; }
   .work-par li{ grid-template-columns:62px 1fr; gap:8px; padding-right:2px; font-size:13px; }
-  .brand{ height:44px; }
-  .scroll-cue{ min-height:44px; }
-  .work-view-hint{ min-height:44px; padding-inline:14px; }
-  .sl-nav{ width:44px; height:44px; font-size:18px; }
   /* 폭이 좁아 강제 줄바꿈이 오히려 어색해지므로 모바일에서는 무시하고 자연스럽게 흘립니다 */
   .work-sum br{ display:none; }
 }
@@ -1061,33 +1277,78 @@ body.lens-on #cur{ opacity:0 !important; }
   .aw-table td:last-child{ margin-top:4px; }
 }
 
-/* ══════════════════ CONTACT ══════════════════ */
-.contact{ position:relative; text-align:center; padding-block:128px 96px; overflow:hidden; }
-.contact-orb{
-  position:absolute; left:50%; top:34%; transform:translate(-50%,-50%);
-  width:min(560px,90vw); aspect-ratio:1; border-radius:50%; pointer-events:none;
-  background:radial-gradient(circle, rgba(201,96,95,.30), rgba(103,108,131,.14) 46%, transparent 68%);
-  filter:blur(28px);
+/* ══════════════════ CONTACT / FOOTER CTA ══════════════════ */
+.contact{
+  position:relative; text-align:center; padding-block:clamp(100px,11vw,150px) clamp(78px,8vw,112px);
+  overflow:hidden; isolation:isolate;
 }
+.contact-orb{
+  position:absolute; z-index:-1; left:50%; top:42%; transform:translate(-50%,-50%);
+  width:min(760px,92vw); aspect-ratio:1; border-radius:50%; pointer-events:none;
+  background:
+    radial-gradient(circle,rgba(113,136,232,.25),rgba(91,107,170,.11) 37%,transparent 67%);
+  filter:blur(22px);
+}
+.contact::before,.contact::after{
+  content:""; position:absolute; z-index:-1; left:50%; top:43%; translate:-50% -50%;
+  border:1px solid rgba(147,168,255,.12); border-radius:50%; pointer-events:none;
+}
+.contact::before{ width:min(680px,76vw); aspect-ratio:1; }
+.contact::after{ width:min(510px,58vw); aspect-ratio:1; border-style:dashed; }
 .contact .inner{ position:relative; }
 .contact h2{
-  font-family:var(--en); font-weight:600; font-size:clamp(38px,7.4vw,88px);
-  line-height:1.02; letter-spacing:-.045em;
+  width:max-content; max-width:100%; margin-inline:auto;
+  font-family:var(--en); font-weight:300; font-size:clamp(48px,7vw,100px);
+  line-height:.86; letter-spacing:-.025em;
 }
 .contact h2 .d{ color:var(--rose-soft); }
-.contact p{ margin-top:22px; font-size:16.5px; color:var(--on-ink-dim); line-height:1.8; }
+.contact-title-outline{
+  color:transparent; -webkit-text-stroke:.012em rgba(242,239,236,.9);
+  filter:drop-shadow(0 0 8px rgba(0,0,0,.38));
+}
+.contact p{ margin-top:44px; font-size:clamp(14px,1.35vw,17px); color:rgba(242,239,236,.67); line-height:1.75; }
+.contact-line{ display:block; width:max-content; max-width:100%; min-height:1.75em; margin-inline:auto; text-align:left; }
+.contact-line.is-typing::after{
+  content:""; display:inline-block; width:1px; height:1em; margin-left:4px;
+  vertical-align:-.12em; background:var(--rose-soft); animation:typeCaret .72s steps(1,end) infinite;
+}
 .mail{
   display:inline-block; margin-top:34px; font-family:var(--en);
   font-size:clamp(19px,3.4vw,30px); font-weight:500; letter-spacing:-.02em;
   padding-bottom:8px; border-bottom:1px solid var(--line-ink); transition:.25s;
 }
 .mail:hover{ color:var(--rose-soft); border-color:var(--rose); }
-.links{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:40px; }
+.links{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:32px; }
 .links a{
-  min-height:46px; display:inline-flex; align-items:center; gap:8px; padding:0 22px;
-  border:1px solid var(--line-ink); border-radius:100px; font-size:14px; transition:.25s var(--ease);
+  min-height:48px; display:inline-flex; align-items:center; gap:10px; padding:0 22px;
+  border:1px solid rgba(255,255,255,.13); border-radius:100px; font-size:14px;
+  color:rgba(255,255,255,.72); background:rgba(255,255,255,.035);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+  -webkit-backdrop-filter:blur(14px) saturate(125%); backdrop-filter:blur(14px) saturate(125%);
+  transition:transform .25s var(--ease),background .25s,border-color .25s,color .25s,box-shadow .25s;
 }
-.links a:hover{ background:var(--on-ink); color:var(--ink); border-color:var(--on-ink); }
+.links a:hover{ transform:translateY(-2px); color:#fff; border-color:rgba(255,255,255,.28); background:rgba(255,255,255,.075); }
+.links .contact-link--primary{
+  color:#fff; border-color:rgba(180,194,255,.5);
+  background:linear-gradient(135deg,rgba(113,136,232,.4),rgba(76,94,174,.26));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 7px 26px -6px rgba(113,136,232,.38);
+}
+.links .contact-link--primary:hover{
+  border-color:rgba(205,214,255,.8); background:linear-gradient(135deg,#8097f0,#5f73c9);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 11px 30px -5px rgba(113,136,232,.52);
+}
+.links .contact-link--document{ color:rgba(255,255,255,.9); border-color:rgba(255,255,255,.22); }
+.file-badge{
+  display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:18px;
+  padding-inline:6px; border:1px solid rgba(255,255,255,.18); border-radius:5px;
+  color:rgba(255,255,255,.62); background:rgba(255,255,255,.07);
+  font-family:var(--en); font-size:9px; font-weight:600; line-height:1; letter-spacing:.08em;
+}
+.contact-link--primary .file-badge{
+  color:rgba(255,255,255,.78); border-color:rgba(221,227,255,.28); background:rgba(255,255,255,.11);
+}
+.contact-link-arrow{ transition:transform .25s var(--ease); }
+.links a:hover .contact-link-arrow{ transform:translate(2px,-2px); }
 
 footer{ border-top:0; overflow:hidden; }
 .foot-signature{ display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:stretch; padding-block:clamp(46px,5vw,64px); }
@@ -1098,6 +1359,12 @@ footer{ border-top:0; overflow:hidden; }
 .foot{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px;
   padding-block:26px; font-size:12.5px; color:var(--on-ink-dim); }
 @media (max-width:640px){
+  .contact{ padding-block:86px 70px; }
+  .contact h2{ font-size:clamp(42px,12.6vw,58px); line-height:.9; }
+  .contact p{ margin-top:36px; }
+  .links{ margin-top:26px; }
+  .links{ gap:8px; }
+  .links a{ min-height:44px; padding-inline:17px; font-size:13px; }
   .foot-signature{ padding-block:40px; }
   .foot-signature img{ width:142px; }
 }
@@ -1241,45 +1508,31 @@ body.intro-active{ overflow:hidden; }
     <!-- 커서 잔상 + 구체 주변 먼지가 그려지는 캔버스 (글자 뒤 레이어) -->
     <canvas class="hero-fx" id="fx" aria-hidden="true"></canvas>
     <div class="wrap">
-      <!-- 이름 + 그 뒤에 겹치는 구체 -->
+      <!-- 이름 + 시그니처 오브제 + 핵심 문장 -->
       <div class="hero-stage">
-        <!-- 구체는 커서를 따라 움직입니다. data-depth = 따라오는 정도 -->
-        <div class="orbs" aria-hidden="true">
-          <div class="orb orb--torus" data-depth="0.5"><i></i></div>
-          <div class="orb orb--ring"  data-depth="1.5"><i></i></div>
-          <div class="orb orb--bead"  data-depth="1.0"><i></i></div>
-          <div class="orb orb--mini"  data-depth="1.8"><i></i></div>
-        </div>
-
         <div class="hero-content">
-          <div class="hero-rule h-rv">
-            <span class="meta meta--rose" id="hero-role"></span>
-            <span class="meta" id="hero-t2"></span>
-          </div>
-
+          <p class="hero-role h-rv">UX/UI · PRODUCT DESIGNER</p>
           <h1 id="hero-name"></h1>
-
-          <div class="hero-rule hero-split h-rv">
-            <span id="hero-s1"></span>
-            <span id="hero-s2"></span>
+          <div class="hero-copy h-rv">
+            <p class="hero-claim hero-claim--left" id="hero-claim-left"></p>
+            <p class="hero-claim hero-claim--right" id="hero-claim-right"></p>
+          </div>
+          <div class="hero-cta hero-actions h-rv">
+            <a href="#works" class="btn btn--fill">프로젝트 보기 <i class="ar-c" aria-hidden="true">↘</i></a>
+            <a href="assets/apply/resume_kim_hanul.pdf" class="btn btn--ghost" target="_blank" rel="noopener">이력서 보기 <i class="ar-c" aria-hidden="true">↗</i></a>
           </div>
         </div>
-      </div>
 
-      <!-- 이름 아래 좌·우로 갈라지는 문구 -->
-      <div class="hero-rule hero-split h-rv">
-        <span id="hero-s1"></span>
-        <span id="hero-s2"></span>
-      </div>
-
-      <div class="hero-bottom h-rv">
-        <div>
-          <p class="hero-tag" id="hero-tag"></p>
-          <div class="hero-cta">
-            <a href="#works" class="btn btn--fill">프로젝트 보기 <i class="ar-c" aria-hidden="true">↗</i></a>
-            <a href="#contact" class="btn btn--ghost">연락하기 <i class="ar-c" aria-hidden="true">↗</i></a>
+        <div class="hero-signature h-rv">
+          <!-- 구체는 커서를 따라 움직입니다. data-depth = 따라오는 정도 -->
+          <div class="orbs" aria-hidden="true">
+            <div class="orb orb--torus" data-depth="0.5"><i></i></div>
+            <div class="orb orb--ring"  data-depth="1.5"><i></i></div>
+            <div class="orb orb--bead"  data-depth="1.0"><i></i></div>
+            <div class="orb orb--mini"  data-depth="1.8"><i></i></div>
           </div>
         </div>
+
         <a href="#about" class="scroll-cue" aria-label="About 섹션으로 이동">
           See more
           <span class="scroll-line" aria-hidden="true"><i></i></span>
@@ -1369,9 +1622,8 @@ body.intro-active{ overflow:hidden; }
   <section id="contact" class="band band--ink contact">
     <div class="contact-orb" aria-hidden="true"></div>
     <div class="wrap inner">
-      <h2 class="rv">let's<br>work<span class="d">.</span>together</h2>
+      <h2 class="rv">let's<br>work<span class="d">.</span><span class="contact-title-outline">together</span></h2>
       <p class="rv" id="contact-msg"></p>
-      <div class="rv"><a class="mail" id="contact-mail" href="#"></a></div>
       <div class="links rv" id="contact-links"></div>
     </div>
   </section>
@@ -1395,21 +1647,16 @@ body.intro-active{ overflow:hidden; }
 const DATA = {
 
   /* ─── 기본 정보 ─────────────────────────────────────────── */
-  role: 'UX/UI · Product Designer',
   nameEn: ['kim', 'hanul'],          // 큰 제목 (가운데 점은 자동으로 들어갑니다)
-  tagline: '사용자의 행동 <b>너머의 이유</b>를 읽고<br>정교한 디테일로 <b>경험을 구축</b>합니다',
-  // 이름 위 줄 — 왼쪽 / 오른쪽 끝에 붙는 작은 글씨
-  heroRight: 'Based in Seoul, KR',   // 이름 위 줄 오른쪽 (왼쪽은 위의 role)
-  // 이름 아래 줄 — 한 문장을 좌·우로 갈라 놓습니다
-  heroSplit: ['From <b>Dot</b>…', '…to <b>Flow</b>'],
+  heroClaims: ['사용자의 행동 너머의 이유를 읽고', '정교한 디테일로 경험을 구축합니다'],
 
   /* ─── 연락처 ─────────────────────────────────────────── */
   contact: {
-    message: '사용자 경험을 정교하게 설계하고<br>신뢰할 수 있는 프로덕트로 함께 풀어내고 싶습니다.',
-    /* email: 'hanuri714@gmail.com',*/
+    message: ['좋은 질문에서 시작해', '팀과 함께 오래 쓰이는 경험으로 완성하겠습니다'],
     links: [
+      { label: 'Portfolio', url: 'assets/apply/portfolio_kim_hanul.pdf', style: 'primary', type: 'PDF' },
+      { label: 'Resume',    url: 'assets/apply/resume_kim_hanul.pdf', style: 'document', type: 'PDF' },
       { label: 'LinkedIn',  url: 'https://linkedin.com/in/hanuriii/' },
-      { label: 'Portfolio', url: 'https://hanuriii.github.io/portfolio/' },
       { label: 'Email',     url: 'mailto:hanuri714@gmail.com' }
     ]
   },
@@ -1640,7 +1887,6 @@ const $  = (s, el = document) => el.querySelector(s);
 const el = (id) => document.getElementById(id);
 
 /* ── HERO ── */
-el('hero-role').textContent = DATA.role;
 /* 이름을 한 글자씩 쪼개서 순서대로 등장시킵니다 (가운데 점은 마지막에 톡 튀어나옴) */
 // 두 번째 단어(hanul)는 속을 비워 외곽선만 남깁니다 → 뒤의 구체가 비쳐 보입니다
 const splitChars = (s, cls = '') => [...s].map(c => `<span class="ch ${cls}">${c}</span>`).join('');
@@ -1649,10 +1895,13 @@ el('hero-name').innerHTML =
 [...el('hero-name').querySelectorAll('.ch')].forEach((c, i) => {
   c.style.animationDelay = `${200 + i * 45}ms`;
 });
-el('hero-tag').innerHTML = DATA.tagline;
-el('hero-t2').textContent = DATA.heroRight;
-el('hero-s1').innerHTML   = DATA.heroSplit[0];
-el('hero-s2').innerHTML   = DATA.heroSplit[1];
+const heroClaimEls = [el('hero-claim-left'),el('hero-claim-right')];
+heroClaimEls.forEach((node,i) => {
+  node.textContent = DATA.heroClaims[i];
+  if (i === 1) node.style.width = `${Math.ceil(node.getBoundingClientRect().width)}px`;
+  node.textContent = '';
+  node.setAttribute('aria-label',DATA.heroClaims[i]);
+});
 
 /* ── ABOUT ── */
 el('about-cap').innerHTML  = DATA.about.caption;
@@ -1827,6 +2076,25 @@ el('works-list').innerHTML = DATA.works.map((w, i) => `
       <div class="chips">${w.tags.map(t => `<span class="chip">${t}</span>`).join('')}</div>
     </div>
   </article>`).join('');
+
+/* Problem → Action → Result 선은 화면에 보일 때만 흐릅니다 */
+const workStoryFlows = document.querySelectorAll('.work-par');
+const alignWorkStoryEnds = () => {
+  workStoryFlows.forEach(flow => {
+    const lastStep = flow.querySelector('li:last-of-type');
+    if (!lastStep) return;
+    const endBottom = Math.max(0, flow.offsetHeight - lastStep.offsetTop - 22.5);
+    flow.style.setProperty('--story-end-bottom', `${endBottom}px`);
+  });
+};
+alignWorkStoryEnds();
+addEventListener('resize', alignWorkStoryEnds, { passive:true });
+if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
+  const workStoryObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => entry.target.classList.toggle('is-active', entry.isIntersecting));
+  }, { threshold: .38 });
+  workStoryFlows.forEach(flow => workStoryObserver.observe(flow));
+}
 
 /* ── 프로젝트 이미지 슬라이드쇼 ───────────────────────────────
    · 2초마다 다음 이미지로 크로스페이드
@@ -2043,11 +2311,17 @@ const box = (title, list) => `
 el('aw-side').innerHTML = box('Patent', DATA.patents) + box('Paper', DATA.papers);
 
 /* ── CONTACT ── */
-el('contact-msg').innerHTML   = DATA.contact.message;
-el('contact-mail').textContent = DATA.contact.email;
-el('contact-mail').href        = `mailto:${DATA.contact.email}`;
+const contactMsg = el('contact-msg');
+contactMsg.innerHTML = DATA.contact.message.map(text => `<span class="contact-line"></span>`).join('');
+contactMsg.setAttribute('aria-label',DATA.contact.message.join(' '));
+const contactLineEls = [...contactMsg.querySelectorAll('.contact-line')];
+contactLineEls.forEach((node,index) => {
+  node.textContent = DATA.contact.message[index];
+  node.style.width = `${Math.ceil(node.getBoundingClientRect().width)}px`;
+  node.textContent = '';
+});
 el('contact-links').innerHTML  = DATA.contact.links.map(l =>
-  `<a href="${l.url}" target="_blank" rel="noopener noreferrer">${l.label} <span aria-hidden="true">↗</span></a>`).join('');
+  `<a href="${l.url}" class="${l.style ? `contact-link--${l.style}` : ''}" target="_blank" rel="noopener noreferrer">${l.label}${l.type ? `<span class="file-badge">${l.type}</span>` : ''}<span class="contact-link-arrow" aria-hidden="true">↗</span></a>`).join('');
 el('foot-left').textContent = `© ${new Date().getFullYear()} kim hanul. All rights reserved.`;
 
 /* ══════════════ 인터랙션 ══════════════ */
@@ -2108,6 +2382,41 @@ document.querySelectorAll('.rv').forEach((n, i) => {
   io.observe(n);
 });
 
+/* ── CONTACT 문장: 화면에 들어오면 두 줄을 순서대로 타이핑 ── */
+let contactTypingStarted = false;
+const reduceContactMotion = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const typeContactMessage = () => {
+  if (contactTypingStarted) return;
+  contactTypingStarted = true;
+  if (reduceContactMotion) {
+    contactLineEls.forEach((node,index) => node.textContent = DATA.contact.message[index]);
+    return;
+  }
+  const typeLine = (node,text,done) => {
+    let index = 0;
+    node.classList.add('is-typing');
+    const tick = () => {
+      node.textContent = text.slice(0,index);
+      index += 1;
+      if (index <= text.length) setTimeout(tick,44);
+      else {
+        node.classList.remove('is-typing');
+        if (done) setTimeout(done,170);
+      }
+    };
+    tick();
+  };
+  typeLine(contactLineEls[0],DATA.contact.message[0],() => {
+    typeLine(contactLineEls[1],DATA.contact.message[1]);
+  });
+};
+const contactTypingObserver = new IntersectionObserver(entries => {
+  if (!entries.some(entry => entry.isIntersecting)) return;
+  typeContactMessage();
+  contactTypingObserver.disconnect();
+},{ threshold:.35 });
+contactTypingObserver.observe(el('contact'));
+
 /* ── 5) 첫 화면 진입 시퀀스 ──────────────────────────────
    HANUL 워드마크를 보여준 뒤 기존 히어로를 시작합니다 */
 document.querySelectorAll('.h-rv').forEach((n, i) => {
@@ -2120,7 +2429,36 @@ let entryCollapseTimer;
 let entryLeaveTimer;
 let entryRemoveTimer;
 let entryFinished = false;
-const startHero = () => requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add('ready')));
+let heroTypingStarted = false;
+const typeHeroClaims = () => {
+  if (heroTypingStarted) return;
+  heroTypingStarted = true;
+  if (reduceEntryMotion) {
+    heroClaimEls.forEach((node,i) => node.textContent = DATA.heroClaims[i]);
+    return;
+  }
+  const typeLine = (node,text,done) => {
+    let index = 0;
+    node.classList.add('is-typing');
+    const tick = () => {
+      node.textContent = text.slice(0,index);
+      index += 1;
+      if (index <= text.length) setTimeout(tick,46);
+      else {
+        node.classList.remove('is-typing');
+        if (done) setTimeout(done,180);
+      }
+    };
+    tick();
+  };
+  setTimeout(() => typeLine(heroClaimEls[0],DATA.heroClaims[0],() => {
+    typeLine(heroClaimEls[1],DATA.heroClaims[1]);
+  }),620);
+};
+const startHero = () => requestAnimationFrame(() => requestAnimationFrame(() => {
+  document.body.classList.add('ready');
+  typeHeroClaims();
+}));
 const finishEntryIntro = (immediate = false) => {
   if (entryFinished) return;
   entryFinished = true;
@@ -2168,6 +2506,7 @@ else {
    터치 기기와 모션 최소화 설정에서는 동작하지 않습니다. */
 const hero  = el('home');
 const orbs  = document.querySelector('.orbs');
+const heroNameMotion = el('hero-name');
 const canHover = matchMedia('(hover:hover)').matches
               && !matchMedia('(prefers-reduced-motion:reduce)').matches;
 
@@ -2179,6 +2518,10 @@ if (hero && orbs && canHover) {
     ticking = false;
     orbs.style.setProperty('--lx', `${px * 14}%`);
     orbs.style.setProperty('--ly', `${py * 14}%`);
+    if (heroNameMotion) {
+      heroNameMotion.style.setProperty('--name-x',`${px * 11}px`);
+      heroNameMotion.style.setProperty('--name-skew',`${px * -1.6}deg`);
+    }
     items.forEach(o => {
       const d = parseFloat(o.dataset.depth) || 1;
       o.style.transform = `translate3d(${px * 24 * d}px, ${py * 18 * d}px, 0)`;
@@ -2228,12 +2571,12 @@ if (fx && hero && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
     const R  = Math.max(or_.width, or_.height) * .5;
 
     // 화면이 좁으면 개수를 줄여 산만해지지 않게 합니다
-    const count = Math.round(Math.max(28, Math.min(105, W * H / 9500)));
+    const count = Math.round(Math.max(18, Math.min(48, W * H / 18000)));
 
     dust = Array.from({ length: count }, () => ({
       cx, cy,
       a : Math.random() * TAU,                                   // 현재 각도
-      d : R * (.55 + Math.random() * .8),                        // 중심에서의 거리
+      d : R * (.76 + Math.random() * .24),                       // 오브제 가까이에서 도는 거리
       sp: (0.00016 + Math.random() * 0.0004) * (Math.random() < .5 ? -1 : 1),
       s : .5 + Math.random() * 1.0,                              // 크기
       ph: Math.random() * TAU,                                   // 반짝임 위상
@@ -2269,6 +2612,8 @@ if (fx && hero && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
 
 
   addEventListener('resize', resize);
+  const dustAnchor = document.querySelector('.orbs');
+  if ('ResizeObserver' in window && dustAnchor) new ResizeObserver(seedDust).observe(dustAnchor);
   // 히어로가 화면에서 벗어나면 그리기를 멈춥니다
   new IntersectionObserver(([e]) => e.isIntersecting ? start() : stop()).observe(hero);
   resize();
